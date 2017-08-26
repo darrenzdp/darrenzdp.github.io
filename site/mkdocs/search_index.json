@@ -2,7 +2,7 @@
     "docs": [
         {
             "location": "/", 
-            "text": "Welcome to Darren_blog\n\n\n\u5f20\u5927\u9e4f\u4e2a\u4eba\u535a\u5ba2\n\n\nCommands\n\n\n\n\nmkdocs new [dir-name]\n - Create a new project.\n\n\nmkdocs serve\n - Start the live-reloading docs server.\n\n\nmkdocs build\n - Build the documentation site.\n\n\nmkdocs help\n - Print this help message.\n\n\n\n\nProject layout\n\n\nmkdocs.yml    # The configuration file.\ndocs/\n    index.md  # The documentation homepage.\n    \u62c9\u52fe\u62db\u8058\u804c\u4f4d\u6570\u636e\u5206\u6790", 
+            "text": "Welcome to Darren_blog\n\n\n\u5f20\u5927\u9e4f\u4e2a\u4eba\u535a\u5ba2\n\n\nProject layout\n\n\ndocs/\n    index.md  # firstpage\n    \u62c9\u52fe\u62db\u8058\u804c\u4f4d\u6570\u636e\u5206\u6790", 
             "title": "Home"
         }, 
         {
@@ -11,13 +11,8 @@
             "title": "Welcome to Darren_blog"
         }, 
         {
-            "location": "/#commands", 
-            "text": "mkdocs new [dir-name]  - Create a new project.  mkdocs serve  - Start the live-reloading docs server.  mkdocs build  - Build the documentation site.  mkdocs help  - Print this help message.", 
-            "title": "Commands"
-        }, 
-        {
             "location": "/#project-layout", 
-            "text": "mkdocs.yml    # The configuration file.\ndocs/\n    index.md  # The documentation homepage.\n    \u62c9\u52fe\u62db\u8058\u804c\u4f4d\u6570\u636e\u5206\u6790", 
+            "text": "docs/\n    index.md  # firstpage\n    \u62c9\u52fe\u62db\u8058\u804c\u4f4d\u6570\u636e\u5206\u6790", 
             "title": "Project layout"
         }, 
         {
