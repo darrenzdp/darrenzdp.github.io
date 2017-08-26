@@ -75,7 +75,7 @@
         </ul>
     
 
-    <li class="toctree-l2"><a href="#logistic">用Logistic回归建模</a></li>
+    <li class="toctree-l2"><a href="#logistic_1">用Logistic回归建模</a></li>
     
 
     <li class="toctree-l2"><a href="#clf-linear_modellogisticregressionc10-penaltyl1-solverliblinear-tol1e-6-tol-float-default-1e-4-tolerance-for-stopping-criteria">clf = linear_model.LogisticRegression(C=1.0, penalty="l1", solver='liblinear', tol=1e-6)  # tol : float, default: 1e-4 Tolerance for stopping criteria.迭代终止判据的误差范围。</a></li>
@@ -139,8 +139,11 @@
 <h2 id="_1">线性回归分析</h2>
 <p style="display:inline-block; font-weight:bold;color:purple;">首先，温故一下直线方程</p>
 
-<p>$ y = ax + b $
-<p>自变量x乘以斜率a再加上截距b就得到了因变量y</p></p>
+<p>
+<script type="math/tex; mode=display"> y = ax + b </script>
+</p>
+<p>自变量x乘以斜率a再加上截距b就得到了因变量y</p>
+
 <pre><code class="python">import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -163,10 +166,14 @@ ax.grid(True, linestyle=&quot;:&quot;, linewidth=1.5, alpha=0.8)
 </code></pre>
 
 <p><img alt="png" src="../output_4_0.png" /></p>
-<p><b>一元一次方程</b> $\quad y \ = \ ax \ + \ b \quad 例如：\ y = 2x + 5$  </p>
-<p>可以写成：  $\quad y \ = \ w_0 \times x_0 \ + \ w_1 \times x_1 \quad 其中w_0 =5, \ x_0=1, \ w_1=2, \ x_1=x$</p>
-<p><b>二元一次方程</b> $\quad y \ = \ ax \ + \ bx \ + \ c $  </p>
-<p>可以写成：  $\quad y \ = \ w_0 \times x_0 \ + \ w_1 \times x_1 \ + \ w_2 \times x_2 \quad 其中x_0=1, \ w_0=c$</p>
+<p><b>一元一次方程</b> <script type="math/tex; mode=display">\quad y \ = \ ax \ + \ b \quad 例如：\ y = 2x + 5</script>
+</p>
+<p>可以写成：  <script type="math/tex; mode=display">\quad y \ = \ w_0 \times x_0 \ + \ w_1 \times x_1 \quad 其中w_0 =5, \ x_0=1, \ w_1=2, \ x_1=x</script>
+</p>
+<p><b>二元一次方程</b> <script type="math/tex; mode=display">\quad y \ = \ ax \ + \ bx \ + \ c </script>
+</p>
+<p>可以写成：  <script type="math/tex; mode=display">\quad y \ = \ w_0 \times x_0 \ + \ w_1 \times x_1 \ + \ w_2 \times x_2 \quad 其中x_0=1, \ w_0=c</script>
+</p>
 <p><b>n元一次方程表达式及矩阵表示：</b></p>
 <p>
 <script type="math/tex; mode=display">y \ = \ w_0\times x_0 + w_1 \times x_1 + w_2 \times x_2 + \cdot\cdot\cdot \ w_n \times x_n \ </script>
@@ -193,9 +200,9 @@ ax.grid(True, linestyle=&quot;:&quot;, linewidth=1.5, alpha=0.8)
 <p>现实生活中，我们不仅需要回归产生一个可以有很多变化的因变量，有时还需要产生类似概率值的0~1之间的数值（比如某一双鞋子今天能否卖出去？或者某一个广告能否被用户点击? 我们希望得到这个数值来辅助决策鞋子上不上架，以及广告展不展示）。这个数值必须是0~1之间，但显然线性回归不满足这个区间要求。于是引入了Logistic方程，来做归一化，即产生了逻辑回归。</p>
 <p>在介绍逻辑回归之前，我们先看看一个小例子：</p>
 <p>鸢尾花数据集包括三种鸢尾花，山鸢尾花(Iris Setosa)、变色鸢尾花(Iris　Versicolor)、维吉尼亚鸢尾花(Iris Virginica)</p>
-<p><img src="./image/Iris Setosa.jpeg" alt="山鸢尾花(Iris Setosa)" style="width:275px;height:275px;display:inline-block;margin-top:20px;">
-<img src="./image/Iris Versicolor.jpeg" alt="变色鸢尾花(Iris　Versicolor)" style="width:275px;height:275px;display:inline-block;">
-<img src="./image/Iris Virginica.jpeg" alt="维吉尼亚鸢尾花(Iris Virginica)" style="width:275px;height:275px;display:inline-block;"></p>
+<p><img src="./image/Iris Setosa.jpeg" alt="山鸢尾花(Iris Setosa)" style="width:250px;height:250px;display:inline-block;margin-top:20px;">
+<img src="./image/Iris Versicolor.jpeg" alt="变色鸢尾花(Iris　Versicolor)" style="width:250px;height:250px;display:inline-block;">
+<img src="./image/Iris Virginica.jpeg" alt="维吉尼亚鸢尾花(Iris Virginica)" style="width:250px;height:250px;display:inline-block;"></p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;山鸢尾花(Iris Setosa) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;变色鸢尾花(Iris　Versicolor) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;维吉尼亚鸢尾花(Iris Virginica)</p>
 
 <p><b style="color:purple">搞清几个概念：</b></p>
@@ -206,7 +213,9 @@ ax.grid(True, linestyle=&quot;:&quot;, linewidth=1.5, alpha=0.8)
 <p>训练集(train)</p>
 <p>测试集(test)
 </b></p>
-<p>莺(dai)尾花数据集　$150行\ \times \ 5列$</p>
+<p>莺(dai)尾花数据集:
+<script type="math/tex; mode=display">150行\ \times \ 5列</script>
+</p>
 <p>特征：4个，分别是花瓣长度和宽度，花萼长度和宽度，单位cm</p>
 <p>分类标签：最后一列，三种取值，分别代表三种类型的莺尾花</p>
 <p><img src="./image/iris_petal_sepal.png"></p>
@@ -278,7 +287,7 @@ df.head(4)
 <img src="./image/Logistic_curve.png" style="width:500px;height:300px;"></p>
 <p>Logistic regression可以用来做回归，也可以用来分类（主要用于二分类）。从上图可以看到sigmoid函数是一个s形的曲线，$s\left(h\right)$的取值在(0, 1)之间，当h=0时，$\ s\left(h\right)=0.5\ $,在h远离0的地方函数的值会很快接近0或1。这个性质使我们能够以概率的方式来解释。</p>
 <h3 id="sigmoid_1">sigmoid函数推导</h3>
-<p>其实，相比线性回归方程，逻辑回归是在线性回归的基础上增加了一个逻辑函数，即将$\ y \ = \ ax \ + \ b \ $作为自变量带入了sigmoid函数里（此时$h=y= ax \ + \ b $）。
+<p>其实，相比线性回归方程，逻辑回归是在线性回归的基础上增加了一个逻辑函数，即将<script type="math/tex; mode=display">\ y \ = \ ax \ + \ b \ </script>作为自变量带入了sigmoid函数里（此时<script type="math/tex; mode=display">h=y= ax \ + \ b </script>）。
 从一个例子说起,我们通过用户的属性和特征来判断用户最终是否会进行购买一种商品。其中购买的概率是因变量y，用户的属性和特征是自变量X。y值越大说明用户购买的可能性越大。这里我们使用InOdds(E)表示这个购买事件，该事件发生的可能性（odds）来表示购买（P(E) &lt;=&gt; P）与未购买（P(E')）的可能性比值，公式如下：
 <script type="math/tex; mode=display">InOdds\left(E\right)=W_0 + W_1 \times X_1 + W_2 \times X_2 + \cdots + W_n \times X_n +  \epsilon</script>
 <script type="math/tex; mode=display">Odds\left(E\right) = \frac{P \left(E \right)}{P \left(E' \right)} = \frac{P \left(E \right)}{1 - P \left(E \right)} = \frac{P}{1 - P}</script>
@@ -323,11 +332,11 @@ p = e / 1 + e</p>
 <p><b style="margin-top:40px; display:block; font-size:22px;">模型参数求解</b>
 <p style="color:purple; font-weight=bold">最大似然估计<p>
 <hr style="border:1px dotted purple;">
-我们要用逻辑回归函数去做分类，必须要求出模型系数$\bf w$，那么如何求解$\bf w$呢？
+我们要用逻辑回归函数去做分类，必须要求出模型系数<script type="math/tex; mode=display">\bf w</script>，那么如何求解<script type="math/tex; mode=display">\bf w</script>呢？
 答案是最大似然估计（maximum likelihood）+ 梯度下降（gradient descent）。</p>
-<p>最大似然估计的本质是，选择最佳的参数$\bf w$,来最大化样本数据的可能性。假设给定样本$X_1, X_2 \cdots X_n$, 那么关于参数$\bf w$的可能性函数(可能性函数就是样本数据作为参数w的函数的概率)：
+<p>最大似然估计的本质是，选择最佳的参数<script type="math/tex; mode=display">\bf w</script>,来最大化样本数据的可能性。假设给定样本<script type="math/tex; mode=display">X_1, X_2 \cdots X_n</script>, 那么关于参数<script type="math/tex; mode=display">\bf w</script>的可能性函数(可能性函数就是样本数据作为参数w的函数的概率)：
 <script type="math/tex; mode=display">lik(w) = f(X_1, X_2, X_3, \cdots X_n \mid w)</script>
-如果$X_1, X_2, X_3, \cdots X_n$之间是相互独立的，可能性函数可以简写为如下：
+如果<script type="math/tex; mode=display">X_1, X_2, X_3, \cdots X_n</script>之间是相互独立的，可能性函数可以简写为如下：
 <script type="math/tex; mode=display">lik(w) = \prod_{i=1}^n f(X_i \mid w) \quad likelihood \ function</script>
 </p>
 <p>一般情况，我们要使用log可能性函数，原因：</p>
@@ -378,12 +387,12 @@ the previous plot illustrates the cost for the classification of a single-sample
 <p>
 <script type="math/tex; mode=display">\bf w_j: = w_j \ + \eta \sum_{i=1}^n (y^{(i)} - h_w(x^{(i)})x_j^{(i)}  \quad j = 1, 2, 3, \cdots m</script>
 </p>
-<p>因此，给定初始的模型系数（$\bf w$）后，模型就会利用梯度下降算法自动学习到合适的模型系数$\bf w$，拿到权重（模型）系数后，就可根据决策函数的输出对样本数据进行分类分析了。</p>
+<p>因此，给定初始的模型系数（w）后，模型就会利用梯度下降算法自动学习到合适的模型系数w，拿到权重（模型）系数后，就可根据决策函数的输出对样本数据进行分类分析了。</p>
 <p><a href="http://blog.csdn.net/dongtingzhizi/article/details/15962797">关于梯度下降过程向量化</a></p>
 <p>vectorization后$\bf w$更新的步骤如下：
-（1）求$A = \bf X {\bullet} {\bf w}$；
+（1）求<script type="math/tex; mode=display">A = \bf X {\bullet} {\bf w}</script>；
 （2）求E = h(A) - y；
-（3）求$w: = w -\eta {\bullet} X' {\bullet} E$，X'表示矩阵X的转置。</p>
+（3）求<script type="math/tex; mode=display">w: = w -\eta {\bullet} X' {\bullet} E</script>，X'表示矩阵X的转置。</p>
 <div id="func1" name="func1">
 <img src="./image/func_parcial.png" alt="python machine learning">
 </div>
@@ -481,7 +490,7 @@ np.shape(X)
 
 <pre><code>(150, 2)
 </code></pre>
-<p><b>调用sklearn库的类LogisticRegression，实现对Iris训练集的学习，用交叉验证检验分类效果，最终将训练好的模型应用在测试集进行验证</b></p>
+<h4 id="sklearnlogisticregressioniris">调用sklearn库的类LogisticRegression，实现对Iris训练集的学习，用交叉验证检验分类效果，最终将训练好的模型应用在测试集进行验证</h4>
 <pre><code class="python">from sklearn.model_selection import train_test_split    
 from sklearn.model_selection import cross_val_score 
 from sklearn.preprocessing import StandardScaler
@@ -650,7 +659,8 @@ sample_weight（fit函数参数）</p>
 <p>Numberof CPU cores used during the cross-validation loop. If given a value of -1, allcores are used.并行数，int：个数；-1：跟CPU核数一致；1:默认值</p>
 <p>tol : float, default: 1e-4 Tolerance for stopping criteria.迭代终止判据的误差范围。</p>
 <p><a href="http://blog.csdn.net/cherdw/article/details/54891073">参考</a></p>
-<h1 id="logistic">用Logistic回归建模</h1>
+<h3 id="logistic">Logistic 预测</h3>
+<h1 id="logistic_1">用Logistic回归建模</h1>
 <h1 id="clf-linear_modellogisticregressionc10-penaltyl1-solverliblinear-tol1e-6-tol-float-default-1e-4-tolerance-for-stopping-criteria">clf = linear_model.LogisticRegression(C=1.0, penalty="l1", solver='liblinear', tol=1e-6)  # tol : float, default: 1e-4 Tolerance for stopping criteria.迭代终止判据的误差范围。</h1>
 <p>lr_model= LogisticRegression(C = 1.0,<br />
                               penalty = 'l2')<br />
