@@ -118,6 +118,22 @@ display_html(&quot;&quot;&quot;&lt;button onclick=&quot;$('.input, .prompt, .out
 </code></pre>
 
 <p><button onclick="$('.input, .prompt, .output_stderr, .output_error').toggle();">点击隐藏/显示代码</button></p>
+<p>%%HTML</p>
+<script>
+code_show=true;
+function code_toggle() {
+ if (code_show){
+ $('div.input').hide();
+ } else {
+ $('div.input').show();
+ }
+ code_show = !code_show
+}
+$( document ).ready(code_toggle);
+</script>
+
+<form action="javascript:code_toggle()"><input type="submit" value="点击按钮显示/隐藏文档代码！"></form>
+
 <h2 id="_2">背景介绍</h2>
 <p>采用scrapy框架采集了拉勾网8月4日的所有招聘职位信息，进行简单的数据分析，主要目的是分析IT行业目前招聘的整体状况，分析技术类中后端开发的招聘形势以及Python编程语言的招聘需求。</p>
 <pre><code class="python"># 导入相关模块
@@ -230,9 +246,9 @@ method_dict = {&quot;mean&quot;: u&quot;平均薪资&quot;, &quot;median&quot;: 
     feature_target_bar(i)
 </code></pre>
 
-<p><img alt="png" src="../output_17_0.png" /></p>
-<p><img alt="png" src="../output_17_1.png" /></p>
-<p><img alt="png" src="../output_17_2.png" /></p>
+<p><img alt="png" src="../output_18_0.png" /></p>
+<p><img alt="png" src="../output_18_1.png" /></p>
+<p><img alt="png" src="../output_18_2.png" /></p>
 <p>不同规模的公司的招聘需求和薪资图是双y轴坐标图，右侧y轴坐标表示的是不同规模的公司的招聘需求占总招聘需求的百分比（注意和下面的双y坐标轴的百分比的区别）</p>
 <pre><code class="python"># 职位招聘需求、平均薪资与公司规模的关系
 d_company_salary = data.groupby('company_size')[&quot;salary&quot;].aggregate([np.size, np.mean, np.median]).sort_values(&quot;size&quot;, ascending=True)
@@ -257,7 +273,7 @@ ax1.set_title(u'不同规模的公司的招聘需求和薪资',fontproperties=fo
 
 <pre><code>&lt;matplotlib.text.Text at 0x7f21a4798610&gt;
 </code></pre>
-<p><img alt="png" src="../output_19_1.png" /></p>
+<p><img alt="png" src="../output_20_1.png" /></p>
 <p>由于拉勾网是专业的互联网招聘平台，招聘信息以IT行业为主，整体薪资水平是偏高的。从上面的柱状图可看出，招聘薪资与招聘企业的金融状况、招聘企业所属的行业领域、求职者的学历与工作经验等特征均有关联性。</p>
 <p>根据招聘企业的金融状况可分成上市公司、成熟、成长、初创性公司，根据上面的柱状图明显看出初创性公司的薪资偏低，而成熟性且融资规模较大的企业的薪资较高。</p>
 <p>分析一线和热门二线城市的薪资柱状图，明显看出一线城市的平均薪资明显高于其他城市（天津除外），尤其以北京的薪资最高，而二线的杭州薪资也较高，可能与阿里巴巴等互联网公司坐落杭州有关。</p>
@@ -287,7 +303,7 @@ plt.title(u&quot;IT行业不同领域薪资&quot;, fontproperties=font, fontsize
 plt.gca().xaxis.grid(True, linestyle = &quot;-.&quot;,)
 </code></pre>
 
-<p><img alt="png" src="../output_24_0.png" /></p>
+<p><img alt="png" src="../output_25_0.png" /></p>
 <pre><code class="python">&quot;&quot;&quot;
 plt.pie参数
 x       (每一块)的比例，如果sum(x) &gt; 1会使用sum(x)归一化
@@ -317,7 +333,7 @@ plt.axis('equal')
  -1.3334685921667122,
  1.3271730638043182)
 </code></pre>
-<p><img alt="png" src="../output_25_1.png" /></p>
+<p><img alt="png" src="../output_26_1.png" /></p>
 <p>IT行业七大领域中职位需求最多的是技术类，其次是产品类，发布职位最少的是金融类，而薪资方面，平均薪资最高的是金融类，其次是技术类。</p>
 <h4 id="it_3">IT行业薪资与城市</h4>
 <pre><code class="python"># 对不同城市和IT行业七大领域进行分组，并对特征salary进行数量统计、平均、中位数计算
@@ -340,7 +356,7 @@ plt.legend(loc=7,prop=font, fontsize=17)
 
 <pre><code>&lt;matplotlib.legend.Legend at 0x7f219c64f950&gt;
 </code></pre>
-<p><img alt="png" src="../output_29_1.png" /></p>
+<p><img alt="png" src="../output_30_1.png" /></p>
 <pre><code class="python">plt.figure(figsize=(12,20))
 g = sns.barplot(y=&quot;first_tag&quot;, x=&quot;size&quot;, data=d_city, hue=&quot;city&quot;, hue_order=city_list, palette=&quot;Set1&quot;)
 plt.yticks(g.get_yticks(), fontproperties=font, fontsize=16)
@@ -353,7 +369,7 @@ plt.legend(loc=7,prop=font, fontsize=17)
 
 <pre><code>&lt;matplotlib.legend.Legend at 0x7f219c0e4250&gt;
 </code></pre>
-<p><img alt="png" src="../output_30_1.png" /></p>
+<p><img alt="png" src="../output_31_1.png" /></p>
 <p>从IT行业各个领域的平均薪资和招聘职位数量可知，无论从招聘数量还是平均薪资北京的老大地位很牢固（除了金融领域），其次是上海，再之是深圳，然后是杭州、广州。很有意思的一个现象是IT行业的金融领域，虽然北京的招聘需求仍旧是最大的，但平均薪资低于上海和深圳，这与中国南方的一线城市的金融行业发展相吻合，另一个现象是厦门的金融领域薪资最高，超过了上海，但招聘职位数量太少，只有3个职位需求。</p>
 <h4 id="it_4">厦门的IT行业七大细分领域的招聘整体状况</h4>
 <p>其中，size表示的是招聘职位的数量，mean表示的是职位的平均薪资，midian表示的是薪资中位数</p>
@@ -459,14 +475,14 @@ experience_list = data.groupby(&quot;work_experience&quot;)[&quot;salary&quot;].
     domains_relation(jobseeker_education, method, &quot;education&quot;, education_list)
 </code></pre>
 
-<p><img alt="png" src="../output_37_0.png" /></p>
-<p><img alt="png" src="../output_37_1.png" /></p>
+<p><img alt="png" src="../output_38_0.png" /></p>
+<p><img alt="png" src="../output_38_1.png" /></p>
 <pre><code class="python">for method in [&quot;size&quot;, &quot;mean&quot;]:
     domains_relation(jobseeker_experience, method, &quot;work_experience&quot;, experience_list)
 </code></pre>
 
-<p><img alt="png" src="../output_38_0.png" /></p>
-<p><img alt="png" src="../output_38_1.png" /></p>
+<p><img alt="png" src="../output_39_0.png" /></p>
+<p><img alt="png" src="../output_39_1.png" /></p>
 <p>招聘需求要求最多的学历是本科，其次是大专，只有在市场与销售领域，本科需求略低于大专；工作经验上，技术相关的领域需求最大的是3-5年工作经验，其次是1-3年，而其他非技术的需求最多的是1-3年，其次是3-5年；</p>
 <p>薪资方面，基本呈现出学历越高、工作经验越丰富薪资越高的趋势，偶尔有特殊情况。</p>
 <p>一般而言，求职者的学历较高或工作经验丰富，其薪资较高，这与上面的柱状图的整体趋势是吻合的；招聘需求最多的学历是本科，其次是大专，工作经验要求3-5年或1-3年居多。</p>
@@ -496,14 +512,14 @@ param_dist = {&quot;industry_field&quot;: u&quot;行业领域&quot;, &quot;city&
     domains_employee(employee_finance, method, &quot;finance_stage&quot;)
 </code></pre>
 
-<p><img alt="png" src="../output_43_0.png" /></p>
-<p><img alt="png" src="../output_43_1.png" /></p>
+<p><img alt="png" src="../output_44_0.png" /></p>
+<p><img alt="png" src="../output_44_1.png" /></p>
 <pre><code class="python">for method in [&quot;size&quot;, &quot;mean&quot;]:
     domains_employee(employee_field, method, &quot;industry_field&quot;)
 </code></pre>
 
-<p><img alt="png" src="../output_44_0.png" /></p>
-<p><img alt="png" src="../output_44_1.png" /></p>
+<p><img alt="png" src="../output_45_0.png" /></p>
+<p><img alt="png" src="../output_45_1.png" /></p>
 <p>招聘需求中最多的是技术领域，上市公司和成长性公司的招聘需求旺盛，但平均薪资最多的却是成熟型公司其次才是上市和成长型公司。从公司所属类型上看，移动互联网的招聘需求最多（部分原因是分类的时候将所有跟移动互联网沾边的公司均划分到移动互联网领域了），薪资上，金融领域最高，接着是O2O、社交网络、数据服务等一些新型的网络科技公司，超过了传统的互联网公司的薪资水平。</p>
 <h4 id="it_7">IT七大领域的技术类中的后端开发岗位描述性分析</h4>
 <pre><code class="python">def IT_occupies(dataframe, content, evaluate_method):
@@ -555,16 +571,16 @@ param_dist = {&quot;industry_field&quot;: u&quot;行业领域&quot;, &quot;city&
 <pre><code class="python">IT_occupies(data, u&quot;招聘职位数量&quot;, &quot;size&quot;)
 </code></pre>
 
-<p><img alt="png" src="../output_48_0.png" /></p>
-<p><img alt="png" src="../output_48_1.png" /></p>
+<p><img alt="png" src="../output_49_0.png" /></p>
+<p><img alt="png" src="../output_49_1.png" /></p>
 <pre><code class="python">IT_occupies(data, u&quot;平均薪资 k(￥)&quot;, &quot;mean&quot;)
 </code></pre>
 
-<p><img alt="png" src="../output_49_0.png" /></p>
+<p><img alt="png" src="../output_50_0.png" /></p>
 <pre><code class="python">IT_occupies(data, u&quot;薪资中位数 k(￥)&quot;, &quot;median&quot;)
 </code></pre>
 
-<p><img alt="png" src="../output_50_0.png" /></p>
+<p><img alt="png" src="../output_51_0.png" /></p>
 <p>Java的招聘职位信息最多,有2700多招聘职位，占比29.37%，编程语言的老大地位不可撼动！PHP职位需求次之，占比14.08%，后续分别是C、C++、.NET、Python，其中Python日需求职位不到400个，占比5.24%。（注：虽然.NET不算真正的编程语言，但拉勾网的数据是如此分类，在这也一并当成一门编程语言看待，数据挖掘、精准推荐等类同）</p>
 <p>薪资方面，最高的是数据挖掘和推荐算法类、其次是一些新兴编程语言如Go，Python的平均薪资较高，达到19K，高于Java、PHP、C、C++等。</p>
 <p>注意：拉勾网发布薪资是一个区间范围，因此本文采取的是该区间的平均值，但从现实生活的规律看，使用薪资区间的最低值比较符合逻辑。</p>
@@ -633,63 +649,63 @@ param_dist = {&quot;city&quot;: u&quot;城市&quot;, &quot;size&quot;: u&quot;�
 <pre><code class="python">tech_backend_plot(&quot;city&quot;, &quot;size&quot;)
 </code></pre>
 
-<p><img alt="png" src="../output_55_0.png" /></p>
+<p><img alt="png" src="../output_56_0.png" /></p>
 <pre><code class="python">tech_backend_plot(&quot;city&quot;, &quot;mean&quot;)
 </code></pre>
 
-<p><img alt="png" src="../output_56_0.png" /></p>
+<p><img alt="png" src="../output_57_0.png" /></p>
 <pre><code class="python">tech_backend_plot(&quot;city&quot;, &quot;median&quot;)
 </code></pre>
 
-<p><img alt="png" src="../output_57_0.png" /></p>
+<p><img alt="png" src="../output_58_0.png" /></p>
 <p>北京、上海、深圳、广州、杭州的IT行业需求量最多，薪资也较高（广州薪资偏低），属于第一梯队；从各编程语言看，Java绝对的霸主地位，但在一线发达城市，Java语言所占的比例远低于其他城市的比例，即一线发达城市各种编程语言都有发展机会，而二线城市还局限在几门编程语言中，如济南，Java占济南职位需求的80%左右，PHP占比15%左右，.NET占比5%左右；Python需求占比最大的是北京，其次是上海和杭州，相比其他语言，Python招聘需求较小，但薪资较高。</p>
 <pre><code class="python">tech_backend_plot(&quot;finance_stage&quot;, &quot;size&quot;)
 </code></pre>
 
-<p><img alt="png" src="../output_59_0.png" /></p>
+<p><img alt="png" src="../output_60_0.png" /></p>
 <p>从招聘需求上看，Java的招聘需求最多，其次是PHP，Python招聘职位较低，但Python的薪资较高。</p>
 <pre><code class="python">tech_backend_plot(&quot;finance_stage&quot;, &quot;mean&quot;)
 </code></pre>
 
-<p><img alt="png" src="../output_61_0.png" /></p>
+<p><img alt="png" src="../output_62_0.png" /></p>
 <pre><code class="python">tech_backend_plot(&quot;finance_stage&quot;, &quot;median&quot;)
 </code></pre>
 
-<p><img alt="png" src="../output_62_0.png" /></p>
+<p><img alt="png" src="../output_63_0.png" /></p>
 <pre><code class="python">tech_backend_plot(&quot;company_size&quot;, &quot;size&quot;)
 </code></pre>
 
-<p><img alt="png" src="../output_63_0.png" /></p>
+<p><img alt="png" src="../output_64_0.png" /></p>
 <pre><code class="python">tech_backend_plot(&quot;company_size&quot;, &quot;mean&quot;)
 </code></pre>
 
-<p><img alt="png" src="../output_64_0.png" /></p>
+<p><img alt="png" src="../output_65_0.png" /></p>
 <pre><code class="python">tech_backend_plot(&quot;company_size&quot;, &quot;median&quot;)
 </code></pre>
 
-<p><img alt="png" src="../output_65_0.png" /></p>
+<p><img alt="png" src="../output_66_0.png" /></p>
 <p>公司规模与招聘需求和薪资折线图看出，大型公司对Java的需求最多，小型公司对PHP和Python的需求较大（注意，图中一种类型的公司中各个编程语言占比之和是100%，其他折线图也类似）。薪资方面，大型公司的薪资最高，其次是中型公司，最低是小型公司。</p>
 <pre><code class="python">tech_backend_plot(&quot;work_experience&quot;, &quot;size&quot;)
 </code></pre>
 
-<p><img alt="png" src="../output_67_0.png" /></p>
+<p><img alt="png" src="../output_68_0.png" /></p>
 <pre><code class="python">tech_backend_plot(&quot;work_experience&quot;, &quot;mean&quot;)
 </code></pre>
 
-<p><img alt="png" src="../output_68_0.png" /></p>
+<p><img alt="png" src="../output_69_0.png" /></p>
 <p>薪资基本与工作经验成正比。</p>
 <pre><code class="python">tech_backend_plot(&quot;education&quot;, &quot;median&quot;)
 </code></pre>
 
-<p><img alt="png" src="../output_70_0.png" /></p>
+<p><img alt="png" src="../output_71_0.png" /></p>
 <pre><code class="python">tech_backend_plot(&quot;education&quot;, &quot;mean&quot;)
 </code></pre>
 
-<p><img alt="png" src="../output_71_0.png" /></p>
+<p><img alt="png" src="../output_72_0.png" /></p>
 <pre><code class="python">tech_backend_plot(&quot;education&quot;, &quot;size&quot;)
 </code></pre>
 
-<p><img alt="png" src="../output_72_0.png" /></p>
+<p><img alt="png" src="../output_73_0.png" /></p>
 <p>上图表示的是不同学历的职位需求百分比，即本科学历中，各个后端开发语言招聘需求的百分比（本科学历中这6种编程语言的百分比之和为100%），由于C#和.NET在硕士学历上没有招聘需求，所以，虽然C++、C、Python的硕士学历需求百分比明显增多，并不一定代表了这3门编程语言对高学历的绝对需求超过了其他相对低学历，只是相对而言，C和C++更青睐于高学历求职者。从前面的分析可知，本科和大专是招聘企业的首先学历。</p>
 <p>薪资与学历基本成正比</p>
 <h4 id="python">拉勾网Python职位描述性分析</h4>
@@ -732,48 +748,48 @@ param_dist = {&quot;city&quot;: u&quot;城市&quot;, &quot;size&quot;: u&quot;�
 <pre><code class="python">series_bar_plot(&quot;Python&quot;, &quot;city&quot;, &quot;size&quot;)
 </code></pre>
 
-<p><img alt="png" src="../output_77_0.png" /></p>
+<p><img alt="png" src="../output_78_0.png" /></p>
 <pre><code class="python">series_bar_plot(&quot;Python&quot;, &quot;city&quot;, &quot;mean&quot;)
 </code></pre>
 
-<p><img alt="png" src="../output_78_0.png" /></p>
+<p><img alt="png" src="../output_79_0.png" /></p>
 <pre><code class="python">series_bar_plot(&quot;Python&quot;, &quot;city&quot;, &quot;median&quot;)
 </code></pre>
 
-<p><img alt="png" src="../output_79_0.png" /></p>
+<p><img alt="png" src="../output_80_0.png" /></p>
 <pre><code class="python">series_bar_plot(&quot;Python&quot;, &quot;finance_stage&quot;, &quot;size&quot;)
 </code></pre>
 
-<p><img alt="png" src="../output_80_0.png" /></p>
+<p><img alt="png" src="../output_81_0.png" /></p>
 <pre><code class="python">series_bar_plot(&quot;Python&quot;, &quot;finance_stage&quot;, &quot;mean&quot;)
 </code></pre>
 
-<p><img alt="png" src="../output_81_0.png" /></p>
+<p><img alt="png" src="../output_82_0.png" /></p>
 <pre><code class="python">series_bar_plot(&quot;Python&quot;, &quot;finance_stage&quot;, &quot;median&quot;)
 </code></pre>
 
-<p><img alt="png" src="../output_82_0.png" /></p>
+<p><img alt="png" src="../output_83_0.png" /></p>
 <pre><code class="python">for i in [&quot;size&quot;, &quot;mean&quot;, &quot;median&quot;]:
     series_bar_plot(&quot;Python&quot;, &quot;company_size&quot;, i)
-</code></pre>
-
-<p><img alt="png" src="../output_83_0.png" /></p>
-<p><img alt="png" src="../output_83_1.png" /></p>
-<p><img alt="png" src="../output_83_2.png" /></p>
-<pre><code class="python">for i in [&quot;size&quot;, &quot;mean&quot;, &quot;median&quot;]:
-    series_bar_plot(&quot;Python&quot;, &quot;work_experience&quot;, i)
 </code></pre>
 
 <p><img alt="png" src="../output_84_0.png" /></p>
 <p><img alt="png" src="../output_84_1.png" /></p>
 <p><img alt="png" src="../output_84_2.png" /></p>
 <pre><code class="python">for i in [&quot;size&quot;, &quot;mean&quot;, &quot;median&quot;]:
-    series_bar_plot(&quot;Python&quot;, &quot;education&quot;, i)
+    series_bar_plot(&quot;Python&quot;, &quot;work_experience&quot;, i)
 </code></pre>
 
 <p><img alt="png" src="../output_85_0.png" /></p>
 <p><img alt="png" src="../output_85_1.png" /></p>
 <p><img alt="png" src="../output_85_2.png" /></p>
+<pre><code class="python">for i in [&quot;size&quot;, &quot;mean&quot;, &quot;median&quot;]:
+    series_bar_plot(&quot;Python&quot;, &quot;education&quot;, i)
+</code></pre>
+
+<p><img alt="png" src="../output_86_0.png" /></p>
+<p><img alt="png" src="../output_86_1.png" /></p>
+<p><img alt="png" src="../output_86_2.png" /></p>
 <p>Python的招聘需求总量不多，但平均薪资较高，这也符合新兴语言的特点。</p>
 <p>Python招聘需求最多的依旧是北京，其次上海，平均薪资最高的还是北京，其次是深圳和上海。从招聘公司的角度分析，中型的成熟和成长性公司的招聘需求和薪资水平都较高，大型上市公司的薪资高但招聘需求没有中型公司多，50人以下的初创公司的招聘需求和薪资都是最低。</p>
 <p>工作经验方面，需求最大的是3-5年，其次是1-3年，薪资跟工作经验基本成正比，有一个特例是应届毕业生，其平均薪资竟然高于有3年工作经验的求职者！仔细分析发现，应届毕业生的招聘需求非常之低，所以，应届毕业生的高薪其实是由于样本量太少又又受到组内离群值的干扰，造成平均薪资很高。</p>
@@ -897,7 +913,7 @@ plt.xticks(g.get_xticks(), fontproperties=font, fontsize=16)
   &lt;matplotlib.axis.XTick at 0x7f8a0f4b22d0&gt;],
  &lt;a list of 9 Text xticklabel objects&gt;)
 </code></pre>
-<p><img alt="png" src="../output_92_1.png" /></p>
+<p><img alt="png" src="../output_93_1.png" /></p>
 <p>python开发工程师主要指的是web开发，而python工程师是招聘岗位名称没有明确标明，要从岗位详情页验证具体岗位情况，其他的分类标签是明确的具体岗位，如数据类，包括了数据分析、挖掘等。</p>
 <p>由于没有采集职位详情页信息，无法进一步验证招聘数量仅次于开发类的所谓的python工程师具体岗位信息。</p>
 <h3 id="_7">招聘职位描述词云图</h3>
@@ -929,7 +945,7 @@ plt.axis(&quot;off&quot;)
 plt.show()
 </code></pre>
 
-<p><img alt="png" src="../output_96_0.png" /></p>
+<p><img alt="png" src="../output_97_0.png" /></p>
 <p>岗位描述用的词汇最多的是培训、扁平、平台，体现出当今IT行业比较注重员工的培训及实施扁平化管理</p>
 <h3 id="_8">招聘职位发布时间规律</h3>
 <pre><code class="python"># 将时间str转成datetime
@@ -965,7 +981,7 @@ plt.legend(loc=&quot;best&quot;,prop=font, fontsize=15)
 
 <pre><code>&lt;matplotlib.legend.Legend at 0x7fc966e6bf50&gt;
 </code></pre>
-<p><img alt="png" src="../output_102_1.png" /></p>
+<p><img alt="png" src="../output_103_1.png" /></p>
 <pre><code class="python">hour_fs = data.groupby([&quot;hour&quot;, &quot;finance_stage&quot;])[&quot;salary&quot;].aggregate(np.size).reset_index().sort(&quot;salary&quot;, ascending=False)
 plt.figure(figsize=(8,6))
 markers = [
@@ -985,7 +1001,7 @@ plt.legend(loc=&quot;best&quot;,prop=font, fontsize=15)
 
 <pre><code>&lt;matplotlib.legend.Legend at 0x7fc973c6ba10&gt;
 </code></pre>
-<p><img alt="png" src="../output_103_1.png" /></p>
+<p><img alt="png" src="../output_104_1.png" /></p>
 <pre><code class="python">data_py = data[data[&quot;third_tag&quot;] == u&quot;Python&quot;]
 hour_cs = data_py.groupby([&quot;hour&quot;, &quot;company_size&quot;])[&quot;salary&quot;].aggregate(np.size).reset_index().sort(&quot;salary&quot;, ascending=False)
 plt.figure(figsize=(8,6))
@@ -1006,7 +1022,7 @@ plt.legend(loc=&quot;best&quot;,prop=font, fontsize=15)
 
 <pre><code>&lt;matplotlib.legend.Legend at 0x7fc965e59c10&gt;
 </code></pre>
-<p><img alt="png" src="../output_104_1.png" /></p>
+<p><img alt="png" src="../output_105_1.png" /></p>
 <pre><code class="python">data_py = data[data[&quot;third_tag&quot;] == u&quot;Python&quot;]
 hour_fs = data_py.groupby([&quot;hour&quot;, &quot;finance_stage&quot;])[&quot;salary&quot;].aggregate(np.size).reset_index().sort(&quot;salary&quot;, ascending=False)
 plt.figure(figsize=(8,6))
@@ -1027,7 +1043,7 @@ plt.legend(loc=&quot;best&quot;,prop=font, fontsize=15)
 
 <pre><code>&lt;matplotlib.legend.Legend at 0x7fc9639932d0&gt;
 </code></pre>
-<p><img alt="png" src="../output_105_1.png" /></p>
+<p><img alt="png" src="../output_106_1.png" /></p>
 <pre><code class="python">plt.figure(figsize=(8,6))
 g = sns.pointplot(x=hour_info.index, y=hour_info[&quot;property&quot;], color=&quot;indianred&quot;, markers=&quot;.&quot;)
 plt.xticks(g.get_xticks(), fontproperties=font, fontsize=16, rotation=30)
@@ -1038,7 +1054,7 @@ plt.gca().yaxis.grid(True, linestyle = &quot;-.&quot;,)
 plt.legend(loc=&quot;best&quot;,prop=font, fontsize=15)
 </code></pre>
 
-<p><img alt="png" src="../output_106_0.png" /></p>
+<p><img alt="png" src="../output_107_0.png" /></p>
 <p>从24小时时段的招聘信息发布量可知，上午9-10点是职位发布的高峰期，其次是下午14点。因此，有求职需求的个人可以在上午11点之后查看拉勾网的招聘信息。</p>
 <h3 id="hr">Hr最后登录时间规律</h3>
 <pre><code class="python">df_login = pd.read_csv(&quot;/home/darren/Desktop/lagou_position/scrapy/job_info_201784.csv&quot;, encoding=&quot;utf-8&quot;)
@@ -1097,7 +1113,7 @@ plt.gca().yaxis.grid(True, linestyle = &quot;-.&quot;,)
 plt.legend(loc=&quot;best&quot;,prop=font, fontsize=15)
 </code></pre>
 
-<p><img alt="png" src="../output_116_0.png" /></p>
+<p><img alt="png" src="../output_117_0.png" /></p>
 <p>Hr最后登录时间分布图如上，Hr最后登录时间集中在下午，尤其是15-17点之间，结合同一天的招聘信息发布状况，投递简历的较佳时间段为上午11点-下午13点之间。</p>
 <h2 id="_9">总结</h2>
 <p>当前，IT行业发展如火如荼，从IT行业的平均薪资便可窥一斑。从全国范围看，IT行业发展并不均衡，而是集中在一线和一些热门的二线城市，尤其是北上深广以及杭州，其中又以北京最为发达！</p>
@@ -1153,6 +1169,7 @@ plt.legend(loc=&quot;best&quot;,prop=font, fontsize=15)
     </span>
 </div>
     <script src="../../js/theme.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
 </body>
 </html>

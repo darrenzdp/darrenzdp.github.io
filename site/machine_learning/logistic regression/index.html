@@ -62,7 +62,7 @@
     <a class="current" href="./">Logistic_regression的Python代码实现</a>
     <ul class="subnav">
             
-    <li class="toctree-l2"><a href="#mathbbpython">$$\mathbb{逻辑回归与python 代码实现}$$</a></li>
+    <li class="toctree-l2"><a href="#mathbbpython">\mathbb{逻辑回归与python 代码实现}</a></li>
     
         <ul>
         
@@ -131,7 +131,9 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="mathbbpython">$$\mathbb{逻辑回归与python 代码实现}$$</h1>
+                <h1 id="mathbbpython">
+<script type="math/tex; mode=display">\mathbb{逻辑回归与python 代码实现}</script>
+</h1>
 <p>逻辑回归(Logistic Regression, LR)又称为逻辑回归分析，是分类和预测算法中的一种。通过历史数据的表现对未来结果发生的概率进行预测。</p>
 <p>例如，我们可以将商品的购买概率设置为因变量，将用户的特征属性，例如性别，年龄，注册时间等设置为自变量。根据特征属性预测购买的概率。逻辑回归与线性回归分析（Linear Regression）有很多相似之处，下面先来看下线性回归分析</p>
 <h2 id="_1">线性回归分析</h2>
@@ -166,27 +168,34 @@ ax.grid(True, linestyle=&quot;:&quot;, linewidth=1.5, alpha=0.8)
 <p><b>二元一次方程</b> $\quad y \ = \ ax \ + \ bx \ + \ c $  </p>
 <p>可以写成：  $\quad y \ = \ w_0 \times x_0 \ + \ w_1 \times x_1 \ + \ w_2 \times x_2 \quad 其中x_0=1, \ w_0=c$</p>
 <p><b>n元一次方程表达式及矩阵表示：</b></p>
-<p>$$y \ = \ w_0\times x_0 + w_1 \times x_1 + w_2 \times x_2 + \cdot\cdot\cdot \ w_n \times x_n \ $$ </p>
-<p>$$=\underbrace{\begin{bmatrix} w_0 &amp; w_1 &amp; w_2 &amp; \cdots\ &amp;w_n \end{bmatrix}}<em>{权重系数向量\bf w} {\ \bullet}  \underbrace{\begin{bmatrix} x</em>{0} \ x_{1} \ x_{2} \ \vdots \ x_n \end{bmatrix}}_{样本特征矩阵\bf x}$$</p>
-<p>$$=\ {\bf w^T x} \quad {其中x_0=1}$$</p>
+<p>
+<script type="math/tex; mode=display">y \ = \ w_0\times x_0 + w_1 \times x_1 + w_2 \times x_2 + \cdot\cdot\cdot \ w_n \times x_n \ </script>
+</p>
+<p>
+<script type="math/tex; mode=display">=\underbrace{\begin{bmatrix} w_0 & w_1 & w_2 & \cdots\ &w_n \end{bmatrix}}_{权重系数向量\bf w} {\ \bullet}  \underbrace{\begin{bmatrix} x_{0} \\ x_{1} \\ x_{2} \\ \vdots \\ x_n \end{bmatrix}}_{样本特征矩阵\bf x}</script>
+</p>
+<p>
+<script type="math/tex; mode=display">=\ {\bf w^T x} \quad {其中x_0=1}</script>
+</p>
 <p><b>回归分析用来描述自变量x和因变量Y之间的关系，或者说自变量X对因变量Y的影响程度，并对因变量Y进行预测。</b> 
 其中因变量(y)是我们希望获得的结果，自变量(x)是影响结果的潜在因素，自变量可以有一个，也可以有多个。一个自变量的叫做一元回归分析，超过一个自变量的叫做多元回归分析。</p>
 <p>回归分析其实就是对已知公式的未知参数进行估计，在给定训练样本点和已知的公式后，去求解一个或多个未知参数，直到找到那个最符合样本点分布的参数（或参数组合）。注意，回归的前提是公式已知，否则回归无法进行。根据公式的不同，回归分为线性回归和非线性回归。线性回归中公式都是“一次”的（一元一次方程，二元一次方程...），而非线性则可以有各种形式（N元N次方程，log方程...）。</p>
 <p>下面是一组广告费用和曝光次数的数据，费用和曝光次数一一对应。其中曝光次数是我们希望知道的结果，费用是影响曝光次数的因素，我们将费用设置为自变量X，将曝光次数设置为因变量Y，通过一元线性回归方程和判定系数可以发现费用(X)对曝光次数(Y)的影响。
 <br>
-<img ../logistic_regression_analysis/liner_reg_adv.png"></p>
-<p>以下为一元回归线性方式表达形式，$$\hat{y} \ = \ w_0 \ + \ w_1 x_1$$</p>
+<img src="./image/liner_reg_adv.png"></p>
+<p>以下为一元回归线性方式表达形式，<script type="math/tex; mode=display">\hat{y} \ = \ w_0 \ + \ w_1 x_1</script>
+</p>
 <p>其中$\bf{\hat{y}}$是预测的因变量，$\bf{x_1}$是自变量$\bf{X}$的一个具体值，我们只需求出截距$w_0$和斜率$w_1$就可以获得费用和曝光次数之间的关系，就可以对曝光次数进行预测。通常，可以用用最小二乘法来计算截距b0和斜率b1。最小二乘法通过最小化误差的平方和寻找数据的最佳函数匹配。</p>
-<p><img ../logistic_regression_analysis/linear_regression.png"></p>
+<p><img src="./image/linear_regression.png"></p>
 <p>关于几个小例子可以点击<a href="http://www.cnblogs.com/nxld/p/6124235.html">这里</a>和<a href="http://blog.csdn.net/wenyusuran/article/details/25824011">这里</a></p>
 <h2 id="logistic-regression">逻辑回归（Logistic Regression）</h2>
 <p>Logistic Regression 是线性回归的一种，是工业界比较常用的有监督式的分类机器学习算法，用于估计某种事物的可能性，比如，用于广告预测（ctr预估），根据不同广告的点击的历史数据，来预测某广告的点击率的可能性，然后，把最可能被用户点击的广告摆在用户能看到的地方，当用户点击了该广告，网站就有钱收了。</p>
 <p>现实生活中，我们不仅需要回归产生一个可以有很多变化的因变量，有时还需要产生类似概率值的0~1之间的数值（比如某一双鞋子今天能否卖出去？或者某一个广告能否被用户点击? 我们希望得到这个数值来辅助决策鞋子上不上架，以及广告展不展示）。这个数值必须是0~1之间，但显然线性回归不满足这个区间要求。于是引入了Logistic方程，来做归一化，即产生了逻辑回归。</p>
 <p>在介绍逻辑回归之前，我们先看看一个小例子：</p>
 <p>鸢尾花数据集包括三种鸢尾花，山鸢尾花(Iris Setosa)、变色鸢尾花(Iris　Versicolor)、维吉尼亚鸢尾花(Iris Virginica)</p>
-<p><img ../logistic_regression_analysis/Iris Setosa.jpeg" alt="山鸢尾花(Iris Setosa)" style="width:275px;height:275px;display:inline-block;margin-top:20px;">
-<img ../logistic_regression_analysis/Iris Versicolor.jpeg" alt="变色鸢尾花(Iris　Versicolor)" style="width:275px;height:275px;display:inline-block;">
-<img ../logistic_regression_analysis/Iris Virginica.jpeg" alt="维吉尼亚鸢尾花(Iris Virginica)" style="width:275px;height:275px;display:inline-block;"></p>
+<p><img src="./image/Iris Setosa.jpeg" alt="山鸢尾花(Iris Setosa)" style="width:275px;height:275px;display:inline-block;margin-top:20px;">
+<img src="./image/Iris Versicolor.jpeg" alt="变色鸢尾花(Iris　Versicolor)" style="width:275px;height:275px;display:inline-block;">
+<img src="./image/Iris Virginica.jpeg" alt="维吉尼亚鸢尾花(Iris Virginica)" style="width:275px;height:275px;display:inline-block;"></p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;山鸢尾花(Iris Setosa) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;变色鸢尾花(Iris　Versicolor) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;维吉尼亚鸢尾花(Iris Virginica)</p>
 
 <p><b style="color:purple">搞清几个概念：</b></p>
@@ -200,7 +209,7 @@ ax.grid(True, linestyle=&quot;:&quot;, linewidth=1.5, alpha=0.8)
 <p>莺(dai)尾花数据集　$150行\ \times \ 5列$</p>
 <p>特征：4个，分别是花瓣长度和宽度，花萼长度和宽度，单位cm</p>
 <p>分类标签：最后一列，三种取值，分别代表三种类型的莺尾花</p>
-<p><img ../logistic_regression_analysis/iris_petal_sepal.png"></p>
+<p><img src="./image/iris_petal_sepal.png"></p>
 <pre><code class="python">import pandas as pd
 df = pd.read_excel(&quot;./Iris.xls&quot;, sheetname=&quot;Iris&quot;)
 print(type(df))
@@ -264,42 +273,52 @@ df.head(4)
 
 <h3 id="sigmoid">sigmoid函数</h3>
 <p>sigmoid函数，数学表达式：
-$$s\left(h\right) \ = \ \frac{1}{1 \ + \ e^{-h}}$$
+<script type="math/tex; mode=display">s\left(h\right) \ = \ \frac{1}{1 \ + \ e^{-h}}</script>
 注意，h在这不仅仅代表我们通常意义的自变量x，还可代表多个自变量的组合。
-<img ../logistic_regression_analysis/Logistic_curve.png" style="width:500px;height:300px;"></p>
+<img src="./image/Logistic_curve.png" style="width:500px;height:300px;"></p>
 <p>Logistic regression可以用来做回归，也可以用来分类（主要用于二分类）。从上图可以看到sigmoid函数是一个s形的曲线，$s\left(h\right)$的取值在(0, 1)之间，当h=0时，$\ s\left(h\right)=0.5\ $,在h远离0的地方函数的值会很快接近0或1。这个性质使我们能够以概率的方式来解释。</p>
 <h3 id="sigmoid_1">sigmoid函数推导</h3>
 <p>其实，相比线性回归方程，逻辑回归是在线性回归的基础上增加了一个逻辑函数，即将$\ y \ = \ ax \ + \ b \ $作为自变量带入了sigmoid函数里（此时$h=y= ax \ + \ b $）。
 从一个例子说起,我们通过用户的属性和特征来判断用户最终是否会进行购买一种商品。其中购买的概率是因变量y，用户的属性和特征是自变量X。y值越大说明用户购买的可能性越大。这里我们使用InOdds(E)表示这个购买事件，该事件发生的可能性（odds）来表示购买（P(E) &lt;=&gt; P）与未购买（P(E')）的可能性比值，公式如下：
-$$InOdds\left(E\right)=W_0 + W_1 \times X_1 + W_2 \times X_2 + \cdots + W_n \times X_n +  \epsilon$$
-$$Odds\left(E\right) = \frac{P \left(E \right)}{P \left(E' \right)} = \frac{P \left(E \right)}{1 - P \left(E \right)} = \frac{P}{1 - P}$$</p>
+<script type="math/tex; mode=display">InOdds\left(E\right)=W_0 + W_1 \times X_1 + W_2 \times X_2 + \cdots + W_n \times X_n +  \epsilon</script>
+<script type="math/tex; mode=display">Odds\left(E\right) = \frac{P \left(E \right)}{P \left(E' \right)} = \frac{P \left(E \right)}{1 - P \left(E \right)} = \frac{P}{1 - P}</script>
+</p>
 <p>Odds是一个从0到无穷的数字，Odds的值越大，表明事件发生的可能性越大。下面我们要将Odds转化为0-1之间的概率函数。首先对Odds取自然对数，得到logit方程，logit是一个范围在负无穷到正无穷的值。</p>
-<p>$$logit(p) = lnOdds(p) = ln \frac{p}{1 - p} = lnp - ln(1-p)$$</p>
-<p><img ../logistic_regression_analysis/Logit.svg.png"></p>
+<p>
+<script type="math/tex; mode=display">logit(p) = lnOdds(p) = ln \frac{p}{1 - p} = lnp - ln(1-p)</script>
+</p>
+<p><img src="./image/Logit.svg.png"></p>
 <p>基于上面的logit方程，获得以下公式：</p>
-<p>$$logit(\pi) = lnOdds(\pi) = ln\frac{P(E)}{P(1-E)} = W_0 + W_1 \times X_1 + W_2 \times X_2 + \cdots + W_n \times X_n +  \epsilon$$</p>
+<p>
+<script type="math/tex; mode=display">logit(\pi) = lnOdds(\pi) = ln\frac{P(E)}{P(1-E)} = W_0 + W_1 \times X_1 + W_2 \times X_2 + \cdots + W_n \times X_n +  \epsilon</script>
+</p>
 <p>其中使用了$\pi$替换了公式中的P(E)，即$\pi = P(E)$。根据指数函数和对数函数规则得到以下公式：</p>
-<p>$$\frac{P(E)}{1 - P(E)} = Odds(E) = e^{W_0 + W_1 \times X_1 + W_2 \times X_2 + \cdots + W_n \times X_n +  \epsilon}$$</p>
+<p>
+<script type="math/tex; mode=display">\frac{P(E)}{1 - P(E)} = Odds(E) = e^{W_0 + W_1 \times X_1 + W_2 \times X_2 + \cdots + W_n \times X_n +  \epsilon}</script>
+</p>
 <p>移项，化简得到逻辑回归方程：</p>
-<p>$$ p = P(E) = \frac{e^{w_0 + w_1 \times x_1 + w_2 \times x_2 + \cdots + w_n \times x_n}}{1 + e^{w_0 + w_1 \times x_1 + w_2 \times x_2 + \cdots + w_n \times x_n}} = \frac{1}{1 + e^{-(w_0 + w_1 \times x_1 + w_2 \times x_2 + \cdots + w_n \times x_n)}} $$</p>
+<p>
+<script type="math/tex; mode=display"> p = P(E) = \frac{e^{w_0 + w_1 \times x_1 + w_2 \times x_2 + \cdots + w_n \times x_n}}{1 + e^{w_0 + w_1 \times x_1 + w_2 \times x_2 + \cdots + w_n \times x_n}} = \frac{1}{1 + e^{-(w_0 + w_1 \times x_1 + w_2 \times x_2 + \cdots + w_n \times x_n)}} </script>
+</p>
 <p>e(1-p) = p
 e - ep = p 
 p(1 + e) = e
 p = e / 1 + e</p>
 <h3 id="_2">逻辑回归模型解读</h3>
 <p><b>逻辑回归函数：</b> 
-$$\quad s\left(h\right) \ = \ \frac{1}{1 \ + \ e^{-h}}\quad$$ 　<div id="func" name="func">其中,$\quad h = w_0 + w_1 \times x_1 + w_2 \times x_2 + \cdots + w_n \times x_n$</div></p>
+<script type="math/tex; mode=display">\quad s\left(h\right) \ = \ \frac{1}{1 \ + \ e^{-h}}\quad</script> 　<div id="func" name="func">其中,$\quad h = w_0 + w_1 \times x_1 + w_2 \times x_2 + \cdots + w_n \times x_n$</div></p>
 <p>假设有n个样本{$\bf X$, y}，y是分类标记，取值是0或1，表示负类还是正类，$\bf X$是m维的样本特征向量，那么这个样本$\bf X$属于正类，也就是y=1的“概率”可以通过下面的逻辑函数来表示：</p>
-<p>$$p(y=1 \mid x; w) = s(w^T x) = \frac{1}{1 + e^{- w^T x}}$$
+<p>
+<script type="math/tex; mode=display">p(y=1 \mid x; w) = s(w^T x) = \frac{1}{1 + e^{- w^T x}}</script>
 这里的$\bf w$是模型参数，也称回归系数，$\ s$是sigmoid函数。</p>
 <p><b>决策函数是：</b>
-$$\phi\left(x\right)=\left{
+<script type="math/tex; mode=display">\phi\left(x\right)=\left\{
 \begin{aligned}
-1 &amp;\ \quad if\ p(y=1 \mid x)\geq 0.5 \
-0 &amp;\ \quad otherwise.
+1 &\ \quad if\ p(y=1 \mid x)\geq 0.5 \\
+0 &\ \quad otherwise.
 \end{aligned}
 \right.
-$$
+</script>
 通常，我们选择0.5作为阈值，当有特定的需求时可以选择不同阈值，如果对正例的判别准确性要求高，可以选择阈值大一些，对正例的召回要求高，则可以选择阈值小一些。</p>
 <p><b style="margin-top:40px; display:block; font-size:22px;">模型参数求解</b>
 <p style="color:purple; font-weight=bold">最大似然估计<p>
@@ -307,49 +326,58 @@ $$
 我们要用逻辑回归函数去做分类，必须要求出模型系数$\bf w$，那么如何求解$\bf w$呢？
 答案是最大似然估计（maximum likelihood）+ 梯度下降（gradient descent）。</p>
 <p>最大似然估计的本质是，选择最佳的参数$\bf w$,来最大化样本数据的可能性。假设给定样本$X_1, X_2 \cdots X_n$, 那么关于参数$\bf w$的可能性函数(可能性函数就是样本数据作为参数w的函数的概率)：
-$$lik(w) = f(X_1, X_2, X_3, \cdots X_n \mid w)$$
+<script type="math/tex; mode=display">lik(w) = f(X_1, X_2, X_3, \cdots X_n \mid w)</script>
 如果$X_1, X_2, X_3, \cdots X_n$之间是相互独立的，可能性函数可以简写为如下：
-$$lik(w) = \prod_{i=1}^n f(X_i \mid w) \quad likelihood \ function$$</p>
+<script type="math/tex; mode=display">lik(w) = \prod_{i=1}^n f(X_i \mid w) \quad likelihood \ function</script>
+</p>
 <p>一般情况，我们要使用log可能性函数，原因：</p>
 <p>1.对上面的likelihood function两边同时取对数，就得到了log likelihood function，这样乘积转换为求和，从而使得函数的求导更容易；</p>
 <p>2.如果我们有很多的样本数据，若直接用likelihood function，该函数是连乘的，而且通常这些项都较小，故可能性函数就会变得很小。所以，应该采用log可能性函数，可以防止当样本可能性很小时，可能出现的数值下溢;</p>
 <p>3.log函数是单调的，最大化可能性函数的值也就是最大化log可能性函数的值。log可能性函数公式如下：
-$$l(w) = log(\ lik(w)\ ) = \sum_{i=1}^n log(\ f(X_i \mid w)\ )$$</p>
+<script type="math/tex; mode=display">l(w) = log(\ lik(w)\ ) = \sum_{i=1}^n log(\ f(X_i \mid w)\ )</script>
+</p>
 <p>用可能性函数来定义上面的模型系数w，要利用二项分布的概率密度函数，公式如下：
-$$L(w) = \prod_{i=1}^n p(y^{(i)} \mid x^{(i)};w) = 
-\prod_{i=1}^n (s(h^{(i)})^{y^{(i)}} (1 - s(h^{(i)}))^{1 - y^{(i)}}$$
+<script type="math/tex; mode=display">L(w) = \prod_{i=1}^n p(y^{(i)} \mid x^{(i)};w) = 
+\prod_{i=1}^n (s(h^{(i)})^{y^{(i)}} (1 - s(h^{(i)}))^{1 - y^{(i)}}</script>
 其中，$y^{(i)}$表示第i个样本对应的分类标记值，$x^{(i)}$表示第i个样本的特征，$h^{(i)}$为第i个样本对应的假设函数的值，$h = h(w) = w_0 + w_1 \times x_1 + w_2 \times x_2 + \cdots + w_n \times x_n\ $ 上面式子两边同时求log，得到最终的log可能性函数：
-$$l(w) = log(L(w)) = \sum_{i=1}^n y^{(i)} log(s(h^{(i)})) + (1 - y^{(i)}) log(1 - s(h^{(i)}))$$
+<script type="math/tex; mode=display">l(w) = log(L(w)) = \sum_{i=1}^n y^{(i)} log(s(h^{(i)})) + (1 - y^{(i)}) log(1 - s(h^{(i)}))</script>
 <p style="color:purple; font-weight=bold">逻辑回归的cost函数<p>
 <hr style="border:1px dotted purple;">
 最大似然估计就是要求得使l(w)取最大值时的w，这里可以使用梯度上升法求解，若要用梯度下降法，就要乘以一个负数，在这，我们可以先直接乘以-1得到如下公式：
-$$J(w) = -l(w) = -log(L(w)) = \sum_{i=1}^n -y^{(i)} log(s(h^{(i)})) - (1 - y^{(i)}) log(1 - s(h^{(i)}))$$
+<script type="math/tex; mode=display">J(w) = -l(w) = -log(L(w)) = \sum_{i=1}^n -y^{(i)} log(s(h^{(i)})) - (1 - y^{(i)}) log(1 - s(h^{(i)}))</script>
 现在，我们就分析一个样本，那么可以把上面的cost函数写成如下形式：</p>
-<p>$$J(w) = -ylog(s(h)) - (1 - y)log(1 - s(h))$$</p>
+<p>
+<script type="math/tex; mode=display">J(w) = -ylog(s(h)) - (1 - y)log(1 - s(h))</script>
+</p>
 <p>當y=0時，上式的前面一項$-ylog(s(h)) = 0$，而當y=1時，後面一項$(1 - y)log(1 - s(h)) = 0$，故上式可寫成如下分段函数：</p>
-<p>$$\phi\left(x\right)=\left{
+<p>
+<script type="math/tex; mode=display">\phi\left(x\right)=\left\{
 \begin{aligned}
--log(s(h)) &amp;\ \quad if\ y = 1 \
--log(1 - s(h)) &amp;\ \quad if\ y = 0
+-log(s(h)) &\ \quad if\ y = 1 \\
+-log(1 - s(h)) &\ \quad if\ y = 0
 \end{aligned}
 \right.
-$$
-<img ../logistic_regression_analysis/cost_function.png" style="width:600px;height:400px;diplay:block; padding-bottom:20px;">
+</script>
+<img src="./image/cost_function.png" style="width:600px;height:400px;diplay:block; padding-bottom:20px;">
 the previous plot illustrates the cost for the classification of a single-sample instance for different values of s(h).
 好了，现在的目标是最小化cost函数，找到最佳的参数$\bf w$，方法是梯度下降法。
 <br>
 <p style="color:purple; font-weight=bold">梯度下降法求模型参数$\bf w$<p>
 <hr style="border:1px dotted purple;"></p>
 <p>对l(w)函数乘以$-\frac{1}{n}$，n是样本数量, 所以，cost函数为：
-$$J(w) = -\frac{1}{n}l(w)$$
+<script type="math/tex; mode=display">J(w) = -\frac{1}{n}l(w)</script>
 正因为乘了一个负的系数$-\frac{1}{n}$，所以J(w)取最小值时的w为要求的最佳参数。根据梯度下降法可得到$\bf w$的更新规则如下：
-$$\bf w_j: = w_j \ + \ \Delta {\bf w_j}$$</p>
-<p>$$\Delta \bf w_j = -\eta \nabla J(w)= -\eta \frac{\partial J(w)}{\partial w_j} = \eta\left(y^\left(i\right) - h_w\left(x^{(i)}\right) \right)x_j^\left(i\right)$$
+<script type="math/tex; mode=display">\bf w_j: = w_j \ + \ \Delta {\bf w_j}</script>
+</p>
+<p>
+<script type="math/tex; mode=display">\Delta \bf w_j = -\eta \nabla J(w)= -\eta \frac{\partial J(w)}{\partial w_j} = \eta\left(y^\left(i\right) - h_w\left(x^{(i)}\right) \right)x_j^\left(i\right)</script>
 其中，$j = 1, 2, 3, \cdots m \ $代表的是样本的第j维的特征，$x^{(i)}$代表的是n個樣本中的第i個樣本，$\eta$是学习率，是0~1之间的数，<a href="#func">$h_w(x^{(i)})$</a>为净输入，<a href="#func1">$\frac{\partial J(w)}{\partial w_j}$</a>为cost函数$J(w)$的梯度。
 完整版的梯度下降：
-$$\bf w_j: = w_j \ - \eta \sum_{i=1}^n (h_w(x^{(i)}) - y^{(i)})x_j^{(i)} \quad j = 1, 2, 3, \cdots m$$
+<script type="math/tex; mode=display">\bf w_j: = w_j \ - \eta \sum_{i=1}^n (h_w(x^{(i)}) - y^{(i)})x_j^{(i)} \quad j = 1, 2, 3, \cdots m</script>
 梯度上升法：</p>
-<p>$$\bf w_j: = w_j \ + \eta \sum_{i=1}^n (y^{(i)} - h_w(x^{(i)})x_j^{(i)}  \quad j = 1, 2, 3, \cdots m$$</p>
+<p>
+<script type="math/tex; mode=display">\bf w_j: = w_j \ + \eta \sum_{i=1}^n (y^{(i)} - h_w(x^{(i)})x_j^{(i)}  \quad j = 1, 2, 3, \cdots m</script>
+</p>
 <p>因此，给定初始的模型系数（$\bf w$）后，模型就会利用梯度下降算法自动学习到合适的模型系数$\bf w$，拿到权重（模型）系数后，就可根据决策函数的输出对样本数据进行分类分析了。</p>
 <p><a href="http://blog.csdn.net/dongtingzhizi/article/details/15962797">关于梯度下降过程向量化</a></p>
 <p>vectorization后$\bf w$更新的步骤如下：
@@ -357,7 +385,7 @@ $$\bf w_j: = w_j \ - \eta \sum_{i=1}^n (h_w(x^{(i)}) - y^{(i)})x_j^{(i)} \quad j
 （2）求E = h(A) - y；
 （3）求$w: = w -\eta {\bullet} X' {\bullet} E$，X'表示矩阵X的转置。</p>
 <div id="func1" name="func1">
-<img ../logistic_regression_analysis/func_parcial.png" alt="python machine learning">
+<img src="./image/func_parcial.png" alt="python machine learning">
 </div>
 
 <h2 id="pythonsklearn">python代码示例(调用sklearn)</h2>
@@ -485,7 +513,7 @@ cross validation score: [ 0.95454545  1.          1.          0.9047619   0.9473
 mean cross validation score: 0.961335156072
 </code></pre>
 <p>查看模型是否过拟合可以用learning curve来查看，过拟合现象表现为，在训练集上准确率得分比较高，但交叉验证集上得分较低，中间gap较大，一般是模型过于复杂导致，但一般随着样本量增加，过拟合会减弱。与之相反的还有欠拟合，即模型复杂度不够，训练集和交叉验证集的得分均较低。</p>
-<p><img ../logistic_regression_analysis/overfitting and underfitting.png">
+<p><img src="./image/overfitting and underfitting.png">
 <b><span style="margin:0px, 100px, 0px, 120px;display:inline-block;">欠擬合</span><span style="margin:0px, 100px, 0px, 120px;display:inline-block;">最佳擬合</span><span style="margin:0px, 100px, 0px, 100px;display:inline-block;">過擬合</span></b>　</p>
 <pre><code class="python">from sklearn.model_selection import learning_curve
 # 用sklearn的learning_curve得到training_score和cv_score，使用matplotlib画出learning curve
@@ -656,7 +684,7 @@ printresult.head(5)  </p>
 <p>机器学习算法与Python实践之（七）逻辑回归（Logistic Regression） http://blog.csdn.net/zouxy09/article/details/20319673</p>
 <p>机器学习算法与Python实践之（七）逻辑回归（Logistic Regression http://blog.csdn.net/wenyusuran/article/details/25824011</p>
 <p>正则化方法：L1和L2 regularization、数据集扩增、dropout http://blog.csdn.net/u012162613/article/details/44261657</p>
-<p>LaTeX 各种命令，$$x_j^\left(i\right)$$ 符号 http://blog.csdn.net/anxiaoxi45/article/details/39449445</p>
+<p>LaTeX 各种命令，<script type="math/tex; mode=display">x_j^\left(i\right)</script> 符号 http://blog.csdn.net/anxiaoxi45/article/details/39449445</p>
               
             </div>
           </div>
@@ -697,6 +725,7 @@ printresult.head(5)  </p>
     </span>
 </div>
     <script src="../../js/theme.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
 </body>
 </html>

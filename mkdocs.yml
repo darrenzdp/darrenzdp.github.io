@@ -1,5 +1,12 @@
 site_name: Darren_blog
 pages:
-- [index.md, Home]
-- [lagou_job_analysis_forshow.md, 拉勾招聘职位数据分析]
+- [index.md, Darren_blog]
+
+- [data_analysis/lagou_job_analysis_forshow.md, 拉勾招聘职位数据分析]
+- [machine_learning/logistic regression.md, Logistic_regression的Python代码实现]
 theme: readthedocs
+extra_javascript: 
+    - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML
+
+markdown_extensions:
+    - mdx_math
