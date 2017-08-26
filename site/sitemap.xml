@@ -11,7 +11,15 @@
 
     
     <url>
-     <loc>/lagou_job_analysis_forshow/</loc>
+     <loc>/data_analysis/lagou_job_analysis_forshow/</loc>
+     <lastmod>2017-08-26</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    
+
+    
+    <url>
+     <loc>/machine_learning/logistic regression/</loc>
      <lastmod>2017-08-26</lastmod>
      <changefreq>daily</changefreq>
     </url>
