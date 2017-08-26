@@ -72,26 +72,7 @@
         
             <li><a class="toctree-l3" href="#pythonsklearn">python代码示例(调用sklearn)</a></li>
         
-        </ul>
-    
-
-    <li class="toctree-l2"><a href="#logistic_1">用Logistic回归建模</a></li>
-    
-
-    <li class="toctree-l2"><a href="#clf-linear_modellogisticregressionc10-penaltyl1-solverliblinear-tol1e-6-tol-float-default-1e-4-tolerance-for-stopping-criteria">clf = linear_model.LogisticRegression(C=1.0, penalty="l1", solver='liblinear', tol=1e-6)  # tol : float, default: 1e-4 Tolerance for stopping criteria.迭代终止判据的误差范围。</a></li>
-    
-
-    <li class="toctree-l2"><a href="#f1">给出交叉验证集的预测结果，并输出评估的准确率、召回率、F1值</a></li>
-    
-
-    <li class="toctree-l2"><a href="#predict_proba011">输出测试集用户逾期还款概率，predict_proba会输出两个概率，即分别分类为‘0’和‘1’的概率，这里只取‘1’的概率</a></li>
-    
-
-    <li class="toctree-l2"><a href="#_4">输出结果</a></li>
-    
-        <ul>
-        
-            <li><a class="toctree-l3" href="#_5">参考文献</a></li>
+            <li><a class="toctree-l3" href="#_4">参考文献</a></li>
         
         </ul>
     
@@ -660,31 +641,33 @@ sample_weight（fit函数参数）</p>
 <p>tol : float, default: 1e-4 Tolerance for stopping criteria.迭代终止判据的误差范围。</p>
 <p><a href="http://blog.csdn.net/cherdw/article/details/54891073">参考</a></p>
 <h3 id="logistic">Logistic 预测</h3>
-<h1 id="logistic_1">用Logistic回归建模</h1>
-<h1 id="clf-linear_modellogisticregressionc10-penaltyl1-solverliblinear-tol1e-6-tol-float-default-1e-4-tolerance-for-stopping-criteria">clf = linear_model.LogisticRegression(C=1.0, penalty="l1", solver='liblinear', tol=1e-6)  # tol : float, default: 1e-4 Tolerance for stopping criteria.迭代终止判据的误差范围。</h1>
-<p>lr_model= LogisticRegression(C = 1.0,<br />
-                              penalty = 'l2')<br />
-lr_model.fit(train_X,train_y)  </p>
-<h1 id="f1">给出交叉验证集的预测结果，并输出评估的准确率、召回率、F1值</h1>
-<p>pred_test= lr_model.predict(test_X)<br />
-printclassification_report(test_y, pred_test)  </p>
-<h1 id="predict_proba011">输出测试集用户逾期还款概率，predict_proba会输出两个概率，即分别分类为‘0’和‘1’的概率，这里只取‘1’的概率</h1>
-<p>pred= lr_model.predict_proba(test)<br />
-result= pd.DataFrame(pred)<br />
-result.index= test.index<br />
-result.columns= ['0', 'probability']<br />
-result.drop('0',<br />
-            axis = 1,<br />
-            inplace = True)<br />
-printresult.head(5)  </p>
-<h1 id="_4">输出结果</h1>
-<p>result.to_csv('result.csv')<br />
-<b>python machine learning</b>－python机器学习入门书<a href="http://download.csdn.net/detail/qq_30096641/9853462">中文版</a></p>
+<pre><code class="python"># 用Logistic回归建模  
+# clf = linear_model.LogisticRegression(C=1.0, penalty=&quot;l1&quot;, solver='liblinear', tol=1e-6)  # tol : float, default: 1e-4 Tolerance for stopping criteria.迭代终止判据的误差范围。
+lr_model= LogisticRegression(C = 1.0,  
+                              penalty = 'l2')  
+lr_model.fit(train_X,train_y)  
+# 给出交叉验证集的预测结果，并输出评估的准确率、召回率、F1值  
+pred_test= lr_model.predict(test_X)  
+printclassification_report(test_y, pred_test)  
+# 输出测试集用户逾期还款概率，predict_proba会输出两个概率，即分别分类为‘0’和‘1’的概率，这里只取‘1’的概率  
+pred= lr_model.predict_proba(test)  
+result= pd.DataFrame(pred)  
+result.index= test.index  
+result.columns= ['0', 'probability']  
+result.drop('0',  
+            axis = 1,  
+            inplace = True)  
+printresult.head(5)  
+#输出结果  
+result.to_csv('result.csv')  
+</code></pre>
+
+<p><b>python machine learning</b>－python机器学习入门书<a href="http://download.csdn.net/detail/qq_30096641/9853462">中文版</a></p>
 <p><b>Python机器学习——预测分析核心算法(machine learning in python--essential techniques for predictive analysis)<b> </p>
 <p><b>统计学习方法</b>——李航</p>
 <p><b>機器學習簡單介紹</b>
 <a href="http://blog.jobbole.com/92021/">10 种机器学习算法的要点（附 Python 和 R 代码）</a></p>
-<h2 id="_5">参考文献</h2>
+<h2 id="_4">参考文献</h2>
 <p>【机器学习笔记1】Logistic回归总结 http://blog.csdn.net/dongtingzhizi/article/details/15962797</p>
 <p>【机器学习笔记2】Linear Regression总结 http://blog.csdn.net/dongtingzhizi/article/details/16884215</p>
 <p>Logistic Regression 模型简介　https://tech.meituan.com/intro_to_logistic_regression.html</p>
