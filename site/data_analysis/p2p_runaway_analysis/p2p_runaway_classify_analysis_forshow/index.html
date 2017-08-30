@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../../../img/favicon.ico">
+  <title>p2p网站跑路判别 - Darren_blog</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../../../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../../../css/highlight.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "p2p\u7f51\u7ad9\u8dd1\u8def\u5224\u522b";
+    var mkdocs_page_input_path = "data_analysis/p2p_runaway_analysis/p2p_runaway_classify_analysis_forshow.md";
+    var mkdocs_page_url = "/data_analysis/p2p_runaway_analysis/p2p_runaway_classify_analysis_forshow/";
+  </script>
+  
+  <script src="../../../js/jquery-2.1.1.min.js"></script>
+  <script src="../../../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../../../js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href="../../.." class="icon icon-home"> Darren_blog</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../..">Darren_blog</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../lagou_job_analysis/lagou_job_analysis_forshow/">拉勾招聘职位信息数据分析</a>
+	    </li>
+          
+            <li class="toctree-l1 current">
+		
+    <a class="current" href="./">p2p网站跑路判别</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l2"><a href="#p2p">p2p网站跑路判别</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l3" href="#_1">背景说明</a></li>
+        
+            <li><a class="toctree-l3" href="#_2">数据采集及清洗</a></li>
+        
+            <li><a class="toctree-l3" href="#_3">探索性分析</a></li>
+        
+            <li><a class="toctree-l3" href="#p2p_3">p2p跑路原因分析及预测</a></li>
+        
+            <li><a class="toctree-l3" href="#_12">总结</a></li>
+        
+        </ul>
+    
+
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../../machine_learning/logistic_regression/logistic_regression_forshow/">Logistic_regression的Python代码实现</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../../machine_learning/perceptron_classifier/perceptron_classifier_blog/">感知器python代码实现</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../..">Darren_blog</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>p2p网站跑路判别</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="p2p">p2p网站跑路判别</h1>
+<h2 id="_1">背景说明</h2>
+<p>近几年，p2p网贷行业发展的是若火如荼，而整个行业的快速发展却掩盖不了其发展的不规范性。P2P网贷最大的优越性是使传统银行难以覆盖的借款人在虚拟世界里能充分享受贷款的高效与便捷。但与此同时，整个行业也是泥沙俱下，良莠不齐。一方面P2P行业仍然呈现高速增长态势，另一方面则是平台提现困难、倒闭、坏账风波不断，出现了所谓的p2p跑路现象。
+本文从普通投资者的角度探讨p2p网贷平台跑路的缘由，分析网贷平台的各种指标与平台经营状态的关联，对p2p网贷平台是否会“跑路”进行预测。</p>
+<p>本报告的所有数据来源于xx之家的档案，数据截止日期为16年11月。以xx之家档案中的3800多家p2p网贷平台为源数据，选择了网贷平台的几个评估指标如，平均收益率、资金托管、网友评分、平台资质、投资期限、注册地等为样本的特征，以网贷平台的经营状况（是正常营业状态还是跑路等非正常营业状态）为分类标签，尝试利用机器学习的决策树分类算法评估和预测p2p网贷平台的跑路现象。</p>
+<h2 id="_2">数据采集及清洗</h2>
+<p>采用python的urllib2和beautifulsoup进行数据的采集和解析，采用python第三方库pandas, numpy对数据进行清洗处理，数据采集和简单的处理过程在此略过。</p>
+<h2 id="_3">探索性分析</h2>
+<pre><code class="python">import pandas as pd
+import numpy as np 
+import matplotlib.pyplot as plt
+import seaborn as sns
+sns.set(style=&quot;whitegrid&quot;, palette=&quot;muted&quot;, font_scale=1.0, color_codes=True, context=&quot;talk&quot;)
+%matplotlib inline
+import sys
+from matplotlib.ticker import MultipleLocator, FormatStrFormatter
+from matplotlib.font_manager import FontProperties  
+font = FontProperties(fname=r&quot;/usr/share/fonts/truetype/arphic/ukai.ttc&quot;)
+reload(sys)
+sys.setdefaultencoding('utf-8')
+</code></pre>
+
+<pre><code class="python"># 载入清洗后的数据集，进行相应处理
+dall = pd.read_table(&quot;./p2pchanged.txt&quot;, sep=',')  # (3895, 12) 
+</code></pre>
+
+<pre><code class="python"># 各特征分别为：
+feature_dict = {&quot;name&quot;: u&quot;p2p平台名&quot;, &quot;averageI&quot;: u&quot;平均年化利率&quot;, 
+               &quot;date&quot;: u&quot;上线日期&quot;, &quot;zhuzed&quot;: u&quot;注册地&quot;, 
+                &quot;touziq&quot;: u&quot;投资期限&quot;, &quot;netF&quot;: u&quot;网友评分&quot;, 
+                &quot;background&quot;: u&quot;公司类型&quot;, &quot;tuoguan&quot;: u&quot;资金托管&quot;,
+                &quot;zhuz&quot;: u&quot;注册资本&quot;, &quot;shiz&quot;: u&quot;实缴资本&quot;, 
+                &quot;datetime&quot;: u&quot;上线时间&quot;, &quot;classification&quot;: u&quot;分类标签&quot;
+               }
+</code></pre>
+
+<pre><code class="python"># 数据集前5行
+dall.head()
+</code></pre>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>averageI</th>
+      <th>date</th>
+      <th>zhuzed</th>
+      <th>classification</th>
+      <th>touziq</th>
+      <th>netF</th>
+      <th>background</th>
+      <th>tuoguan</th>
+      <th>zhuz</th>
+      <th>shiz</th>
+      <th>datetime</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>108贷</td>
+      <td>14.548392</td>
+      <td>2015-02-26</td>
+      <td>44.0</td>
+      <td>0.0</td>
+      <td>2.578413</td>
+      <td>14.351883</td>
+      <td>0</td>
+      <td>0</td>
+      <td>500</td>
+      <td>0</td>
+      <td>5.326389e+07</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2025金融</td>
+      <td>14.548392</td>
+      <td>2015-11-16</td>
+      <td>11.0</td>
+      <td>0.0</td>
+      <td>2.578413</td>
+      <td>14.351883</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2000</td>
+      <td>0</td>
+      <td>3.054069e+07</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>51帮你</td>
+      <td>12.460000</td>
+      <td>2012-08-15</td>
+      <td>33.0</td>
+      <td>1.0</td>
+      <td>1.172000</td>
+      <td>16.500000</td>
+      <td>0</td>
+      <td>1</td>
+      <td>3000</td>
+      <td>2000</td>
+      <td>1.331839e+08</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>53财服</td>
+      <td>14.548392</td>
+      <td>2016-04-18</td>
+      <td>33.0</td>
+      <td>1.0</td>
+      <td>1.100000</td>
+      <td>14.351883</td>
+      <td>0</td>
+      <td>0</td>
+      <td>10000</td>
+      <td>20</td>
+      <td>1.723509e+07</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>51钱管家</td>
+      <td>12.000000</td>
+      <td>2015-11-04</td>
+      <td>50.0</td>
+      <td>1.0</td>
+      <td>2.578413</td>
+      <td>14.000000</td>
+      <td>0</td>
+      <td>1</td>
+      <td>10000</td>
+      <td>100</td>
+      <td>3.157749e+07</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h3 id="_4">平均年化利率</h3>
+<pre><code class="python">dall[&quot;averageI&quot;] = dall[&quot;averageI&quot;].map(lambda x: np.round(x, 4))
+dall.loc[:, &quot;classification&quot;] = dall[&quot;classification&quot;].replace([0,1], [u'跑路',u'正常营业'])
+df = dall.loc[dall[&quot;averageI&quot;] != 14.5484, :]
+</code></pre>
+
+<pre><code class="python">plt.figure(figsize=(8,6))
+fig = sns.distplot(df['averageI'],kde=True, vertical=False, color=&quot;green&quot;)
+sns.despine(top=True)
+plt.yticks(fig.get_yticks(), fig.get_yticks() * 100)
+plt.ylabel('Distribution [%]', fontsize=16)
+plt.xticks(range(0, 100, 10))
+plt.gca().yaxis.grid(True, linestyle = &quot;:&quot;)
+plt.gca().xaxis.grid(True, linestyle = &quot;-.&quot;)
+plt.xlabel(u&quot;平均年化利率 %&quot;, fontsize=16, fontproperties=font)
+plt.title(u&quot;平均年化利率的分布&quot;, fontsize=20, fontproperties=font)
+</code></pre>
+
+<pre><code>&lt;matplotlib.text.Text at 0x7fe3af9f8a10&gt;
+</code></pre>
+<p><img alt="png" src="../output_12_1.png" /></p>
+<pre><code class="python"># 根据跑路与否进行分组得到了平均利率的分组对象
+rate_cont = df.groupby([&quot;classification&quot;])[&quot;averageI&quot;]  
+</code></pre>
+
+<pre><code class="python">fig, ax1 = plt.subplots(figsize=(8,6))
+rate_cont.plot(kind='kde',ax=ax1, style='--', linewidth=2.5)
+rate_cont.plot(kind='hist',ax=ax1, normed=True, alpha=0.8,)
+ax1.legend(loc='best', prop=font, fontsize=17)
+ax1.set_ylabel('Frequency', fontsize=16)
+ax1.set_xlim(-1, 95)
+ax1.text(14.0, 0.115,s=u'正常营业平台平均收益率 12.88%', fontsize=12,va=&quot;bottom&quot;,ha=&quot;left&quot;,fontproperties=font,color='blue') 
+ax1.text(20.0, 0.09,s=u'跑路平台平均收益率 18.56%', fontsize=12,va=&quot;bottom&quot;,ha=&quot;left&quot;,fontproperties=font,color='green')
+ax1.annotate('',xy=(12.18,0.109),xytext=(14,0.115),arrowprops=dict(arrowstyle=&quot;-&gt;&quot;,color='blue')) 
+ax1.annotate('',xy=(17.9,0.08),xytext=(20,0.09),arrowprops=dict(arrowstyle=&quot;-&gt;&quot;,color='green'))
+plt.xlabel(u&quot;平均年化利率 %&quot;, fontsize=16, fontproperties=font)
+plt.title(u&quot;p2p平台跑路与否与平均收益率&quot;, fontsize=20, fontproperties=font)
+plt.yticks(ax1.get_yticks(), ax1.get_yticks() * 100)
+plt.ylabel('Distribution [%]', fontsize=16)
+plt.xticks(range(0, 100, 10))
+plt.gca().yaxis.grid(True, linestyle = &quot;:&quot;)
+plt.gca().xaxis.grid(True, linestyle = &quot;-.&quot;)
+</code></pre>
+
+<p><img alt="png" src="../output_14_0.png" /></p>
+<p>p2p网贷平台的平均年化收益率分布很广，从最低的4%到最高的90%均有，其中正常营业的p2p平台主要分布在5-20%, 而跑路平台主要分布在8-30%之间。正常营业的p2p平台的平均收益率为12.88%，跑路平台的平均收益率是18.56%。</p>
+<h3 id="_5">地域分布</h3>
+<pre><code class="python"># 载入地区编号，共30个省
+places = pd.read_table(&quot;./regis_place.txt&quot;, sep=',', header=None)  # (30,2) 
+places.columns =[&quot;number_pro&quot;, &quot;name_pro&quot;]
+</code></pre>
+
+<pre><code class="python">df_set = set(df[&quot;zhuzed&quot;].astype(np.int).values)
+places_set = set(places[&quot;number_pro&quot;])
+places_set ^ df_set
+</code></pre>
+
+<pre><code>{54, 63}
+</code></pre>
+<pre><code class="python">p1 = places.loc[places[&quot;number_pro&quot;] != 54, :]
+p_sub = p1.loc[p1[&quot;number_pro&quot;] != 63, :][&quot;name_pro&quot;]
+p_sub.shape
+</code></pre>
+
+<pre><code>(29,)
+</code></pre>
+<pre><code class="python"># 根据注册地进行分组
+pro_groupby = df.groupby(&quot;zhuzed&quot;)[&quot;averageI&quot;].aggregate([np.size, np.mean]).reset_index()
+pro_name = pro_groupby[&quot;zhuzed&quot;].replace(pro_groupby[&quot;zhuzed&quot;].values, p_sub)
+pro_groupby[&quot;pro_name&quot;] = pro_name.map(lambda x: x.strip())
+pro_groupby.sort_values(&quot;size&quot;, ascending=False, inplace=True)
+pro_groupby.head(3)
+</code></pre>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>zhuzed</th>
+      <th>size</th>
+      <th>mean</th>
+      <th>pro_name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>18</th>
+      <td>44.0</td>
+      <td>479.0</td>
+      <td>14.446493</td>
+      <td>广东</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>11.0</td>
+      <td>335.0</td>
+      <td>11.644448</td>
+      <td>北京</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>31.0</td>
+      <td>246.0</td>
+      <td>12.214431</td>
+      <td>上海</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code class="python">fig, ax1 = plt.subplots(figsize=(10,7))
+g = sns.barplot(y=&quot;size&quot;, x=&quot;pro_name&quot;, data=pro_groupby, palette=&quot;PuBu_d&quot;, ax=ax1)
+plt.xticks(g.get_xticks(), fontproperties=font, fontsize=16, rotation=75)
+# g=sns.factorplot(y=&quot;zhuzed&quot;, data=df, kind='count', size=6, color=&quot;indianred&quot;)
+ax2 = ax1.twinx()
+x_list = range(len(pro_groupby))
+ax2.plot(x_list, pro_groupby[&quot;mean&quot;], linewidth = 3, color=&quot;skyblue&quot;, marker=&quot;o&quot;, label=u&quot;职位需求量&quot;) 
+ax2.set_ylabel(u&quot;平均年化利率 %&quot;, fontsize=16, fontproperties=font)
+ax1.set_ylabel(u&quot;数量&quot;, fontsize=16, fontproperties=font)
+ax2.set_ylim(4, 20)
+ax2.yaxis.grid(True, linestyle = &quot;:&quot;,)
+ax1.yaxis.grid(False)
+plt.title(u&quot;全国各地区p2p网贷平台数量及平均年化利率&quot;, fontproperties=font, fontsize=20)
+</code></pre>
+
+<p><img alt="png" src="../output_21_0.png" /></p>
+<pre><code class="python"># 根据注册地和跑路与否的分类标签进行分组
+pro_cla = df.groupby([&quot;zhuzed&quot;, &quot;classification&quot;])[&quot;averageI&quot;].aggregate([np.size, np.mean]).reset_index()
+pro_name = pro_cla[&quot;zhuzed&quot;].replace(pro_cla[&quot;zhuzed&quot;].unique(), p_sub)
+pro_cla[&quot;pro_name&quot;] = pro_name.map(lambda x: x.strip())
+</code></pre>
+
+<pre><code class="python">for i in pro_cla[&quot;zhuzed&quot;].unique():
+    total_ = pro_cla.loc[pro_cla[&quot;zhuzed&quot;] == i, &quot;size&quot;].sum()
+    temp = pro_cla.loc[pro_cla[&quot;zhuzed&quot;] == i, &quot;size&quot;] / total_ * 100
+    pro_cla.loc[pro_cla[&quot;zhuzed&quot;] == i, &quot;property&quot;] = temp
+    pro_cla.loc[pro_cla[&quot;zhuzed&quot;] == i, &quot;total_num&quot;] = total_   
+</code></pre>
+
+<pre><code class="python">pro_cla.sort_values([&quot;total_num&quot;, &quot;classification&quot;], ascending=False, inplace=True)
+pro_cla.head(15)
+</code></pre>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>zhuzed</th>
+      <th>classification</th>
+      <th>size</th>
+      <th>mean</th>
+      <th>pro_name</th>
+      <th>property</th>
+      <th>total_num</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>37</th>
+      <td>44.0</td>
+      <td>跑路</td>
+      <td>149.0</td>
+      <td>17.667383</td>
+      <td>广东</td>
+      <td>31.106472</td>
+      <td>479.0</td>
+    </tr>
+    <tr>
+      <th>36</th>
+      <td>44.0</td>
+      <td>正常营业</td>
+      <td>330.0</td>
+      <td>12.992212</td>
+      <td>广东</td>
+      <td>68.893528</td>
+      <td>479.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>11.0</td>
+      <td>跑路</td>
+      <td>57.0</td>
+      <td>13.858772</td>
+      <td>北京</td>
+      <td>17.014925</td>
+      <td>335.0</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>11.0</td>
+      <td>正常营业</td>
+      <td>278.0</td>
+      <td>11.190432</td>
+      <td>北京</td>
+      <td>82.985075</td>
+      <td>335.0</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>31.0</td>
+      <td>跑路</td>
+      <td>54.0</td>
+      <td>16.403704</td>
+      <td>上海</td>
+      <td>21.951220</td>
+      <td>246.0</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>31.0</td>
+      <td>正常营业</td>
+      <td>192.0</td>
+      <td>11.036198</td>
+      <td>上海</td>
+      <td>78.048780</td>
+      <td>246.0</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>33.0</td>
+      <td>跑路</td>
+      <td>42.0</td>
+      <td>22.031429</td>
+      <td>浙江</td>
+      <td>23.204420</td>
+      <td>181.0</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>33.0</td>
+      <td>正常营业</td>
+      <td>139.0</td>
+      <td>13.863022</td>
+      <td>浙江</td>
+      <td>76.795580</td>
+      <td>181.0</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>37.0</td>
+      <td>跑路</td>
+      <td>92.0</td>
+      <td>21.970326</td>
+      <td>山东</td>
+      <td>57.142857</td>
+      <td>161.0</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>37.0</td>
+      <td>正常营业</td>
+      <td>69.0</td>
+      <td>15.144058</td>
+      <td>山东</td>
+      <td>42.857143</td>
+      <td>161.0</td>
+    </tr>
+    <tr>
+      <th>33</th>
+      <td>42.0</td>
+      <td>跑路</td>
+      <td>30.0</td>
+      <td>17.895000</td>
+      <td>湖北</td>
+      <td>31.578947</td>
+      <td>95.0</td>
+    </tr>
+    <tr>
+      <th>32</th>
+      <td>42.0</td>
+      <td>正常营业</td>
+      <td>65.0</td>
+      <td>13.785231</td>
+      <td>湖北</td>
+      <td>68.421053</td>
+      <td>95.0</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>34.0</td>
+      <td>跑路</td>
+      <td>27.0</td>
+      <td>18.066667</td>
+      <td>安徽</td>
+      <td>36.486486</td>
+      <td>74.0</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>34.0</td>
+      <td>正常营业</td>
+      <td>47.0</td>
+      <td>13.342553</td>
+      <td>安徽</td>
+      <td>63.513514</td>
+      <td>74.0</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>32.0</td>
+      <td>跑路</td>
+      <td>18.0</td>
+      <td>21.010556</td>
+      <td>江苏</td>
+      <td>25.714286</td>
+      <td>70.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code class="python">plt.figure(figsize=(7, 12))
+g=sns.barplot(y=&quot;pro_name&quot;, x=&quot;size&quot;, data=pro_cla, hue=&quot;classification&quot;)
+plt.yticks(g.get_yticks(), fontproperties=font, fontsize=16)
+plt.ylabel(&quot;&quot;)
+plt.xlabel(u&quot;数量&quot;, fontsize=16, fontproperties=font)
+plt.title(u&quot;p2p网贷平台地区分布&quot;, fontproperties=font, fontsize=20)
+plt.gca().xaxis.grid(True, linestyle = &quot;-.&quot;,)
+plt.legend(loc=7,prop=font, fontsize=12)
+plt.annotate(u&quot;山东地区p2p跑路比例最高达57%&quot;, xy = (80, 4), xytext = (100, 6), fontproperties=font, fontsize=15, arrowprops = dict(facecolor='purple'))
+</code></pre>
+
+<pre><code>&lt;matplotlib.text.Annotation at 0x7fe3a13a9110&gt;
+</code></pre>
+<p><img alt="png" src="../output_25_1.png" /></p>
+<p>全国p2p平台的数量位居前三的省份（市）是广东、北京、上海，跑路平台比例最高的是山东，超过一半的p2p网贷平台出现跑路或其他非正常营业现象。</p>
+<h3 id="p2p_1">p2p网贷成立时间</h3>
+<pre><code class="python"># 将时间str转成datetime
+df['date'] = pd.to_datetime(df['date'])
+# 将转换好的时间series设置成行索引
+dt = df.set_index(&quot;date&quot;)
+dt[&quot;year_&quot;] = dt.index.year
+dt[&quot;month&quot;] = dt.index.month
+year_groupby = dt.groupby(&quot;year_&quot;)[&quot;averageI&quot;].aggregate([np.size, np.mean, np.median])
+year_groupby.drop(year_groupby.index[0], inplace=True)
+year_groupby.reset_index(inplace=True)
+</code></pre>
+
+<pre><code class="python">month_groupby = dt.groupby(&quot;month&quot;)[&quot;averageI&quot;].aggregate([np.size, np.mean, np.median])
+month_groupby.drop(month_groupby.index[0], inplace=True)
+month_groupby.reset_index(inplace=True)
+month_groupby
+</code></pre>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>month</th>
+      <th>size</th>
+      <th>mean</th>
+      <th>median</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2</td>
+      <td>97.0</td>
+      <td>13.900103</td>
+      <td>12.600</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>3</td>
+      <td>202.0</td>
+      <td>14.094703</td>
+      <td>13.295</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>4</td>
+      <td>191.0</td>
+      <td>13.716649</td>
+      <td>13.000</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>5</td>
+      <td>171.0</td>
+      <td>14.180819</td>
+      <td>12.790</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>6</td>
+      <td>180.0</td>
+      <td>14.210944</td>
+      <td>13.000</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>7</td>
+      <td>193.0</td>
+      <td>14.886114</td>
+      <td>13.500</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>8</td>
+      <td>186.0</td>
+      <td>15.527688</td>
+      <td>14.000</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>9</td>
+      <td>194.0</td>
+      <td>14.236392</td>
+      <td>13.195</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>10</td>
+      <td>171.0</td>
+      <td>15.033860</td>
+      <td>14.000</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>11</td>
+      <td>200.0</td>
+      <td>15.484450</td>
+      <td>14.300</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>12</td>
+      <td>239.0</td>
+      <td>13.877448</td>
+      <td>13.440</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code class="python">p2p_date_dict = {&quot;year_&quot;: u&quot;年份&quot;, &quot;month&quot;: u&quot;月份&quot;}
+</code></pre>
+
+<pre><code class="python">def p2p_date_plot(dt, groupby_item):
+    data = dt.groupby(groupby_item)[&quot;averageI&quot;].aggregate([np.size, np.mean, np.median])
+    data.drop(data.index[0], inplace=True)
+    data.reset_index(inplace=True)  
+    fig, ax1 = plt.subplots(figsize=(8,6))
+    g = sns.barplot(y=&quot;size&quot;, x=groupby_item, data=data, palette=&quot;BuGn_d&quot;, ax=ax1)
+    plt.xticks(g.get_xticks(), fontproperties=font, fontsize=16, rotation=60)
+    ax2 = ax1.twinx()
+    x_list = range(len(data))
+    ax2.plot(x_list, data[&quot;mean&quot;], linewidth = 3, color=&quot;darkgreen&quot;, marker=&quot;o&quot;, label=u&quot;利率&quot;) 
+    ax2.set_ylabel(u&quot;平均年化利率 %&quot;, fontsize=16, fontproperties=font)
+    ax1.set_ylabel(u&quot;数量&quot;, fontsize=16, fontproperties=font)
+    ax1.set_xlabel(&quot;&quot;)
+    ax2.yaxis.grid(True, linestyle = &quot;:&quot;, linewidth=2, color=&quot;green&quot;, alpha=0.2)
+    ax1.yaxis.grid(False)
+    if groupby_item == &quot;month&quot;:
+        ax2.set_ylim(10, 18) 
+        # ax2.axhline(y=14.7,linewidth=2, xmin=0.5, xmax=0.8, color='r')        
+        # 平行x轴的矩形，参数：ymin,ymax,xmin=0,xmin=1        
+        ax2.axhspan(14.7, 15.7, 0.49, 0.6, facecolor=&quot;skyblue&quot;, alpha=0.8)
+        ax2.axhspan(14.7, 15.7, 0.74, 0.85, facecolor=&quot;skyblue&quot;, alpha=0.8)
+        plt.annotate(&quot;&quot;, xy = (8.1, 15.7), xytext = (7.5, 16.7), fontproperties=font, fontsize=15, arrowprops = dict(facecolor='skyblue'))        
+        plt.annotate(&quot;&quot;, xy = (5, 15.7), xytext = (7, 16.7), fontproperties=font, fontsize=15, arrowprops = dict(facecolor='skyblue'))        
+    plt.title(u&quot;p2p网贷平台数量及平均年化利率与成立{}&quot;.format(p2p_date_dict.get(groupby_item)), fontproperties=font, fontsize=20)
+    plt.legend(loc=&quot;best&quot;,prop=font, fontsize=17)
+</code></pre>
+
+<pre><code class="python">for i in p2p_date_dict:   
+    p2p_date_plot(dt, i)
+</code></pre>
+
+<p><img alt="png" src="../output_32_0.png" /></p>
+<p><img alt="png" src="../output_32_1.png" /></p>
+<p>统计数据显示我国最早的p2p网贷平台成立于2004年4月，截止到16年11月初，全国注册成立了近4000家p2p网贷平台。我国的p2p网贷行业在2013年进行高速发展期，到2014年底及2015年初到达顶峰，随后增速放慢。</p>
+<p>从平均利率上看，2013年达到最大值，随后急剧降低;从利率与月份的关系可看出，7-8、10-11月份的平均利率高于其他月份，难道跟市场流动资金紧缺程度相关？</p>
+<h3 id="_6">资金托管</h3>
+<pre><code class="python">fig, ax = plt.subplots(figsize=(8,6))
+sns.barplot(x=&quot;tuoguan&quot;, y=&quot;averageI&quot;, hue=&quot;classification&quot;, hue_order=[u&quot;跑路&quot;, u&quot;正常营业&quot;], data=df, palette=&quot;husl&quot;, ax=ax)
+ax.set_xticklabels([u&quot;无托管&quot;, u&quot;托管&quot;], fontproperties=font, fontsize=16)
+ax2 = ax.twinx()
+# 托管状况百分比
+dft = df[&quot;tuoguan&quot;].value_counts() / df.shape[0] * 100
+ax2.plot([0,1], dft.values, linewidth = 1, color=&quot;b&quot;, marker=&quot;*&quot;, markersize=20, label=u&quot;百分比%&quot;) 
+ax.set_ylabel(u&quot;平均年化利率%&quot;, fontsize=16, fontproperties=font)
+ax2.set_ylabel(u&quot;百分比%&quot;, fontsize=16, fontproperties=font)
+ax.yaxis.grid(True, linestyle = &quot;-.&quot;,)
+ax2.yaxis.grid(False)
+ax.legend(loc=9,prop=font, fontsize=17)
+ax2.legend(loc=1,prop=font, fontsize=17)
+ax.set_xlabel(&quot;&quot;)
+plt.title(u&quot;p2p平台资金托管状况&quot;, fontproperties=font, fontsize=20)
+</code></pre>
+
+<pre><code>&lt;matplotlib.text.Text at 0x7fe397039310&gt;
+</code></pre>
+<p><img alt="png" src="../output_35_1.png" /></p>
+<p>只有约45%的网贷平台进行了资金托管，进行资金托管的p2p网贷平台的平均利率低于未进行资金托管的平台，跑路或出现其他经营状况的平均利率均高于正常营业的平台。</p>
+<h3 id="_7">网友评分</h3>
+<pre><code class="python">df[&quot;net_score&quot;] = df[&quot;netF&quot;].astype(np.int)
+net_friend_score = df.groupby(&quot;classification&quot;)[&quot;net_score&quot;].value_counts().unstack().unstack().unstack().fillna(0)
+net_friend_score[&quot;total&quot;] = net_friend_score.sum(axis=1)
+net_friend_score_cum = net_friend_score.div(net_friend_score[&quot;total&quot;], axis=0)*100
+net_friend_score_cum.drop(&quot;total&quot;, axis=1, inplace=True)
+net_friend_score.drop(&quot;total&quot;, axis=1, inplace=True)
+fig1, (ax1, ax2) = plt.subplots(2,1, sharex=True, figsize=(12,9)) 
+net_friend_score_cum.plot(kind='bar',ax=ax1, stacked=True, label=&quot;&quot;)
+net_friend_score.plot(kind='bar',ax=ax2, stacked=True)
+ax1.legend(loc=1, prop=font, fontsize=17)
+ax2.legend(loc='best', prop=font, fontsize=17)
+ax2.xaxis.grid(False)
+ax2.yaxis.grid(True, linestyle=&quot;-.&quot;)
+ax1.yaxis.grid(True, linestyle=&quot;-.&quot;)
+ax2.set_ylabel(u&quot;数量&quot;, fontsize=16, fontproperties=font)
+ax1.set_ylabel(u&quot;百分比%&quot;, fontsize=16, fontproperties=font)
+ax2.annotate(&quot;5&quot;, xy = (1, 10), xytext = (2.5, 160), fontproperties=font, fontsize=15, arrowprops = dict(facecolor=&quot;m&quot;))        
+ax1.annotate(u&quot;总数为5&quot;, xy = (1, 76), xytext = (1.5,60), fontproperties=font, fontsize=15, arrowprops = dict(facecolor=&quot;m&quot;))        
+plt.xlabel(u&quot;网友评分&quot;, fontproperties=font, fontsize=17)
+</code></pre>
+
+<pre><code>&lt;matplotlib.text.Text at 0x7fe3912ed850&gt;
+</code></pre>
+<p><img alt="png" src="../output_38_1.png" /></p>
+<p>网友评分栏包括四项，每项记5分，满分总共20分。在数据处理时将每一评分项目的无评分的或小于1.0分的统统记为1.0分，因此，最低分为4.0分，最高为20分。根据相对累计柱状图，网友评分较高的网贷平台出现跑路的比例较低。由于5分的平台数量只有5家，造成百分数偏离较大。</p>
+<h3 id="p2p_2">p2p网贷平台背景</h3>
+<pre><code class="python">background = df.groupby(&quot;classification&quot;)[&quot;background&quot;].value_counts().unstack().unstack().unstack().fillna(0)
+# [0,1,2,3],[u'私营&amp;民营系',u'上市公司系',u'银行系',u'国资系']
+background[&quot;total&quot;] = background.sum(axis=1)
+background_cum = background.div(background[&quot;total&quot;], axis=0)*100
+background_cum.drop(&quot;total&quot;, axis=1, inplace=True)
+background.drop(&quot;total&quot;, axis=1, inplace=True)
+fig1, (ax1, ax2) = plt.subplots(2,1, sharex=True, figsize=(12,9)) 
+background_cum.plot(kind='bar',ax=ax1, stacked=True, label=&quot;&quot;)
+background.plot(kind='bar',ax=ax2, stacked=True)
+ax1.legend(loc=9, prop=font, fontsize=17)
+ax2.legend(loc='best', prop=font, fontsize=17)
+ax2.xaxis.grid(False)
+ax2.yaxis.grid(True, linestyle=&quot;-.&quot;)
+ax1.yaxis.grid(True, linestyle=&quot;-.&quot;)
+ax2.set_ylabel(u&quot;数量&quot;, fontsize=16, fontproperties=font)
+ax1.set_ylabel(u&quot;百分比%&quot;, fontsize=16, fontproperties=font)
+ax2.set_xticklabels([u'私营&amp;民营系',u'上市公司系',u'银行系',u'国资系'], rotation=30, fontproperties=font)
+ax2.annotate(u'提现困难1家',xy=(3,150),xytext=(2.5,300),fontproperties=font,arrowprops=dict(arrowstyle=&quot;-&gt;&quot;,color='green',linewidth=3)) 
+plt.xlabel(u&quot;平台资质&quot;, fontproperties=font, fontsize=17)
+</code></pre>
+
+<pre><code>&lt;matplotlib.text.Text at 0x7f14b5933510&gt;
+</code></pre>
+<p><img alt="png" src="../output_41_1.png" /></p>
+<p>p2p平台资质（平台背景）划分为民营&amp;私营系、上市公司系、银行系、国资系，其中民营系网贷跑路比例最高，国资系有提现困难1家，上市公司和银行系无跑路。</p>
+<h3 id="_8">投资期限</h3>
+<pre><code class="python">df.loc[:, &quot;touziq&quot;] = df[&quot;touziq&quot;].map(lambda x: np.round(x, 4))
+df_span = df.loc[df[&quot;touziq&quot;] != 2.5784, :]  # (1524, 12)
+df_span.loc[:, &quot;touziq&quot;] = df_span[&quot;touziq&quot;].map(lambda x: np.round(x))
+df_span.loc[df_span[&quot;touziq&quot;] == 0, &quot;touziq&quot;] = 0.5
+df_span.loc[:, &quot;touziq&quot;] = df_span['touziq'].astype(np.int64)
+</code></pre>
+
+<pre><code class="python">plt.figure(figsize=(10,6))
+g = sns.barplot(x=&quot;touziq&quot;, y=&quot;averageI&quot;, data=df_span, hue=&quot;classification&quot;)
+plt.xticks(g.get_xticks(), fontproperties=font, fontsize=16)
+plt.ylabel(u&quot;平均年化利率%&quot;, fontsize=16, fontproperties=font)
+plt.xlabel(u&quot;投资期限(月)&quot;, fontsize=16, fontproperties=font)
+plt.title(u&quot;p2p平台平均年化利率与投资期限&quot;, fontproperties=font, fontsize=20)
+plt.gca().yaxis.grid(True, linestyle = &quot;-.&quot;,)
+plt.legend(loc=&quot;best&quot;,prop=font, fontsize=17)
+</code></pre>
+
+<pre><code>&lt;matplotlib.legend.Legend at 0x7f14b2acf0d0&gt;
+</code></pre>
+<p><img alt="png" src="../output_45_1.png" /></p>
+<pre><code class="python">span = df_span.groupby(&quot;classification&quot;)[&quot;touziq&quot;].value_counts().unstack().unstack().unstack().fillna(0)
+span[&quot;total&quot;] = span.sum(axis=1)
+span_cum = span.div(span[&quot;total&quot;], axis=0)*100
+span_cum.drop(&quot;total&quot;, axis=1, inplace=True)
+span.drop(&quot;total&quot;, axis=1, inplace=True)
+fig1, (ax1, ax2) = plt.subplots(2,1, sharex=True, figsize=(12,9)) 
+span_cum.plot(kind='bar',ax=ax1, stacked=True, label=&quot;&quot;)
+span.plot(kind='bar',ax=ax2, stacked=True)
+ax1.legend(loc=2, prop=font, fontsize=17)
+ax2.legend(loc='best', prop=font, fontsize=17)
+ax2.xaxis.grid(False)
+ax2.yaxis.grid(True, linestyle=&quot;-.&quot;)
+ax1.yaxis.grid(True, linestyle=&quot;-.&quot;)
+ax2.set_ylabel(u&quot;数量&quot;, fontsize=16, fontproperties=font)
+ax1.set_ylabel(u&quot;百分比%&quot;, fontsize=16, fontproperties=font) 
+ax2.annotate(u'小于1个月',xy=(0,30),xytext=(0,100),fontproperties=font,arrowprops=dict(arrowstyle=&quot;-&gt;&quot;,color='k',linewidth=3)) 
+plt.xlabel(u&quot;投资期限(月)&quot;, fontproperties=font, fontsize=17)
+</code></pre>
+
+<pre><code>&lt;matplotlib.text.Text at 0x7f14b0e47550&gt;
+</code></pre>
+<p><img alt="png" src="../output_46_1.png" /></p>
+<p>p2p网贷的投资期限变化范围很宽泛，少的短则几天，多的长达几年。为了方便，将秒标、天标等小于1个月的网贷平台记为小于1个月(0)，将大于等于24个月的平台记为24个月。大部分网贷平台的投资期限小于半年，尤其集中在1月、2月、3月标及天标上。而跑路的网贷平台也多集中在短期投资上。一年以上的投资期限的平台没有跑路现象。因此，在选择p2p平台时，要选择投资期限长的为宜。</p>
+<h2 id="p2p_3">p2p跑路原因分析及预测</h2>
+<p>通过前面的简单的探索分析我们对p2p网贷平台的几个样本特征与平台跑路的关系有了一定认识，下面尝试利用机器学习的决策树分类算法来分析和预测p2p网贷平台的跑路现象。</p>
+<h3 id="_9">样本特征选择</h3>
+<p>采用相关系数矩阵和递归特征消除法(RFE)评估特征指标的重要性，进而选择合适的样品特征进行分类模型训练。</p>
+<pre><code class="python"># 暂且不考虑p2p网贷平台名称和成立日期
+data = dall.drop([&quot;name&quot;, &quot;date&quot;,], axis=1)  
+cols = data.columns.tolist()
+data.head(3)
+</code></pre>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>averageI</th>
+      <th>zhuzed</th>
+      <th>classification</th>
+      <th>touziq</th>
+      <th>netF</th>
+      <th>background</th>
+      <th>tuoguan</th>
+      <th>zhuz</th>
+      <th>shiz</th>
+      <th>datetime</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>14.548392</td>
+      <td>44.0</td>
+      <td>0.0</td>
+      <td>2.578413</td>
+      <td>14.351883</td>
+      <td>0</td>
+      <td>0</td>
+      <td>500</td>
+      <td>0</td>
+      <td>5.326389e+07</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>14.548392</td>
+      <td>11.0</td>
+      <td>0.0</td>
+      <td>2.578413</td>
+      <td>14.351883</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2000</td>
+      <td>0</td>
+      <td>3.054069e+07</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>12.460000</td>
+      <td>33.0</td>
+      <td>1.0</td>
+      <td>1.172000</td>
+      <td>16.500000</td>
+      <td>0</td>
+      <td>1</td>
+      <td>3000</td>
+      <td>2000</td>
+      <td>1.331839e+08</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code class="python"># corrcoef函数计算相关系数,更精确地是相关系数矩阵
+cm = np.corrcoef(data[cols].values.T)
+plt.figure(figsize=(10,8))
+g = sns.heatmap(cm, cbar=True, annot=True, 
+            square=True, fmt=&quot;.2f&quot;, 
+            annot_kws={'size': 15}, 
+           yticklabels=cols,xticklabels=cols)
+plt.yticks(g.get_yticks(), fontproperties=font, fontsize=16)
+plt.xticks(g.get_xticks(), fontproperties=font, fontsize=16)
+</code></pre>
+
+<pre><code>([&lt;matplotlib.axis.XTick at 0x7f4cbaab8c50&gt;,
+  &lt;matplotlib.axis.XTick at 0x7f4cbab0e050&gt;,
+  &lt;matplotlib.axis.XTick at 0x7f4cba9db890&gt;,
+  &lt;matplotlib.axis.XTick at 0x7f4cba9dbdd0&gt;,
+  &lt;matplotlib.axis.XTick at 0x7f4cba9e3310&gt;,
+  &lt;matplotlib.axis.XTick at 0x7f4cba9e39d0&gt;,
+  &lt;matplotlib.axis.XTick at 0x7f4cba9ec110&gt;,
+  &lt;matplotlib.axis.XTick at 0x7f4cba9ec810&gt;,
+  &lt;matplotlib.axis.XTick at 0x7f4cba9ecc90&gt;,
+  &lt;matplotlib.axis.XTick at 0x7f4cba9f93d0&gt;],
+ &lt;a list of 10 Text xticklabel objects&gt;)
+</code></pre>
+<p><img alt="png" src="../output_53_1.png" /></p>
+<p>从相关系数矩阵，投资期限和平均利率与分类标签（是否跑路）有较强的线性相关性，注册资本线性相关性最低，其他的特征有一定的线性相关性，但强度较弱。</p>
+<pre><code class="python">from sklearn.model_selection import train_test_split
+from sklearn.model_selection import cross_val_score
+from sklearn.feature_selection import RFE
+from sklearn.linear_model import RandomizedLasso
+from sklearn.linear_model import RandomizedLogisticRegression
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.preprocessing import StandardScaler 
+from sklearn.metrics import accuracy_score
+from sklearn.model_selection import learning_curve
+from sklearn.metrics import classification_report
+from sklearn.pipeline import Pipeline
+from sklearn.model_selection import GridSearchCV
+</code></pre>
+
+<pre><code class="python">y = data.pop(&quot;classification&quot;)
+X = data
+features = X.columns.values
+</code></pre>
+
+<pre><code class="python">X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
+sc = StandardScaler()
+sc.fit(X_train)  # 计算均值和方差
+X_train_std = sc.transform(X_train)  # 进行标准变换，变成标准正态分布
+X_test_std = sc.transform(X_test)
+</code></pre>
+
+<pre><code class="python">&quot;&quot;&quot;
+递归消除特征法使用一个基模型来进行多轮训练，每轮训练后，选出最好的的特征，
+然后在剩余的特征上重复这个过程。整个过程中特征被消除的次序就是特征的排序。
+RFE的稳定性很大程度上取决于在迭代的时候底层用哪种模型。参数estimator为基模型，
+参数n_features_to_select为选择的特征个数。
+&quot;&quot;&quot; 
+estimator = LogisticRegression()
+selector = RFE(estimator, n_features_to_select=1, step=1)  
+selector = selector.fit(X_train_std, y_train) 
+bag = sorted(zip(features, selector.ranking_, selector.support_),
+             key=lambda x: x[1])
+bag
+</code></pre>
+
+<pre><code>[('background', 1, True),
+ ('tuoguan', 2, False),
+ ('shiz', 3, False),
+ ('averageI', 4, False),
+ ('netF', 5, False),
+ ('zhuz', 6, False),
+ ('touziq', 7, False),
+ ('zhuzed', 8, False),
+ ('datetime', 9, False)]
+</code></pre>
+<pre><code class="python">&quot;&quot;&quot;
+稳定性选择是一种基于二次抽样和选择算法相结合的方法，选择算法可以是回归、SVM或其他
+类似的方法。它的主要思想是在不同的数据子集和特征子集上运行特征选择算法，不断的重复，
+最终汇总特征选择结果，比如可以统计某个特征被认为是重要特征的频率（被选为重要特征的
+次数除以它所在的子集被测试的次数）。理想情况下，重要特征的得分会接近100%。稍微弱一点
+的特征得分会是非0的数，而最无用的特征得分将会接近于0。
+sklearn提供了随机lasso和随机逻辑回归。
+&quot;&quot;&quot;
+rlg = RandomizedLogisticRegression()
+rlg.fit(X_train, y_train)
+bag_rr = sorted(zip(features, rlg.scores_), key=lambda x: x[1], reverse=True)
+bag_rr
+</code></pre>
+
+<pre><code>[('averageI', 1.0),
+ ('netF', 1.0),
+ ('background', 1.0),
+ ('tuoguan', 1.0),
+ ('touziq', 0.56000000000000005),
+ ('zhuzed', 0.53500000000000003),
+ ('shiz', 0.40000000000000002),
+ ('datetime', 0.23000000000000001),
+ ('zhuz', 0.0)]
+</code></pre>
+<p>综合相关系数矩阵、递归消除特征法、稳定性选择的评估结果，平均利率、网友评分、平台背景、有无托管四个特征与p2p网贷平台的是否跑路线性相关性较大，我们先采用这四个特征进行分类模型构建。</p>
+<h3 id="_10">分类模型构建</h3>
+<pre><code class="python"># 用sklearn的learning_curve得到training_score和cv_score，使用matplotlib画出learning curve
+def plot_learning_curve(estimator, title, X, y, ylim=None, cv=5, n_jobs=1, 
+                        train_sizes=np.linspace(.05, 1., 20), 
+                        verbose=0, plot=True, text_=None):
+    &quot;&quot;&quot;
+    画出data在某模型上的learning curve.
+    参数解释
+    ----------
+    estimator : 使用的分类器。
+    title : 图的标题。
+    X : 输入的feature，numpy类型
+    y : 输入的target vector
+    ylim : tuple格式的(ymin, ymax), 设定图像中纵坐标的最低点和最高点
+    cv : 做cross-validation的时候，数据分成的份数，其中一份作为cv集，其余n-1份作为training(默认为3份)
+    n_jobs : 并行的的任务数(默认1)
+    &quot;&quot;&quot;
+    train_sizes, train_scores, test_scores = learning_curve(
+        estimator, X, y, cv=cv, n_jobs=n_jobs, train_sizes=train_sizes, verbose=verbose)
+    train_scores_mean = np.mean(train_scores, axis=1)  # train_scores是一个２０行５列的ndarry,20为从样本取的不同比例的样本数据作为X, 而５表示５次交叉验证
+    train_scores_std = np.std(train_scores, axis=1)
+    test_scores_mean = np.mean(test_scores, axis=1)
+    test_scores_std = np.std(test_scores, axis=1)
+
+    if plot:
+        plt.figure(figsize=(7,7))
+        plt.title(title)
+        if ylim is not None:
+            plt.ylim(*ylim)
+        plt.xlabel(&quot;samples&quot;)
+        plt.ylabel(&quot;scores&quot;)
+        # plt.gca().invert_yaxis() 例如y轴坐标3000-10000，调整为10000-3000来显示
+        plt.fill_between(train_sizes, train_scores_mean - train_scores_std, train_scores_mean + train_scores_std, 
+                         alpha=0.2, color=&quot;b&quot;)
+        plt.fill_between(train_sizes, test_scores_mean - test_scores_std, test_scores_mean + test_scores_std, 
+                         alpha=0.2, color=&quot;r&quot;)
+        plt.plot(train_sizes, train_scores_mean, '^-', color=&quot;blue&quot;, label=&quot;train score&quot;)
+        plt.plot(train_sizes, test_scores_mean, 'v-', color=&quot;red&quot;, label=&quot;cross_validation score&quot;)
+        plt.legend(loc=&quot;best&quot;)
+        plt.gca().yaxis.grid(True, linestyle = &quot;-.&quot;)
+        plt.gca().xaxis.grid(True, linestyle = &quot;-.&quot;)   
+        plt.text(500, 0.754, text_, size = 12, color = &quot;k&quot;, weight = &quot;light&quot;, bbox = dict(facecolor = &quot;purple&quot;, alpha = 0.3))   
+        # plt.text(60, .025, r'$\mu=100,\ \sigma=15$')
+        plt.show()        
+</code></pre>
+
+<h4 id="logisticreregession">LogisticReregession 分类模型构建</h4>
+<pre><code class="python">def evaluate_feature(df, feature_add, C_):
+    &quot;&quot;&quot;评估增加新的特征的分类准确率&quot;&quot;&quot;
+    raw_feature = ['averageI','classification','netF',
+                   'background','tuoguan']
+    raw_feature.extend(feature_add) if type(feature_add) == list else raw_feature.append(feature_add)
+    data = df[raw_feature]
+    y = data.pop(&quot;classification&quot;)
+    X = data
+    for i in X.columns.tolist():
+        if i in [&quot;background&quot;, &quot;tuoguan&quot;, &quot;zhuzed&quot;]:
+            dummies_ = pd.get_dummies(X[i], prefix=i)
+            X_dummies = pd.concat([X, dummies_], axis=1)
+            X_dummies.drop([i], axis=1, inplace=True)
+
+    if &quot;touziq&quot; in X_dummies.columns.tolist():
+            X_dummies[&quot;touziq&quot;] = X_dummies[&quot;touziq&quot;].astype(np.int)
+    X_train, X_test, y_train, y_test = train_test_split(X_dummies, y, test_size=0.2, random_state=0)
+    lr = LogisticRegression(C=C_, penalty=&quot;l2&quot;, random_state=0, tol=1e-6)
+    lr.fit(X_train, y_train)
+    y_pred = lr.predict(X_test)
+    num_test = len(y_test)
+    result = (num_test - (y_test != y_pred).sum()) / float(num_test) * 100
+    feature_str = &quot;add feature:&quot; + &quot;,&quot;.join(feature_add) if feature_add else &quot;&quot;    
+    content = &quot;{2} accuracy_score:{0} C:{1}&quot;.format(np.round(result, 4), C_, feature_str)
+    plot_learning_curve(lr, &quot;learning curve&quot;, X_train, y_train, text_=content)    
+</code></pre>
+
+<pre><code class="python">for i in [None, &quot;touziq&quot;, &quot;zhuzed&quot;]:
+    add_feature = []
+    if i is not None:
+        add_feature.append(i)
+    evaluate_feature(dall, add_feature, 0.5)    
+</code></pre>
+
+<p><img alt="png" src="../output_65_0.png" /></p>
+<p><img alt="png" src="../output_65_1.png" /></p>
+<p><img alt="png" src="../output_65_2.png" /></p>
+<pre><code class="python">for C in [0.01, 0.05, 0.1, 0.5, 1]:
+    evaluate_feature(dall, [&quot;touziq&quot;, &quot;zhuzed&quot;], C)
+</code></pre>
+
+<p><img alt="png" src="../output_66_0.png" /></p>
+<p><img alt="png" src="../output_66_1.png" /></p>
+<p><img alt="png" src="../output_66_2.png" /></p>
+<p><img alt="png" src="../output_66_3.png" /></p>
+<p><img alt="png" src="../output_66_4.png" /></p>
+<p>当选择平均年化利率、网友评分、资金托管、平台资质四个特征，正则化系数为0.5候，LogisticRegression的分类准确率为76.5%，当增加投资期限的分类特征时候，准确率略有提高达到77.1%，当增加注册地的分类特征时候，准确率反而降低，这可能与处理注册地的哑变量没有进一步进行数量上的限制有关。在此，先选取平均年化利率、网友评分、资金托管、平台资质、注册地为分类特征。</p>
+<h4 id="_11">随机森林分类模型构建</h4>
+<pre><code class="python">dall.head(2)
+</code></pre>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>averageI</th>
+      <th>date</th>
+      <th>zhuzed</th>
+      <th>classification</th>
+      <th>touziq</th>
+      <th>netF</th>
+      <th>background</th>
+      <th>tuoguan</th>
+      <th>zhuz</th>
+      <th>shiz</th>
+      <th>datetime</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>108贷</td>
+      <td>14.548392</td>
+      <td>2015-02-26</td>
+      <td>44.0</td>
+      <td>0.0</td>
+      <td>2.578413</td>
+      <td>14.351883</td>
+      <td>0</td>
+      <td>0</td>
+      <td>500</td>
+      <td>0</td>
+      <td>5.326389e+07</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2025金融</td>
+      <td>14.548392</td>
+      <td>2015-11-16</td>
+      <td>11.0</td>
+      <td>0.0</td>
+      <td>2.578413</td>
+      <td>14.351883</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2000</td>
+      <td>0</td>
+      <td>3.054069e+07</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code class="python">def randomforest_classifier(df):   
+    feature = ['averageI','classification','netF',
+                   'background','tuoguan','touziq']
+    data = df[feature]
+    y = data.pop(&quot;classification&quot;)
+    X = data
+    for i in X.columns.tolist():
+        if i in [&quot;background&quot;, &quot;tuoguan&quot;, &quot;zhuzed&quot;]:
+            dummies_ = pd.get_dummies(X[i], prefix=i)
+            X_dummies = pd.concat([X, dummies_], axis=1)
+            X_dummies.drop([i], axis=1, inplace=True)
+
+    if &quot;touziq&quot; in X_dummies.columns.tolist():
+            X_dummies[&quot;touziq&quot;] = X_dummies[&quot;touziq&quot;].astype(np.int)
+    X_train, X_test, y_train, y_test = train_test_split(X_dummies, y, test_size=0.2, random_state=0)
+
+    pipeline = Pipeline([('clf', RandomForestClassifier(criterion='gini'))])
+    parameters = {
+                  'clf__n_estimators': (40, 80),
+                  'clf__max_depth': (15, 20, 30),
+                  'clf__min_samples_split': (10,20,50),
+                  'clf__min_samples_leaf': (2,5,15),
+                  'clf__max_features': (2,5)
+                  }
+    grid_search = GridSearchCV(pipeline, parameters, n_jobs=2, verbose=1, scoring='accuracy')
+    grid_search.fit(X_train, y_train)
+    accuracy_score = &quot;best_accuray_score: {}&quot;.format(grid_search.best_score_) 
+    best_parameters = grid_search.best_estimator_.get_params()
+    parameters = sorted(parameters.keys())
+    #print &quot;\t%s: %r&quot; % (param_name, best_parameters[param_name])
+    predictions = grid_search.predict(X_test)
+    print '\t%s\t%s\t%s\t%s' % ('分类','精确率','召回率','f1-score')
+    evaluate_result = classification_report(y_test, predictions)
+    #print '0 ：p2p平台跑路(或出现其他非正常运营的问题)' 
+    #print '1 ：正常运营' 
+    return accuracy_score, best_parameters, evaluate_result    
+</code></pre>
+
+<pre><code class="python">accuracy_score, best_params, evaluate_result = randomforest_classifier(dall)
+</code></pre>
+
+<pre><code class="python">accuracy_score
+</code></pre>
+
+<pre><code>'best_accuray_score: 0.825738125802'
+</code></pre>
+<pre><code class="python">best_params
+&quot;&quot;&quot;
+{'clf': RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+             max_depth=30, max_features=5, max_leaf_nodes=None,
+             min_impurity_split=1e-07, min_samples_leaf=2,
+             min_samples_split=50, min_weight_fraction_leaf=0.0,
+             n_estimators=80, n_jobs=1, oob_score=False, random_state=None,
+             verbose=0, warm_start=False),
+&quot;&quot;&quot;
+</code></pre>
+
+<pre><code class="python"># 使用gridsearch的最佳参数进行randomforestclssification,分析learning curve
+feature = ['averageI','classification','netF','background','tuoguan','touziq']
+data = dall[feature]
+y = data.pop(&quot;classification&quot;)
+X = data
+for i in X.columns.tolist():
+    if i in [&quot;background&quot;, &quot;tuoguan&quot;, &quot;zhuzed&quot;]:
+        dummies_ = pd.get_dummies(X[i], prefix=i)
+        X_dummies = pd.concat([X, dummies_], axis=1)
+        X_dummies.drop([i], axis=1, inplace=True)
+
+if &quot;touziq&quot; in X_dummies.columns.tolist():
+        X_dummies[&quot;touziq&quot;] = X_dummies[&quot;touziq&quot;].astype(np.int)
+X_train, X_test, y_train, y_test = train_test_split(X_dummies, y, test_size=0.2, random_state=0)
+rsl = RandomForestClassifier(n_estimators=80, criterion='gini', max_depth=30, min_samples_split=50, min_samples_leaf=2,
+                             max_features=5)  
+rsl.fit(X_train, y_train)
+y_pred = rsl.predict(X_test)
+num_test = len(y_test)
+result = (num_test - (y_test != y_pred).sum()) / float(num_test) * 100
+plot_learning_curve(rsl, &quot;learning curve&quot;, X_train, y_train, text_=result)        
+result
+</code></pre>
+
+<p><img alt="png" src="../output_74_0.png" /></p>
+<pre><code>80.616174582798465
+</code></pre>
+<p>RandomForestClassifier的训练集的最高分类准确率为82.5%，但从learning curve能看出存在着明显的过拟合现象，故测试集的准确率只有80.6%，略高于LogisticRegression的分类效果。</p>
+<h2 id="_12">总结</h2>
+<p>通过LogistciRegression和RandomForestClassifier建立的分类模型的分类效果均较差。造成以上原因跟数据源有一定关系。有关p2p网贷平台的评估指标有很多，本报告只选择了5个特征给机器算法学习和训练，其他指标如网贷平台的工商注册信息、网站ICP、融资及风投信息等暂没考虑。此外，由于数据的缺失值较多，比如平均利率这一个指标，在分析的3800多家p2p平台中有1695家无此项数据，这些都会影响到分类模型的分类及预测效果。</p>
+<p>p2p平台跑路原因可简单地分为诈骗类和经营不善类。庞氏骗局、恶意自融等属于诈骗类。由于网贷平台经营过程的成本偏高，风控不过关而导致的经营不善，引起运营平台资金链断裂，最终关门跑路。一般而言，跑路平台有一些特点，如资产项目信息披露不明，风控不达标或根本无风控一环，秒标、天标、高息标比例高，投资者用户体验度差等。</p>
+<p>本文首先对p2p网贷平台的特征与是否跑路的关系进行定性分析，随后尝试图通过sklearn提供的两种分类算法对p2p网贷平台的跑路现象进行分类预测，效果一般（准确率0.8），其原因在样本数据缺失较多及样本特征不全面。因此，要对网贷平台的跑路与否进行更精确的预测，就要更进一步地采取一些措施考察网贷平台，比如，对网贷平台的相关工商信息进行查询和确认，查询网贷平台是否接受过风投，可参考第三方网贷机构的评级数据，对平台进行实地考察等等。只有对网贷平台进行全面的考察和判断才能最大地降低网贷投资风险。</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../../../machine_learning/logistic_regression/logistic_regression_forshow/" class="btn btn-neutral float-right" title="Logistic_regression的Python代码实现">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../../lagou_job_analysis/lagou_job_analysis_forshow/" class="btn btn-neutral" title="拉勾招聘职位信息数据分析"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+    
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../../lagou_job_analysis/lagou_job_analysis_forshow/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../../../machine_learning/logistic_regression/logistic_regression_forshow/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script src="../../../js/theme.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+</body>
+</html>
