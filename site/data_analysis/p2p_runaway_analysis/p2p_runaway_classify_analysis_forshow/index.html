@@ -862,6 +862,99 @@ plt.xlabel(u&quot;投资期限(月)&quot;, fontproperties=font, fontsize=17)
 <p>通过前面的简单的探索分析我们对p2p网贷平台的几个样本特征与平台跑路的关系有了一定认识，下面尝试利用机器学习的决策树分类算法来分析和预测p2p网贷平台的跑路现象。</p>
 <h3 id="_9">样本特征选择</h3>
 <p>采用相关系数矩阵和递归特征消除法(RFE)评估特征指标的重要性，进而选择合适的样品特征进行分类模型训练。</p>
+<pre><code class="python"># dall.shape  # (3895, 12)
+# dall.head(3)
+# dall.isnull()
+dall.count()
+((dall.shape[0] - dall.count()) / dall.shape[0] * 100). round(2)
+</code></pre>
+
+<pre><code>name              0.0
+averageI          0.0
+date              0.0
+zhuzed            0.0
+classification    0.0
+touziq            0.0
+netF              0.0
+background        0.0
+tuoguan           0.0
+zhuz              0.0
+shiz              0.0
+datetime          0.0
+dtype: float64
+</code></pre>
+<pre><code class="python">dall.head(3)
+</code></pre>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>averageI</th>
+      <th>date</th>
+      <th>zhuzed</th>
+      <th>classification</th>
+      <th>touziq</th>
+      <th>netF</th>
+      <th>background</th>
+      <th>tuoguan</th>
+      <th>zhuz</th>
+      <th>shiz</th>
+      <th>datetime</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>108贷</td>
+      <td>14.548392</td>
+      <td>2015-02-26</td>
+      <td>44.0</td>
+      <td>0.0</td>
+      <td>2.578413</td>
+      <td>14.351883</td>
+      <td>0</td>
+      <td>0</td>
+      <td>500</td>
+      <td>0</td>
+      <td>5.326389e+07</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2025金融</td>
+      <td>14.548392</td>
+      <td>2015-11-16</td>
+      <td>11.0</td>
+      <td>0.0</td>
+      <td>2.578413</td>
+      <td>14.351883</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2000</td>
+      <td>0</td>
+      <td>3.054069e+07</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>51帮你</td>
+      <td>12.460000</td>
+      <td>2012-08-15</td>
+      <td>33.0</td>
+      <td>1.0</td>
+      <td>1.172000</td>
+      <td>16.500000</td>
+      <td>0</td>
+      <td>1</td>
+      <td>3000</td>
+      <td>2000</td>
+      <td>1.331839e+08</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
 <pre><code class="python"># 暂且不考虑p2p网贷平台名称和成立日期
 data = dall.drop([&quot;name&quot;, &quot;date&quot;,], axis=1)  
 cols = data.columns.tolist()
@@ -952,9 +1045,10 @@ plt.xticks(g.get_xticks(), fontproperties=font, fontsize=16)
   &lt;matplotlib.axis.XTick at 0x7f4cba9f93d0&gt;],
  &lt;a list of 10 Text xticklabel objects&gt;)
 </code></pre>
-<p><img alt="png" src="../output_53_1.png" /></p>
+<p><img alt="png" src="../output_55_1.png" /></p>
 <p>从相关系数矩阵，投资期限和平均利率与分类标签（是否跑路）有较强的线性相关性，注册资本线性相关性最低，其他的特征有一定的线性相关性，但强度较弱。</p>
-<pre><code class="python">from sklearn.model_selection import train_test_split
+<pre><code class="python">import datetime
+from sklearn.model_selection import train_test_split
 from sklearn.model_selection import cross_val_score
 from sklearn.feature_selection import RFE
 from sklearn.linear_model import RandomizedLasso
@@ -1094,7 +1188,7 @@ def plot_learning_curve(estimator, title, X, y, ylim=None, cv=5, n_jobs=1,
     if &quot;touziq&quot; in X_dummies.columns.tolist():
             X_dummies[&quot;touziq&quot;] = X_dummies[&quot;touziq&quot;].astype(np.int)
     X_train, X_test, y_train, y_test = train_test_split(X_dummies, y, test_size=0.2, random_state=0)
-    lr = LogisticRegression(C=C_, penalty=&quot;l2&quot;, random_state=0, tol=1e-6)
+    lr = LogisticRegression(C=C_, penalty=&quot;l2&quot;, random_state=24, tol=1e-6)
     lr.fit(X_train, y_train)
     y_pred = lr.predict(X_test)
     num_test = len(y_test)
@@ -1111,83 +1205,389 @@ def plot_learning_curve(estimator, title, X, y, ylim=None, cv=5, n_jobs=1,
     evaluate_feature(dall, add_feature, 0.5)    
 </code></pre>
 
-<p><img alt="png" src="../output_65_0.png" /></p>
-<p><img alt="png" src="../output_65_1.png" /></p>
-<p><img alt="png" src="../output_65_2.png" /></p>
+<p><img alt="png" src="../output_67_0.png" /></p>
+<p><img alt="png" src="../output_67_1.png" /></p>
+<p><img alt="png" src="../output_67_2.png" /></p>
 <pre><code class="python">for C in [0.01, 0.05, 0.1, 0.5, 1]:
-    evaluate_feature(dall, [&quot;touziq&quot;, &quot;zhuzed&quot;], C)
+    evaluate_feature(dall, [&quot;touziq&quot;], C)
 </code></pre>
 
-<p><img alt="png" src="../output_66_0.png" /></p>
-<p><img alt="png" src="../output_66_1.png" /></p>
-<p><img alt="png" src="../output_66_2.png" /></p>
-<p><img alt="png" src="../output_66_3.png" /></p>
-<p><img alt="png" src="../output_66_4.png" /></p>
-<p>当选择平均年化利率、网友评分、资金托管、平台资质四个特征，正则化系数为0.5候，LogisticRegression的分类准确率为76.5%，当增加投资期限的分类特征时候，准确率略有提高达到77.1%，当增加注册地的分类特征时候，准确率反而降低，这可能与处理注册地的哑变量没有进一步进行数量上的限制有关。在此，先选取平均年化利率、网友评分、资金托管、平台资质、注册地为分类特征。</p>
+<p><img alt="png" src="../output_68_0.png" /></p>
+<p><img alt="png" src="../output_68_1.png" /></p>
+<p><img alt="png" src="../output_68_2.png" /></p>
+<p><img alt="png" src="../output_68_3.png" /></p>
+<p><img alt="png" src="../output_68_4.png" /></p>
+<p>当选择平均年化利率、网友评分、资金托管、平台资质四个特征，正则化系数为0.5候，LogisticRegression的分类准确率为76.5%，当增加投资期限的分类特征时候，准确率略有提高达到77.1%，当增加注册地的分类特征时候，准确率反而降低。</p>
+<pre><code class="python">def evaluate_feature(df, C_):
+    &quot;&quot;&quot;评估增加新的特征的分类准确率&quot;&quot;&quot;
+    # raw_feature = features
+    # ['averageI','classification','netF', 'background','tuoguan']
+    # raw_feature.extend(feature_add) if type(feature_add) == list else raw_feature.append(feature_add)
+    # data = df[raw_feature]
+    feature_add = &quot;&quot;
+    data = df.drop([&quot;name&quot;, &quot;datetime&quot;,], axis=1) 
+    y = data.pop(&quot;classification&quot;)
+    X = data[['averageI','netF', 'background','tuoguan', 
+              'touziq', 'shiz', 'date']]  # &quot;datetime&quot;'zhuzed'
+    # 加入注册地对分类效果没有明显帮助，即使减少注册地的类别也无益最终分类效果
+    if &quot;zhuzed&quot; in X.columns.tolist():
+        set_zhu_all = set(data[&quot;zhuzed&quot;].unique().tolist())
+        set_zhu_pa = set(data[&quot;zhuzed&quot;].value_counts().index[:1].tolist())
+        zhu_replace = list(set_zhu_all - set_zhu_pa)       
+        X[&quot;zhuzed&quot;] = X[&quot;zhuzed&quot;].replace(zhu_replace,[100] * len(zhu_replace))
+    if &quot;date&quot; in X.columns.tolist():
+        date_str = X[&quot;date&quot;].str.slice(0,7)
+        date_ = pd.to_datetime(date_str)
+        last = pd.to_datetime(&quot;2016-12&quot;)
+        day_dela = (last - date_)
+        day_str = day_dela.astype(str)
+        day_ = day_str.str.split(&quot; &quot;).str.get(0).astype(int) 
+        X[&quot;date&quot;] = (day_ / 30).astype(np.int)
+    for i in X.columns.tolist():
+        if i in [&quot;background&quot;, &quot;tuoguan&quot;, &quot;zhuzed&quot;]:
+            dummies_ = pd.get_dummies(X[i], prefix=i)
+            X_dummies = pd.concat([X, dummies_], axis=1)
+            X_dummies.drop([i], axis=1, inplace=True)
+
+    if &quot;touziq&quot; in X_dummies.columns.tolist():
+            X_dummies[&quot;touziq&quot;] = X_dummies[&quot;touziq&quot;].astype(np.int)
+    X_train, X_test, y_train, y_test = train_test_split(X_dummies, y, test_size=0.2, random_state=0)
+    lr = LogisticRegression(C=C_, penalty=&quot;l2&quot;, random_state=24, tol=1e-6)
+    lr.fit(X_train, y_train)
+    y_pred = lr.predict(X_test)
+    num_test = len(y_test)
+    result = (num_test - (y_test != y_pred).sum()) / float(num_test) * 100
+    feature_str = &quot;add feature:&quot; + &quot;,&quot;.join(feature_add) if feature_add else &quot;&quot;    
+    content = &quot;{2} accuracy_score:{0} C:{1}&quot;.format(np.round(result, 4), C_, feature_str)
+    plot_learning_curve(lr, &quot;learning curve&quot;, X_train, y_train, text_=content)    
+</code></pre>
+
+<pre><code class="python">evaluate_feature(dall, 0.1)    
+</code></pre>
+
+<p><img alt="png" src="../output_71_0.png" /></p>
+<p>选取平均年化利率、网友评分、资金托管、平台资质、注册日期，实缴资本为分类特征，使用LogisticRegression构建分类器，当正则化为C=0.1时候，测试集分类准取率为77.9%。</p>
 <h4 id="_11">随机森林分类模型构建</h4>
-<pre><code class="python">dall.head(2)
-</code></pre>
-
-<div>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>name</th>
-      <th>averageI</th>
-      <th>date</th>
-      <th>zhuzed</th>
-      <th>classification</th>
-      <th>touziq</th>
-      <th>netF</th>
-      <th>background</th>
-      <th>tuoguan</th>
-      <th>zhuz</th>
-      <th>shiz</th>
-      <th>datetime</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>108贷</td>
-      <td>14.548392</td>
-      <td>2015-02-26</td>
-      <td>44.0</td>
-      <td>0.0</td>
-      <td>2.578413</td>
-      <td>14.351883</td>
-      <td>0</td>
-      <td>0</td>
-      <td>500</td>
-      <td>0</td>
-      <td>5.326389e+07</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>2025金融</td>
-      <td>14.548392</td>
-      <td>2015-11-16</td>
-      <td>11.0</td>
-      <td>0.0</td>
-      <td>2.578413</td>
-      <td>14.351883</td>
-      <td>0</td>
-      <td>0</td>
-      <td>2000</td>
-      <td>0</td>
-      <td>3.054069e+07</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-<pre><code class="python">def randomforest_classifier(df):   
+<p>选取平均年化利率、网友评分、资金托管、平台资质、投资期、注册日期、实缴资本为分类特征，随机森林进行分类，尝试对关键参数进行调试。</p>
+<pre><code class="python">def rf_test_n_estimator(df):   
     feature = ['averageI','classification','netF',
-                   'background','tuoguan','touziq']
+                   'background','tuoguan','touziq','date', 'shiz']
     data = df[feature]
     y = data.pop(&quot;classification&quot;)
     X = data
+    if &quot;zhuzed&quot; in X.columns.tolist():
+        set_zhu_all = set(data[&quot;zhuzed&quot;].unique().tolist())
+        set_zhu_pa = set(data[&quot;zhuzed&quot;].value_counts().index[:1].tolist())
+        zhu_replace = list(set_zhu_all - set_zhu_pa)       
+        X[&quot;zhuzed&quot;] = X[&quot;zhuzed&quot;].replace(zhu_replace,[100] * len(zhu_replace))
+    if &quot;date&quot; in X.columns.tolist():
+        date_str = X[&quot;date&quot;].str.slice(0,7)
+        date_ = pd.to_datetime(date_str)
+        last = pd.to_datetime(&quot;2016-12&quot;)
+        day_dela = (last - date_)
+        day_str = day_dela.astype(str)
+        day_ = day_str.str.split(&quot; &quot;).str.get(0).astype(int) 
+        X[&quot;date&quot;] = (day_ / 30).astype(np.int)
+    for i in X.columns.tolist():
+        if i in [&quot;background&quot;, &quot;tuoguan&quot;, &quot;zhuzed&quot;]:
+            dummies_ = pd.get_dummies(X[i], prefix=i)
+            X_dummies = pd.concat([X, dummies_], axis=1)
+            X_dummies.drop([i], axis=1, inplace=True)
+
+    if &quot;touziq&quot; in X_dummies.columns.tolist():
+            X_dummies[&quot;touziq&quot;] = X_dummies[&quot;touziq&quot;].astype(np.int)
+
+    X_train, X_test, y_train, y_test = train_test_split(X_dummies, y, test_size=0.2, random_state=0)
+    cross_score = []
+    cross_score_i = []
+    for i in range(10, 210, 20):
+        clf = RandomForestClassifier(n_estimators=i, random_state=24)
+        scores = cross_val_score(clf, X_train, y_train, cv=5, scoring='accuracy')
+        mean_score = scores.mean()
+        cross_score.append(mean_score)
+        cross_score_i.append(i)
+        # cross_val_score_ = dict(zip(cross_val_score_i, cross_val_score))
+        # print(&quot;Accuracy: %0.2f (+/- %0.2f) [%s]&quot; % (scores.mean(), scores.std(), label))
+
+    x_num = len(cross_score)
+    fig, ax = plt.subplots(figsize=(8,6)) 
+    sns.pointplot(range(x_num), cross_score, ax=ax)
+    ax.set_ylabel(u'交叉验证准确率', fontsize=15, fontproperties=font)
+    ax.set_xlabel(u'n_estimator数量', fontsize=15, fontproperties=font)
+    ax.set_xticklabels(cross_score_i, rotation=30)           
+</code></pre>
+
+<pre><code class="python">rf_test_n_estimator(dall)   
+</code></pre>
+
+<p><img alt="png" src="../output_76_0.png" /></p>
+<pre><code class="python">def rf_test_max_depth(df):   
+    feature = ['averageI','classification','netF',
+                   'background','tuoguan','touziq','date', 'shiz']
+    data = df[feature]
+    y = data.pop(&quot;classification&quot;)
+    X = data
+    if &quot;zhuzed&quot; in X.columns.tolist():
+        set_zhu_all = set(data[&quot;zhuzed&quot;].unique().tolist())
+        set_zhu_pa = set(data[&quot;zhuzed&quot;].value_counts().index[:1].tolist())
+        zhu_replace = list(set_zhu_all - set_zhu_pa)       
+        X[&quot;zhuzed&quot;] = X[&quot;zhuzed&quot;].replace(zhu_replace,[100] * len(zhu_replace))
+    if &quot;date&quot; in X.columns.tolist():
+        date_str = X[&quot;date&quot;].str.slice(0,7)
+        date_ = pd.to_datetime(date_str)
+        last = pd.to_datetime(&quot;2016-12&quot;)
+        day_dela = (last - date_)
+        day_str = day_dela.astype(str)
+        day_ = day_str.str.split(&quot; &quot;).str.get(0).astype(int) 
+        X[&quot;date&quot;] = (day_ / 30).astype(np.int)
+    for i in X.columns.tolist():
+        if i in [&quot;background&quot;, &quot;tuoguan&quot;, &quot;zhuzed&quot;]:
+            dummies_ = pd.get_dummies(X[i], prefix=i)
+            X_dummies = pd.concat([X, dummies_], axis=1)
+            X_dummies.drop([i], axis=1, inplace=True)
+
+    if &quot;touziq&quot; in X_dummies.columns.tolist():
+            X_dummies[&quot;touziq&quot;] = X_dummies[&quot;touziq&quot;].astype(np.int)
+
+    X_train, X_test, y_train, y_test = train_test_split(X_dummies, y, test_size=0.2, random_state=0)
+    cross_score = []
+    cross_score_i = []
+    for i in range(5, 26, 5):
+        clf = RandomForestClassifier(max_depth=i, n_estimators=100, random_state=24)
+        scores = cross_val_score(clf, X_train, y_train, cv=5, scoring='accuracy')
+        mean_score = scores.mean()
+        cross_score.append(mean_score)
+        cross_score_i.append(i)
+    x_num = len(cross_score)
+    fig, ax = plt.subplots(figsize=(8,6)) 
+    sns.pointplot(range(x_num), cross_score, ax=ax)
+    ax.set_ylabel(u'交叉验证准确率', fontsize=15, fontproperties=font)
+    ax.set_xlabel(u'max_depth', fontsize=15, fontproperties=font)
+    ax.set_xticklabels(cross_score_i, rotation=30)         
+</code></pre>
+
+<pre><code class="python">rf_test_max_depth(dall)
+</code></pre>
+
+<p><img alt="png" src="../output_78_0.png" /></p>
+<pre><code class="python">def rf_test_max_feature(df):   
+    feature = ['averageI','classification','netF',
+                   'background','tuoguan','touziq','date', 'shiz']
+    data = df[feature]
+    y = data.pop(&quot;classification&quot;)
+    X = data
+    if &quot;zhuzed&quot; in X.columns.tolist():
+        set_zhu_all = set(data[&quot;zhuzed&quot;].unique().tolist())
+        set_zhu_pa = set(data[&quot;zhuzed&quot;].value_counts().index[:1].tolist())
+        zhu_replace = list(set_zhu_all - set_zhu_pa)       
+        X[&quot;zhuzed&quot;] = X[&quot;zhuzed&quot;].replace(zhu_replace,[100] * len(zhu_replace))
+    if &quot;date&quot; in X.columns.tolist():
+        date_str = X[&quot;date&quot;].str.slice(0,7)
+        date_ = pd.to_datetime(date_str)
+        last = pd.to_datetime(&quot;2016-12&quot;)
+        day_dela = (last - date_)
+        day_str = day_dela.astype(str)
+        day_ = day_str.str.split(&quot; &quot;).str.get(0).astype(int) 
+        X[&quot;date&quot;] = (day_ / 30).astype(np.int)
+    for i in X.columns.tolist():
+        if i in [&quot;background&quot;, &quot;tuoguan&quot;, &quot;zhuzed&quot;]:
+            dummies_ = pd.get_dummies(X[i], prefix=i)
+            X_dummies = pd.concat([X, dummies_], axis=1)
+            X_dummies.drop([i], axis=1, inplace=True)
+
+    if &quot;touziq&quot; in X_dummies.columns.tolist():
+            X_dummies[&quot;touziq&quot;] = X_dummies[&quot;touziq&quot;].astype(np.int)
+
+    X_train, X_test, y_train, y_test = train_test_split(X_dummies, y, test_size=0.2, random_state=0)
+    cross_score = []
+    cross_score_i = []
+    for i in range(1, len(X.columns.tolist())):
+        clf = RandomForestClassifier(max_features=i, max_depth=10, n_estimators=100, random_state=24)
+        scores = cross_val_score(clf, X_train, y_train, cv=5, scoring='accuracy')
+        mean_score = scores.mean()
+        cross_score.append(mean_score)
+        cross_score_i.append(i)
+    x_num = len(cross_score)
+    fig, ax = plt.subplots(figsize=(8,6)) 
+    sns.pointplot(range(x_num), cross_score, ax=ax)
+    ax.set_ylabel(u'交叉验证准确率', fontsize=15, fontproperties=font)
+    ax.set_xlabel(u'max_feature', fontsize=15, fontproperties=font)
+    ax.set_xticklabels(cross_score_i, rotation=30)         
+</code></pre>
+
+<pre><code class="python">rf_test_max_feature(dall)
+</code></pre>
+
+<p><img alt="png" src="../output_80_0.png" /></p>
+<pre><code class="python">def rf_test_min_samples_split(df):   
+    feature = ['averageI','classification','netF',
+                   'background','tuoguan','touziq','date', 'shiz']
+    data = df[feature]
+    y = data.pop(&quot;classification&quot;)
+    X = data
+    if &quot;zhuzed&quot; in X.columns.tolist():
+        set_zhu_all = set(data[&quot;zhuzed&quot;].unique().tolist())
+        set_zhu_pa = set(data[&quot;zhuzed&quot;].value_counts().index[:1].tolist())
+        zhu_replace = list(set_zhu_all - set_zhu_pa)       
+        X[&quot;zhuzed&quot;] = X[&quot;zhuzed&quot;].replace(zhu_replace,[100] * len(zhu_replace))
+    if &quot;date&quot; in X.columns.tolist():
+        date_str = X[&quot;date&quot;].str.slice(0,7)
+        date_ = pd.to_datetime(date_str)
+        last = pd.to_datetime(&quot;2016-12&quot;)
+        day_dela = (last - date_)
+        day_str = day_dela.astype(str)
+        day_ = day_str.str.split(&quot; &quot;).str.get(0).astype(int) 
+        X[&quot;date&quot;] = (day_ / 30).astype(np.int)
+    for i in X.columns.tolist():
+        if i in [&quot;background&quot;, &quot;tuoguan&quot;, &quot;zhuzed&quot;]:
+            dummies_ = pd.get_dummies(X[i], prefix=i)
+            X_dummies = pd.concat([X, dummies_], axis=1)
+            X_dummies.drop([i], axis=1, inplace=True)
+
+    if &quot;touziq&quot; in X_dummies.columns.tolist():
+            X_dummies[&quot;touziq&quot;] = X_dummies[&quot;touziq&quot;].astype(np.int)
+
+    X_train, X_test, y_train, y_test = train_test_split(X_dummies, y, test_size=0.2, random_state=0)
+    cross_score = []
+    cross_score_i = []
+    for i in range(2, 11, 2):
+        clf = RandomForestClassifier(min_samples_split=i, max_features=3, max_depth=10, n_estimators=100, random_state=24)
+        scores = cross_val_score(clf, X_train, y_train, cv=5, scoring='accuracy')
+        mean_score = scores.mean()
+        cross_score.append(mean_score)
+        cross_score_i.append(i)
+    x_num = len(cross_score)
+    fig, ax = plt.subplots(figsize=(8,6)) 
+    sns.pointplot(range(x_num), cross_score, ax=ax)
+    ax.set_ylabel(u'交叉验证准确率', fontsize=15, fontproperties=font)
+    ax.set_xlabel(u'min_sample_split', fontsize=15, fontproperties=font)
+    ax.set_xticklabels(cross_score_i, rotation=30)
+</code></pre>
+
+<pre><code class="python">rf_test_min_samples_split(dall) 
+</code></pre>
+
+<p><img alt="png" src="../output_82_0.png" /></p>
+<pre><code class="python">def rf_test_min_samples_leaf(df):   
+    feature = ['averageI','classification','netF',
+                   'background','tuoguan','touziq','date', 'shiz']
+    data = df[feature]
+    y = data.pop(&quot;classification&quot;)
+    X = data
+    if &quot;zhuzed&quot; in X.columns.tolist():
+        set_zhu_all = set(data[&quot;zhuzed&quot;].unique().tolist())
+        set_zhu_pa = set(data[&quot;zhuzed&quot;].value_counts().index[:1].tolist())
+        zhu_replace = list(set_zhu_all - set_zhu_pa)       
+        X[&quot;zhuzed&quot;] = X[&quot;zhuzed&quot;].replace(zhu_replace,[100] * len(zhu_replace))
+    if &quot;date&quot; in X.columns.tolist():
+        date_str = X[&quot;date&quot;].str.slice(0,7)
+        date_ = pd.to_datetime(date_str)
+        last = pd.to_datetime(&quot;2016-12&quot;)
+        day_dela = (last - date_)
+        day_str = day_dela.astype(str)
+        day_ = day_str.str.split(&quot; &quot;).str.get(0).astype(int) 
+        X[&quot;date&quot;] = (day_ / 30).astype(np.int)
+    for i in X.columns.tolist():
+        if i in [&quot;background&quot;, &quot;tuoguan&quot;, &quot;zhuzed&quot;]:
+            dummies_ = pd.get_dummies(X[i], prefix=i)
+            X_dummies = pd.concat([X, dummies_], axis=1)
+            X_dummies.drop([i], axis=1, inplace=True)
+
+    if &quot;touziq&quot; in X_dummies.columns.tolist():
+            X_dummies[&quot;touziq&quot;] = X_dummies[&quot;touziq&quot;].astype(np.int)
+
+    X_train, X_test, y_train, y_test = train_test_split(X_dummies, y, test_size=0.2, random_state=0)
+    cross_score = []
+    cross_score_i = []
+    for i in range(2, 11, 2):
+        clf = RandomForestClassifier(min_samples_leaf=i, min_samples_split=2, max_features=3, max_depth=10, n_estimators=100, random_state=24)
+        scores = cross_val_score(clf, X_train, y_train, cv=5, scoring='accuracy')
+        mean_score = scores.mean()
+        cross_score.append(mean_score)
+        cross_score_i.append(i)
+    x_num = len(cross_score)
+    fig, ax = plt.subplots(figsize=(8,6)) 
+    sns.pointplot(range(x_num), cross_score, ax=ax)
+    ax.set_ylabel(u'交叉验证准确率', fontsize=15, fontproperties=font)
+    ax.set_xlabel(u'min_sample_leaf', fontsize=15, fontproperties=font)
+    ax.set_xticklabels(cross_score_i, rotation=30)
+</code></pre>
+
+<pre><code class="python">rf_test_min_samples_leaf(dall)
+</code></pre>
+
+<p><img alt="png" src="../output_84_0.png" /></p>
+<pre><code class="python">def rf(df):   
+    feature = ['averageI','classification','netF',
+                   'background','tuoguan','touziq','date', 'shiz']
+    data = df[feature]
+    y = data.pop(&quot;classification&quot;)
+    X = data
+    if &quot;zhuzed&quot; in X.columns.tolist():
+        set_zhu_all = set(data[&quot;zhuzed&quot;].unique().tolist())
+        set_zhu_pa = set(data[&quot;zhuzed&quot;].value_counts().index[:1].tolist())
+        zhu_replace = list(set_zhu_all - set_zhu_pa)       
+        X[&quot;zhuzed&quot;] = X[&quot;zhuzed&quot;].replace(zhu_replace,[100] * len(zhu_replace))
+    if &quot;date&quot; in X.columns.tolist():
+        date_str = X[&quot;date&quot;].str.slice(0,7)
+        date_ = pd.to_datetime(date_str)
+        last = pd.to_datetime(&quot;2016-12&quot;)
+        day_dela = (last - date_)
+        day_str = day_dela.astype(str)
+        day_ = day_str.str.split(&quot; &quot;).str.get(0).astype(int) 
+        X[&quot;date&quot;] = (day_ / 30).astype(np.int)
+    for i in X.columns.tolist():
+        if i in [&quot;background&quot;, &quot;tuoguan&quot;, &quot;zhuzed&quot;]:
+            dummies_ = pd.get_dummies(X[i], prefix=i)
+            X_dummies = pd.concat([X, dummies_], axis=1)
+            X_dummies.drop([i], axis=1, inplace=True)
+
+    if &quot;touziq&quot; in X_dummies.columns.tolist():
+            X_dummies[&quot;touziq&quot;] = X_dummies[&quot;touziq&quot;].astype(np.int)
+
+    X_train, X_test, y_train, y_test = train_test_split(X_dummies, y, test_size=0.2, random_state=0)
+    clf = RandomForestClassifier(min_samples_leaf=6, min_samples_split=8, max_features=3, max_depth=10, n_estimators=100, random_state=24)
+    clf.fit(X_train, y_train)    
+    y_pred = clf.predict(X_test)
+    num_test = len(y_test)
+    result = (num_test - (y_test != y_pred).sum()) / float(num_test) * 100
+    plot_learning_curve(clf, &quot;learning curve&quot;, X_train, y_train, text_=result)        
+    #print '\t%s\t%s\t%s\t%s' % ('分类','精确率','召回率','f1-score')
+    evaluate_result_rf = classification_report(y_test, y_pred)
+    #print '0 ：p2p平台跑路(或出现其他非正常运营的问题)' 
+    #print '1 ：正常运营' 
+    return evaluate_result_rf   
+</code></pre>
+
+<pre><code class="python">evaluate_result_rf = rf(dall)
+</code></pre>
+
+<p><img alt="png" src="../output_86_0.png" /></p>
+<pre><code class="python">evaluate_result_rf
+</code></pre>
+
+<pre><code>'             precision    recall  f1-score   support\n\n        0.0       0.82      0.82      0.82       392\n        1.0       0.82      0.82      0.82       387\n\navg / total       0.82      0.82      0.82       779\n'
+</code></pre>
+<p>使用GridSearchCV进一步搜索最优参数</p>
+<pre><code class="python">def randomforest_classifier_gs(df):   
+    feature = ['averageI','classification','netF',
+                   'background','tuoguan','touziq','date', 'shiz']
+    data = df[feature]
+    y = data.pop(&quot;classification&quot;)
+    X = data
+    if &quot;zhuzed&quot; in X.columns.tolist():
+        set_zhu_all = set(data[&quot;zhuzed&quot;].unique().tolist())
+        set_zhu_pa = set(data[&quot;zhuzed&quot;].value_counts().index[:1].tolist())
+        zhu_replace = list(set_zhu_all - set_zhu_pa)       
+        X[&quot;zhuzed&quot;] = X[&quot;zhuzed&quot;].replace(zhu_replace,[100] * len(zhu_replace))
+    if &quot;date&quot; in X.columns.tolist():
+        date_str = X[&quot;date&quot;].str.slice(0,7)
+        date_ = pd.to_datetime(date_str)
+        last = pd.to_datetime(&quot;2016-12&quot;)
+        day_dela = (last - date_)
+        day_str = day_dela.astype(str)
+        day_ = day_str.str.split(&quot; &quot;).str.get(0).astype(int) 
+        X[&quot;date&quot;] = (day_ / 30).astype(np.int)
     for i in X.columns.tolist():
         if i in [&quot;background&quot;, &quot;tuoguan&quot;, &quot;zhuzed&quot;]:
             dummies_ = pd.get_dummies(X[i], prefix=i)
@@ -1200,11 +1600,11 @@ def plot_learning_curve(estimator, title, X, y, ylim=None, cv=5, n_jobs=1,
 
     pipeline = Pipeline([('clf', RandomForestClassifier(criterion='gini'))])
     parameters = {
-                  'clf__n_estimators': (40, 80),
-                  'clf__max_depth': (15, 20, 30),
-                  'clf__min_samples_split': (10,20,50),
-                  'clf__min_samples_leaf': (2,5,15),
-                  'clf__max_features': (2,5)
+                  'clf__n_estimators': (100, 120, 140),
+                  'clf__max_depth': (10, 12),
+                  'clf__min_samples_split': (7, 8, 9),
+                  'clf__min_samples_leaf': (5, 6, 7),
+                  'clf__max_features': (3, 5)
                   }
     grid_search = GridSearchCV(pipeline, parameters, n_jobs=2, verbose=1, scoring='accuracy')
     grid_search.fit(X_train, y_train)
@@ -1220,57 +1620,46 @@ def plot_learning_curve(estimator, title, X, y, ylim=None, cv=5, n_jobs=1,
     return accuracy_score, best_parameters, evaluate_result    
 </code></pre>
 
-<pre><code class="python">accuracy_score, best_params, evaluate_result = randomforest_classifier(dall)
+<pre><code class="python">randomforest_classifier_gs(dall)
 </code></pre>
 
-<pre><code class="python">accuracy_score
+<pre><code>('best_accuray_score: 0.821566110398',
+ {'clf': RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+              max_depth=10, max_features=3, max_leaf_nodes=None,
+              min_impurity_split=1e-07, min_samples_leaf=6,
+              min_samples_split=7, min_weight_fraction_leaf=0.0,
+              n_estimators=120, n_jobs=1, oob_score=False, random_state=None,
+              verbose=0, warm_start=False),
+  'clf__bootstrap': True,
+  'clf__class_weight': None,
+  'clf__criterion': 'gini',
+  'clf__max_depth': 10,
+  'clf__max_features': 3,
+  'clf__max_leaf_nodes': None,
+  'clf__min_impurity_split': 1e-07,
+  'clf__min_samples_leaf': 6,
+  'clf__min_samples_split': 7,
+  'clf__min_weight_fraction_leaf': 0.0,
+  'clf__n_estimators': 120,
+  'clf__n_jobs': 1,
+  'clf__oob_score': False,
+  'clf__random_state': None,
+  'clf__verbose': 0,
+  'clf__warm_start': False,
+  'steps': [('clf',
+    RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+                max_depth=10, max_features=3, max_leaf_nodes=None,
+                min_impurity_split=1e-07, min_samples_leaf=6,
+                min_samples_split=7, min_weight_fraction_leaf=0.0,
+                n_estimators=120, n_jobs=1, oob_score=False, random_state=None,
+                verbose=0, warm_start=False))]},
+ '             precision    recall  f1-score   support\n\n        0.0       0.83      0.81      0.82       392\n        1.0       0.81      0.83      0.82       387\n\navg / total       0.82      0.82      0.82       779\n')
 </code></pre>
-
-<pre><code>'best_accuray_score: 0.825738125802'
-</code></pre>
-<pre><code class="python">best_params
-&quot;&quot;&quot;
-{'clf': RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
-             max_depth=30, max_features=5, max_leaf_nodes=None,
-             min_impurity_split=1e-07, min_samples_leaf=2,
-             min_samples_split=50, min_weight_fraction_leaf=0.0,
-             n_estimators=80, n_jobs=1, oob_score=False, random_state=None,
-             verbose=0, warm_start=False),
-&quot;&quot;&quot;
-</code></pre>
-
-<pre><code class="python"># 使用gridsearch的最佳参数进行randomforestclssification,分析learning curve
-feature = ['averageI','classification','netF','background','tuoguan','touziq']
-data = dall[feature]
-y = data.pop(&quot;classification&quot;)
-X = data
-for i in X.columns.tolist():
-    if i in [&quot;background&quot;, &quot;tuoguan&quot;, &quot;zhuzed&quot;]:
-        dummies_ = pd.get_dummies(X[i], prefix=i)
-        X_dummies = pd.concat([X, dummies_], axis=1)
-        X_dummies.drop([i], axis=1, inplace=True)
-
-if &quot;touziq&quot; in X_dummies.columns.tolist():
-        X_dummies[&quot;touziq&quot;] = X_dummies[&quot;touziq&quot;].astype(np.int)
-X_train, X_test, y_train, y_test = train_test_split(X_dummies, y, test_size=0.2, random_state=0)
-rsl = RandomForestClassifier(n_estimators=80, criterion='gini', max_depth=30, min_samples_split=50, min_samples_leaf=2,
-                             max_features=5)  
-rsl.fit(X_train, y_train)
-y_pred = rsl.predict(X_test)
-num_test = len(y_test)
-result = (num_test - (y_test != y_pred).sum()) / float(num_test) * 100
-plot_learning_curve(rsl, &quot;learning curve&quot;, X_train, y_train, text_=result)        
-result
-</code></pre>
-
-<p><img alt="png" src="../output_74_0.png" /></p>
-<pre><code>80.616174582798465
-</code></pre>
-<p>RandomForestClassifier的训练集的最高分类准确率为82.5%，但从learning curve能看出存在着明显的过拟合现象，故测试集的准确率只有80.6%，略高于LogisticRegression的分类效果。</p>
+<p>选取平均年化利率、网友评分、资金托管、平台资质、投资期、注册日期、实缴资本为分类特征，RandomForestClassifier的测试集的准确率有82%，精确率、召回率也是82%，但从learning curve能看出存在着过拟合现象。</p>
 <h2 id="_12">总结</h2>
 <p>通过LogistciRegression和RandomForestClassifier建立的分类模型的分类效果均较差。造成以上原因跟数据源有一定关系。有关p2p网贷平台的评估指标有很多，本报告只选择了5个特征给机器算法学习和训练，其他指标如网贷平台的工商注册信息、网站ICP、融资及风投信息等暂没考虑。此外，由于数据的缺失值较多，比如平均利率这一个指标，在分析的3800多家p2p平台中有1695家无此项数据，这些都会影响到分类模型的分类及预测效果。</p>
 <p>p2p平台跑路原因可简单地分为诈骗类和经营不善类。庞氏骗局、恶意自融等属于诈骗类。由于网贷平台经营过程的成本偏高，风控不过关而导致的经营不善，引起运营平台资金链断裂，最终关门跑路。一般而言，跑路平台有一些特点，如资产项目信息披露不明，风控不达标或根本无风控一环，秒标、天标、高息标比例高，投资者用户体验度差等。</p>
-<p>本文首先对p2p网贷平台的特征与是否跑路的关系进行定性分析，随后尝试图通过sklearn提供的两种分类算法对p2p网贷平台的跑路现象进行分类预测，效果一般（准确率0.8），其原因在样本数据缺失较多及样本特征不全面。因此，要对网贷平台的跑路与否进行更精确的预测，就要更进一步地采取一些措施考察网贷平台，比如，对网贷平台的相关工商信息进行查询和确认，查询网贷平台是否接受过风投，可参考第三方网贷机构的评级数据，对平台进行实地考察等等。只有对网贷平台进行全面的考察和判断才能最大地降低网贷投资风险。</p>
+<p>本文首先对p2p网贷平台的特征与是否跑路的关系进行定性分析，随后尝试图通过sklearn提供的两种分类算法对p2p网贷平台的跑路现象进行分类预测，效果一般（准确率0.82），推测原因主要在样本数据缺失较多及样本特征不全面。因此，要对网贷平台的跑路与否进行更精确的预测，就要更进一步地采取一些措施考察网贷平台，比如，对网贷平台的相关工商信息进行查询和确认，查询网贷平台是否接受过风投，可参考第三方网贷机构的评级数据，对平台进行实地考察等等。只有对网贷平台进行全面的考察和判断才能最大地降低网贷投资风险。</p>
               
             </div>
           </div>
