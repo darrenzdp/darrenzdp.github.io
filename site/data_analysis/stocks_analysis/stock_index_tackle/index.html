@@ -1,0 +1,2359 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../../../img/favicon.ico">
+  <title>股票线性回归分析 - Darren_blog</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../../../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../../../css/highlight.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "\u80a1\u7968\u7ebf\u6027\u56de\u5f52\u5206\u6790";
+    var mkdocs_page_input_path = "data_analysis/stocks_analysis/stock_index_tackle.md";
+    var mkdocs_page_url = "/data_analysis/stocks_analysis/stock_index_tackle/";
+  </script>
+  
+  <script src="../../../js/jquery-2.1.1.min.js"></script>
+  <script src="../../../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../../../js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href="../../.." class="icon icon-home"> Darren_blog</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../..">Darren_blog</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../lagou_job_analysis/lagou_job_analysis_forshow/">拉勾招聘职位信息数据分析</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../p2p_runaway_analysis/p2p_runaway_classify_analysis_forshow/">p2p网站跑路判别</a>
+	    </li>
+          
+            <li class="toctree-l1 current">
+		
+    <a class="current" href="./">股票线性回归分析</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l2"><a href="#_1">股票线性回归分析</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l3" href="#_2">股票数据采集</a></li>
+        
+            <li><a class="toctree-l3" href="#_3">数据清洗与分析</a></li>
+        
+        </ul>
+    
+
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../../machine_learning/logistic_regression/logistic_regression_forshow/">Logistic_regression的Python代码实现</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../../machine_learning/perceptron_classifier/perceptron_classifier_blog/">感知器python代码实现</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../..">Darren_blog</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>股票线性回归分析</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="_1">股票线性回归分析</h1>
+<h2 id="_2">股票数据采集</h2>
+<p>使用tushare提供的接口采集2017年3000多个股信息，同时采集了三年的大盘信息，使用pymysql与mysql数据库进行交互，具体采集过程略过。</p>
+<h2 id="_3">数据清洗与分析</h2>
+<p>tushare提供的新浪财经上的数据，数据无明显的缺失和错误。
+首先选择合适的股指指数，然后对个股与大盘指数的关系进行分析，即尝试使用线性回归对个股与大盘的关系进行分析，进而找出一些“强势”股票。</p>
+<p>假定股票投资收益率与市场收益率存在着线性相关关系，则股票投资收益率灵敏度系数可以用线性回归模型估计，其公式如下：
+<script type="math/tex; mode=display"> R = \alpha + \beta R_M + \epsilon </script>
+</p>
+<p>R—资产的预期投资收益率；
+$R_M$—资本市场的平均投资收益率；
+β—风险矫正系数，即对资本市场系统风险变化的敏感程度；
+$\alpha$—常数项，超出市场的部分；
+ε—误差项；</p>
+<pre><code class="python">import pandas as pd 
+import numpy as np
+import matplotlib.pyplot as plt 
+import seaborn as sns
+sns.set(style=&quot;whitegrid&quot;, palette=&quot;muted&quot;, font_scale=1.0, color_codes=True, context=&quot;talk&quot;)
+%matplotlib inline
+from matplotlib.font_manager import FontProperties  
+font = FontProperties(fname=r&quot;/usr/share/fonts/truetype/arphic/ukai.ttc&quot;)
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
+import datetime
+import pymysql
+from scipy import stats
+</code></pre>
+
+<h3 id="_4">股指数据处理</h3>
+<pre><code class="python"># 处理股指数据
+si = pd.read_csv(&quot;./stock_index_all.csv&quot;, parse_dates=True, index_col=&quot;sdate&quot;)
+si.shape  # (4404,8)
+sname = si[&quot;sindex&quot;].unique()
+si[&quot;sindex&quot;].replace(sname, [u&quot;创业板&quot;,u&quot;沪深300&quot;,u&quot;上证&quot;,
+                             u&quot;深圳成指&quot;,u&quot;上证50&quot;,u&quot;中小板&quot;], inplace=True)
+</code></pre>
+
+<pre><code class="python"># 透视表
+si_pv = si.pivot_table(index=si.index, columns=&quot;sindex&quot;)
+si_pv.head(3)
+</code></pre>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr>
+      <th></th>
+      <th colspan="6" halign="left">open</th>
+      <th colspan="4" halign="left">close</th>
+      <th>...</th>
+      <th colspan="4" halign="left">price_change</th>
+      <th colspan="6" halign="left">p_change</th>
+    </tr>
+    <tr>
+      <th>sindex</th>
+      <th>上证</th>
+      <th>上证50</th>
+      <th>中小板</th>
+      <th>创业板</th>
+      <th>沪深300</th>
+      <th>深圳成指</th>
+      <th>上证</th>
+      <th>上证50</th>
+      <th>中小板</th>
+      <th>创业板</th>
+      <th>...</th>
+      <th>中小板</th>
+      <th>创业板</th>
+      <th>沪深300</th>
+      <th>深圳成指</th>
+      <th>上证</th>
+      <th>上证50</th>
+      <th>中小板</th>
+      <th>创业板</th>
+      <th>沪深300</th>
+      <th>深圳成指</th>
+    </tr>
+    <tr>
+      <th>sdate</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2014-10-14</th>
+      <td>2362.802</td>
+      <td>1603.347</td>
+      <td>5593.922</td>
+      <td>1546.666</td>
+      <td>2451.094</td>
+      <td>8150.859</td>
+      <td>2359.475</td>
+      <td>1600.299</td>
+      <td>5577.213</td>
+      <td>1539.119</td>
+      <td>...</td>
+      <td>-22.859</td>
+      <td>-9.208</td>
+      <td>-8.384</td>
+      <td>-24.106</td>
+      <td>-0.28</td>
+      <td>-0.35</td>
+      <td>-0.41</td>
+      <td>-0.59</td>
+      <td>-0.34</td>
+      <td>-0.29</td>
+    </tr>
+    <tr>
+      <th>2014-10-15</th>
+      <td>2358.233</td>
+      <td>1599.895</td>
+      <td>5577.844</td>
+      <td>1539.347</td>
+      <td>2444.538</td>
+      <td>8141.143</td>
+      <td>2373.670</td>
+      <td>1612.772</td>
+      <td>5611.542</td>
+      <td>1545.623</td>
+      <td>...</td>
+      <td>34.329</td>
+      <td>6.504</td>
+      <td>17.312</td>
+      <td>58.163</td>
+      <td>0.60</td>
+      <td>0.78</td>
+      <td>0.62</td>
+      <td>0.42</td>
+      <td>0.71</td>
+      <td>0.71</td>
+    </tr>
+    <tr>
+      <th>2014-10-16</th>
+      <td>2361.130</td>
+      <td>1602.383</td>
+      <td>5587.709</td>
+      <td>1539.858</td>
+      <td>2448.968</td>
+      <td>8156.785</td>
+      <td>2356.499</td>
+      <td>1608.735</td>
+      <td>5525.425</td>
+      <td>1526.560</td>
+      <td>...</td>
+      <td>-86.117</td>
+      <td>-19.063</td>
+      <td>-19.479</td>
+      <td>-87.437</td>
+      <td>-0.72</td>
+      <td>-0.25</td>
+      <td>-1.53</td>
+      <td>-1.23</td>
+      <td>-0.79</td>
+      <td>-1.07</td>
+    </tr>
+  </tbody>
+</table>
+<p>3 rows × 42 columns</p>
+</div>
+
+<pre><code class="python"># 删除股指缺失数据，原始数据错误
+ss = si_pv[&quot;open&quot;][u&quot;上证&quot;]
+sst = si_pv[ss.isnull()].index.date
+miss_date = []
+for i in sst:
+    date_str = datetime.datetime.strftime(i, &quot;%Y-%m-%d&quot;)
+    miss_date.append(date_str)
+miss_date
+</code></pre>
+
+<pre><code>['2015-02-24', '2015-10-07', '2017-02-02', '2017-05-30']
+</code></pre>
+<pre><code class="python">si_pv.drop(sst, inplace=True)
+si_pv.shape  # (733, 42)
+</code></pre>
+
+<pre><code>(733, 42)
+</code></pre>
+<pre><code class="python">si_close = si_pv[&quot;close&quot;]
+si_change = si_pv[&quot;p_change&quot;]
+si_volume = si_pv[&quot;volume&quot;]
+</code></pre>
+
+<pre><code class="python">si_close.head(3)
+</code></pre>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>sindex</th>
+      <th>上证</th>
+      <th>上证50</th>
+      <th>中小板</th>
+      <th>创业板</th>
+      <th>沪深300</th>
+      <th>深圳成指</th>
+    </tr>
+    <tr>
+      <th>sdate</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2014-10-14</th>
+      <td>2359.475</td>
+      <td>1600.299</td>
+      <td>5577.213</td>
+      <td>1539.119</td>
+      <td>2446.562</td>
+      <td>8139.961</td>
+    </tr>
+    <tr>
+      <th>2014-10-15</th>
+      <td>2373.670</td>
+      <td>1612.772</td>
+      <td>5611.542</td>
+      <td>1545.623</td>
+      <td>2463.874</td>
+      <td>8198.124</td>
+    </tr>
+    <tr>
+      <th>2014-10-16</th>
+      <td>2356.499</td>
+      <td>1608.735</td>
+      <td>5525.425</td>
+      <td>1526.560</td>
+      <td>2444.395</td>
+      <td>8110.687</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code class="python">si_close.plot(figsize=(8,6))
+plt.xlabel(u&quot;日期&quot;, fontsize=16, fontproperties=font)
+plt.title(u&quot;各股指指数变化&quot;, fontsize=25, fontproperties=font)
+# plt.yticks(ax1.get_yticks(), ax1.get_yticks() * 100)
+plt.ylabel('指数', fontproperties=font, fontsize=16)
+plt.gca().yaxis.grid(True, linestyle = &quot;:&quot;)
+plt.gca().xaxis.grid(True, linestyle = &quot;:&quot;)
+plt.legend(loc='best', prop=font, fontsize=12)
+</code></pre>
+
+<pre><code>&lt;matplotlib.legend.Legend at 0x7f99aaf3b410&gt;
+</code></pre>
+<p><img alt="png" src="../output_11_1.png" /></p>
+<pre><code class="python">fig1, (ax1, ax2, ax3) = plt.subplots(3,1, figsize=(10, 13))
+si_close.plot(ax=ax1, use_index=False, xticks=[], legend=False, fontsize=16)
+si_change.plot(ax=ax2, use_index=False, xticks=[], legend=False, fontsize=16)
+si_change_cumsum = si_change.cumsum()
+si_change_cumsum.plot(ax=ax3, fontsize=16, legend=False)
+ax1.set_title(u&quot;各股指变化&quot;, fontproperties=font, fontsize=19)
+ax2.set_title(u&quot;涨跌幅变化&quot;, fontproperties=font, fontsize=19)
+ax3.set_title(u&quot;涨跌幅累计变化&quot;, fontproperties=font, fontsize=19)
+plt.tight_layout() 
+plt.xlabel(u&quot;日期&quot;, fontproperties=font, fontsize=16)
+plt.legend(loc='best', prop=font, fontsize=15)
+</code></pre>
+
+<pre><code>&lt;matplotlib.legend.Legend at 0x7f99aa280f90&gt;
+</code></pre>
+<p><img alt="png" src="../output_12_1.png" /></p>
+<pre><code class="python"># 2017年的股指数据
+ssi_close = si_close['2017-1':'2017-10']
+ssi_change = si_change['2017-1':'2017-10']
+ssi_volume = si_volume['2017-1':'2017-10']
+ssi_close.head(3)
+</code></pre>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>sindex</th>
+      <th>上证</th>
+      <th>上证50</th>
+      <th>中小板</th>
+      <th>创业板</th>
+      <th>沪深300</th>
+      <th>深圳成指</th>
+    </tr>
+    <tr>
+      <th>sdate</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2017-01-03</th>
+      <td>3135.92</td>
+      <td>2307.89</td>
+      <td>6510.90</td>
+      <td>1963.26</td>
+      <td>3342.23</td>
+      <td>10262.85</td>
+    </tr>
+    <tr>
+      <th>2017-01-04</th>
+      <td>3158.79</td>
+      <td>2322.21</td>
+      <td>6600.20</td>
+      <td>1991.57</td>
+      <td>3368.31</td>
+      <td>10384.87</td>
+    </tr>
+    <tr>
+      <th>2017-01-05</th>
+      <td>3165.41</td>
+      <td>2322.68</td>
+      <td>6587.13</td>
+      <td>1983.97</td>
+      <td>3367.79</td>
+      <td>10371.47</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code class="python">fig2, (ax1, ax2, ax3) = plt.subplots(3,1, figsize=(8, 13))
+ssi_close.plot(ax=ax1, use_index=False, xticks=[], fontsize=16,legend=False)
+ssi_change.plot(ax=ax2, use_index=False, xticks=[],legend=False, fontsize=16)
+ssi_change_cumsum = ssi_change.cumsum()
+ssi_change_cumsum.plot(ax=ax3, fontsize=16, legend=True)
+ax1.set_title(u&quot;各股指变化&quot;, fontproperties=font, fontsize=19)
+ax2.set_title(u&quot;涨跌幅变化&quot;, fontproperties=font, fontsize=19)
+ax3.set_title(u&quot;涨跌幅累计变化&quot;, fontproperties=font, fontsize=19)
+plt.tight_layout() 
+plt.legend(loc='best', prop=font, fontsize=15)
+plt.xlabel(u&quot;日期&quot;, fontproperties=font, fontsize=16)
+</code></pre>
+
+<pre><code>&lt;matplotlib.text.Text at 0x7f99a8429ed0&gt;
+</code></pre>
+<p><img alt="png" src="../output_14_1.png" /></p>
+<pre><code class="python">def corr_plot(dataframe, method='pearson', plot_title=None, figsize=(10,8)):
+    si_corr = dataframe.corr(method=method)    
+    siname = si_corr.columns.values
+    plt.figure(figsize=figsize)
+    g = sns.heatmap(si_corr, cbar=True, annot=True, 
+                square=True, fmt=&quot;.2f&quot;, 
+                annot_kws={'size': 12}, 
+               yticklabels=siname,xticklabels=siname)
+    plt.yticks(g.get_yticks(), fontproperties=font, fontsize=16)
+    plt.xticks(g.get_xticks(), fontproperties=font, fontsize=16)
+    plt.xlabel(&quot;&quot;)
+    plt.ylabel(&quot;&quot;)
+    plt.title(plot_title, fontproperties=font, fontsize=20)
+</code></pre>
+
+<pre><code class="python">corr_plot(ssi_change, u&quot;近一年各股指相关关系&quot;)
+</code></pre>
+
+<p><img alt="png" src="../output_16_0.png" /></p>
+<pre><code class="python">corr_plot(si_change, u&quot;近三年各股指相关关系&quot;)
+</code></pre>
+
+<p><img alt="png" src="../output_17_0.png" /></p>
+<pre><code class="python">ssi_change.shape  # (190, 6)
+ssi_change.head(3)
+</code></pre>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>sindex</th>
+      <th>上证</th>
+      <th>上证50</th>
+      <th>中小板</th>
+      <th>创业板</th>
+      <th>沪深300</th>
+      <th>深圳成指</th>
+    </tr>
+    <tr>
+      <th>sdate</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2017-01-03</th>
+      <td>1.04</td>
+      <td>0.92</td>
+      <td>0.60</td>
+      <td>0.06</td>
+      <td>0.97</td>
+      <td>0.84</td>
+    </tr>
+    <tr>
+      <th>2017-01-04</th>
+      <td>0.73</td>
+      <td>0.62</td>
+      <td>1.37</td>
+      <td>1.44</td>
+      <td>0.78</td>
+      <td>1.19</td>
+    </tr>
+    <tr>
+      <th>2017-01-05</th>
+      <td>0.21</td>
+      <td>0.02</td>
+      <td>-0.20</td>
+      <td>-0.38</td>
+      <td>-0.01</td>
+      <td>-0.13</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code class="python">ssi_change.describe()
+</code></pre>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>sindex</th>
+      <th>上证</th>
+      <th>上证50</th>
+      <th>中小板</th>
+      <th>创业板</th>
+      <th>沪深300</th>
+      <th>深圳成指</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>188.000000</td>
+      <td>188.000000</td>
+      <td>188.000000</td>
+      <td>188.000000</td>
+      <td>188.000000</td>
+      <td>188.000000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>0.047606</td>
+      <td>0.094096</td>
+      <td>0.096436</td>
+      <td>-0.011862</td>
+      <td>0.091064</td>
+      <td>0.059202</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>0.534457</td>
+      <td>0.635277</td>
+      <td>0.831965</td>
+      <td>1.024665</td>
+      <td>0.575751</td>
+      <td>0.829573</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>-1.630000</td>
+      <td>-1.570000</td>
+      <td>-2.820000</td>
+      <td>-5.110000</td>
+      <td>-1.840000</td>
+      <td>-3.570000</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>-0.300000</td>
+      <td>-0.330000</td>
+      <td>-0.445000</td>
+      <td>-0.630000</td>
+      <td>-0.292500</td>
+      <td>-0.432500</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>0.070000</td>
+      <td>0.065000</td>
+      <td>0.085000</td>
+      <td>0.060000</td>
+      <td>0.095000</td>
+      <td>0.110000</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>0.362500</td>
+      <td>0.472500</td>
+      <td>0.652500</td>
+      <td>0.557500</td>
+      <td>0.392500</td>
+      <td>0.592500</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>1.830000</td>
+      <td>2.740000</td>
+      <td>2.720000</td>
+      <td>3.620000</td>
+      <td>1.800000</td>
+      <td>2.220000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>根据线图和pearson相关关系图，各大股指有一定的相关性，尤其是上证、深圳成指、创业板，由此可以选择上证为衡量的股指指数。</p>
+<h3 id="_5">个股数据处理</h3>
+<pre><code class="python">stock_id= pd.read_csv(&quot;./stock_id.csv&quot;, header=None, dtype=str)
+stock_id.head(10)
+stock_id.shape
+</code></pre>
+
+<pre><code>(3413, 1)
+</code></pre>
+<pre><code class="python">stocks = pd.read_csv(&quot;./stocks_all.csv&quot;, parse_dates=True, index_col=&quot;ssdate&quot;, dtype=str)
+</code></pre>
+
+<pre><code class="python">for i in [&quot;open&quot;, &quot;close&quot;, &quot;volume&quot;, &quot;p_change&quot;]:    
+    stocks[i] = stocks[i].astype(np.float)
+stocks.dtypes
+</code></pre>
+
+<pre><code>ssindex      object
+open        float64
+close       float64
+volume      float64
+p_change    float64
+dtype: object
+</code></pre>
+<pre><code class="python">stocks.head(2)
+</code></pre>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>ssindex</th>
+      <th>open</th>
+      <th>close</th>
+      <th>volume</th>
+      <th>p_change</th>
+    </tr>
+    <tr>
+      <th>ssdate</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2017-01-03</th>
+      <td>300425</td>
+      <td>30.47</td>
+      <td>30.64</td>
+      <td>10473.89</td>
+      <td>0.86</td>
+    </tr>
+    <tr>
+      <th>2017-01-04</th>
+      <td>300425</td>
+      <td>30.64</td>
+      <td>30.97</td>
+      <td>10098.92</td>
+      <td>1.08</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code class="python">stocks.count()
+</code></pre>
+
+<pre><code>ssindex     543445
+open        543445
+close       543445
+volume      543445
+p_change    543445
+dtype: int64
+</code></pre>
+<pre><code class="python">ssi_change.count()
+</code></pre>
+
+<pre><code>sindex
+上证       188
+上证50     188
+中小板      188
+创业板      188
+沪深300    188
+深圳成指     188
+dtype: int64
+</code></pre>
+<p>个股数据基本无缺失值，统计了17年截至目前共计188天交易日的数据</p>
+<h3 id="_6">线性回归分析个股与大盘的关系</h3>
+<pre><code class="python"># 股票id
+stocks_id = stocks[&quot;ssindex&quot;].unique()
+regress_weights = pd.DataFrame()
+columns=[&quot;ssindex&quot;, &quot;sindex&quot;, &quot;beta&quot;, &quot;alpha&quot;, &quot;r_value&quot;, &quot;p_value&quot;, &quot;sigma&quot;, &quot;coeff&quot;]
+for i in stocks_id:
+    one_stock = stocks.loc[stocks[&quot;ssindex&quot;] == i, [&quot;p_change&quot;]]    
+    index_stock = ssi_change[[u&quot;上证&quot;, u&quot;创业板&quot;, u&quot;深圳成指&quot;]]
+    result = pd.merge(one_stock, index_stock, left_index=True, right_index=True)
+    corr_s = result.corr()
+    corrs = corr_s.loc[corr_s.index == &quot;p_change&quot;, corr_s.index != &quot;p_change&quot;]
+    for j in ([u&quot;上证&quot;, u&quot;创业板&quot;, u&quot;深圳成指&quot;]):
+        # 个股与大盘指数
+        cof = stats.linregress(result[j], result[&quot;p_change&quot;])
+        cof = list(cof)
+        cof.insert(0, j)
+        cof.insert(0, i)
+        cof.append(corrs[j].values[0])
+        regress_weights = regress_weights.append(pd.Series(cof), ignore_index=True)
+regress_weights.columns = columns
+# regress_weights.to_csv(&quot;./stocks_linear_reg.csv&quot;, index=False)
+</code></pre>
+
+<pre><code class="python">regress_weights.head(3)
+</code></pre>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>ssindex</th>
+      <th>sindex</th>
+      <th>beta</th>
+      <th>alpha</th>
+      <th>r_value</th>
+      <th>p_value</th>
+      <th>sigma</th>
+      <th>coeff</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>300425</td>
+      <td>上证</td>
+      <td>1.982162</td>
+      <td>-0.226491</td>
+      <td>0.435494</td>
+      <td>4.212572e-10</td>
+      <td>0.300425</td>
+      <td>0.435494</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>300425</td>
+      <td>创业板</td>
+      <td>1.370130</td>
+      <td>-0.115876</td>
+      <td>0.577131</td>
+      <td>4.361627e-18</td>
+      <td>0.142157</td>
+      <td>0.577131</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>300425</td>
+      <td>深圳成指</td>
+      <td>1.630604</td>
+      <td>-0.228663</td>
+      <td>0.556075</td>
+      <td>1.188637e-16</td>
+      <td>0.178702</td>
+      <td>0.556075</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code class="python">target_cof = regress_weights[regress_weights[&quot;alpha&quot;] &gt; 0.2]  # 11%股票alpha &gt; 0.2
+target_stock_index_temp = target_cof[&quot;ssindex&quot;].unique()  # 443
+target_stock_index = list(set(target_stock_index1) | set(target_stock_index_temp))
+</code></pre>
+
+<pre><code class="python">rw = pd.pivot_table(regress_weights, index=[&quot;ssindex&quot;], columns=[&quot;sindex&quot;])
+</code></pre>
+
+<pre><code class="python">rw.head(2)
+</code></pre>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr>
+      <th></th>
+      <th colspan="3" halign="left">beta</th>
+      <th colspan="3" halign="left">alpha</th>
+      <th colspan="3" halign="left">r_value</th>
+      <th colspan="3" halign="left">p_value</th>
+      <th colspan="3" halign="left">sigma</th>
+      <th colspan="3" halign="left">coeff</th>
+    </tr>
+    <tr>
+      <th>sindex</th>
+      <th>上证</th>
+      <th>创业板</th>
+      <th>深圳成指</th>
+      <th>上证</th>
+      <th>创业板</th>
+      <th>深圳成指</th>
+      <th>上证</th>
+      <th>创业板</th>
+      <th>深圳成指</th>
+      <th>上证</th>
+      <th>创业板</th>
+      <th>深圳成指</th>
+      <th>上证</th>
+      <th>创业板</th>
+      <th>深圳成指</th>
+      <th>上证</th>
+      <th>创业板</th>
+      <th>深圳成指</th>
+    </tr>
+    <tr>
+      <th>ssindex</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>000001</th>
+      <td>1.009117</td>
+      <td>0.124561</td>
+      <td>0.371582</td>
+      <td>0.094619</td>
+      <td>0.144137</td>
+      <td>0.120661</td>
+      <td>0.422698</td>
+      <td>0.100032</td>
+      <td>0.241593</td>
+      <td>1.515277e-09</td>
+      <td>0.171984</td>
+      <td>0.000838</td>
+      <td>0.158640</td>
+      <td>0.090845</td>
+      <td>0.109434</td>
+      <td>0.422698</td>
+      <td>0.100032</td>
+      <td>0.241593</td>
+    </tr>
+    <tr>
+      <th>000002</th>
+      <td>0.772420</td>
+      <td>0.061969</td>
+      <td>0.555449</td>
+      <td>0.155289</td>
+      <td>0.193293</td>
+      <td>0.154671</td>
+      <td>0.179175</td>
+      <td>0.026400</td>
+      <td>0.193210</td>
+      <td>1.522864e-02</td>
+      <td>0.722779</td>
+      <td>0.008779</td>
+      <td>0.315248</td>
+      <td>0.174413</td>
+      <td>0.209659</td>
+      <td>0.179175</td>
+      <td>0.026400</td>
+      <td>0.193210</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code class="python">rwc = rw.swaplevel(0, 1, axis=1)  # 反转列层次化索引
+rwc.head(2)
+</code></pre>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr>
+      <th>sindex</th>
+      <th>上证</th>
+      <th>创业板</th>
+      <th>深圳成指</th>
+      <th>上证</th>
+      <th>创业板</th>
+      <th>深圳成指</th>
+      <th>上证</th>
+      <th>创业板</th>
+      <th>深圳成指</th>
+      <th>上证</th>
+      <th>创业板</th>
+      <th>深圳成指</th>
+      <th>上证</th>
+      <th>创业板</th>
+      <th>深圳成指</th>
+      <th>上证</th>
+      <th>创业板</th>
+      <th>深圳成指</th>
+    </tr>
+    <tr>
+      <th></th>
+      <th>beta</th>
+      <th>beta</th>
+      <th>beta</th>
+      <th>alpha</th>
+      <th>alpha</th>
+      <th>alpha</th>
+      <th>r_value</th>
+      <th>r_value</th>
+      <th>r_value</th>
+      <th>p_value</th>
+      <th>p_value</th>
+      <th>p_value</th>
+      <th>sigma</th>
+      <th>sigma</th>
+      <th>sigma</th>
+      <th>coeff</th>
+      <th>coeff</th>
+      <th>coeff</th>
+    </tr>
+    <tr>
+      <th>ssindex</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>000001</th>
+      <td>1.009117</td>
+      <td>0.124561</td>
+      <td>0.371582</td>
+      <td>0.094619</td>
+      <td>0.144137</td>
+      <td>0.120661</td>
+      <td>0.422698</td>
+      <td>0.100032</td>
+      <td>0.241593</td>
+      <td>1.515277e-09</td>
+      <td>0.171984</td>
+      <td>0.000838</td>
+      <td>0.158640</td>
+      <td>0.090845</td>
+      <td>0.109434</td>
+      <td>0.422698</td>
+      <td>0.100032</td>
+      <td>0.241593</td>
+    </tr>
+    <tr>
+      <th>000002</th>
+      <td>0.772420</td>
+      <td>0.061969</td>
+      <td>0.555449</td>
+      <td>0.155289</td>
+      <td>0.193293</td>
+      <td>0.154671</td>
+      <td>0.179175</td>
+      <td>0.026400</td>
+      <td>0.193210</td>
+      <td>1.522864e-02</td>
+      <td>0.722779</td>
+      <td>0.008779</td>
+      <td>0.315248</td>
+      <td>0.174413</td>
+      <td>0.209659</td>
+      <td>0.179175</td>
+      <td>0.026400</td>
+      <td>0.193210</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code class="python">rw[&quot;sigma&quot;].describe()
+</code></pre>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>sindex</th>
+      <th>上证</th>
+      <th>创业板</th>
+      <th>深圳成指</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>3039.000000</td>
+      <td>3039.000000</td>
+      <td>3039.000000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>0.318601</td>
+      <td>0.160160</td>
+      <td>0.197206</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>0.173631</td>
+      <td>0.088121</td>
+      <td>0.111256</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>0.080941</td>
+      <td>0.047468</td>
+      <td>0.055388</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>0.218256</td>
+      <td>0.108247</td>
+      <td>0.132529</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>0.275778</td>
+      <td>0.137372</td>
+      <td>0.168823</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>0.357421</td>
+      <td>0.179410</td>
+      <td>0.221232</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>1.294449</td>
+      <td>0.745507</td>
+      <td>0.837215</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code class="python">p_value_l = regress_weights[regress_weights[&quot;p_value&quot;] &gt;= 0.05]
+target_stock_index1 = p_value_l[&quot;ssindex&quot;].unique()
+target_stock_index1.shape  #  (234,)
+</code></pre>
+
+<p>根据个股与大盘进行线性回归，得到三个回归参数将，其中，根据alpha的正负号可以判断个股是否优于大盘（超出市场的程度），beta是否大于１表示了对大盘的敏感程度（大于１表示敏感，反之表示不敏感），sigma可近似看成个股波动风险</p>
+<pre><code class="python"># 回归系数相关性——spearman相关系数
+for j in [u&quot;上证&quot;, u&quot;创业板&quot;, u&quot;深圳成指&quot;]:
+    temp = rwc[j][[&quot;alpha&quot;, &quot;beta&quot;, &quot;sigma&quot;]]
+    corr_plot(temp, method=&quot;spearman&quot;, plot_title = u&quot;{}回归系数相关关系&quot;.format(j), figsize=(8,6))
+</code></pre>
+
+<p><img alt="png" src="../output_39_0.png" /></p>
+<p><img alt="png" src="../output_39_1.png" /></p>
+<p><img alt="png" src="../output_39_2.png" /></p>
+<pre><code class="python"># 回归系数相关性——pearson相关系数
+for j in [u&quot;上证&quot;, u&quot;创业板&quot;, u&quot;深圳成指&quot;]:
+    temp = rwc[j][[&quot;alpha&quot;, &quot;beta&quot;, &quot;sigma&quot;]]
+    corr_plot(temp, method=&quot;pearson&quot;, plot_title = u&quot;{}回归系数相关关系&quot;.format(j), figsize=(8,6))
+</code></pre>
+
+<p><img alt="png" src="../output_40_0.png" /></p>
+<p><img alt="png" src="../output_40_1.png" /></p>
+<p><img alt="png" src="../output_40_2.png" /></p>
+<pre><code class="python">alpha_stock = pd.DataFrame()
+alpha_stock[u&quot;上证&quot;] = rw[&quot;alpha&quot;][u&quot;上证&quot;]
+alpha_stock[u&quot;创业板&quot;] = rw[&quot;alpha&quot;][u&quot;创业板&quot;]
+alpha_stock[u&quot;深圳成指&quot;] = rw[&quot;alpha&quot;][u&quot;深圳成指&quot;]
+</code></pre>
+
+<pre><code class="python">def distribution_plot(df, plot_title=&quot;&quot;):
+    for i in [&quot;beta&quot;, &quot;alpha&quot;, &quot;sigma&quot;]:    
+        fig1, (ax1, ax2) = plt.subplots(2, 1,figsize=(8,12))
+        df[i].plot(kind='hist',ax=ax1, normed=True, alpha=0.7,bins=50)
+        df[i].plot(kind='kde',ax=ax2, style='-.', linewidth=3)
+        ax1.legend(loc='best', prop=font, fontsize=17)
+        ax2.legend(loc='best', prop=font, fontsize=17)
+        ax1.set_title(u&quot;{0}{1}分布&quot;.format(plot_title, i), fontproperties=font, fontsize=19)
+        ax2.set_title(u&quot;{0}{1}分布&quot;.format(plot_title, i), fontproperties=font, fontsize=19)
+        plt.tight_layout() 
+</code></pre>
+
+<pre><code class="python">ditribution_plot(rw)
+</code></pre>
+
+<p><img alt="png" src="../output_43_0.png" /></p>
+<p><img alt="png" src="../output_43_1.png" /></p>
+<p><img alt="png" src="../output_43_2.png" /></p>
+<p>$\alpha$和$\beta$分布类似正态分布，但$\alpha$明显的右偏，表明有一些$\alpha$偏大，从相关关系图可看出$\alpha$和$\beta$有一定的负相关性，$\alpha$和$\sigma$有较大的正相关性，而$\beta$与$\sigma$有较弱的正相关性。</p>
+<p>通过比较每月个股涨跌幅与大盘指数涨跌幅，简单的判断个股强弱，然后通过线性回归系数进行进一步判断</p>
+<pre><code class="python">stocks_id = stocks[&quot;ssindex&quot;].unique()
+i = stocks_id[0]
+one_stock = stocks.loc[stocks[&quot;ssindex&quot;] == i, [&quot;p_change&quot;]]    
+index_stock = ssi_change[[u&quot;上证&quot;]]
+result = pd.merge(one_stock, index_stock, left_index=True, right_index=True)
+result.tail(3)
+</code></pre>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>p_change</th>
+      <th>上证</th>
+    </tr>
+    <tr>
+      <th>ssdate</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2017-10-10</th>
+      <td>2.71</td>
+      <td>0.26</td>
+    </tr>
+    <tr>
+      <th>2017-10-11</th>
+      <td>0.18</td>
+      <td>0.16</td>
+    </tr>
+    <tr>
+      <th>2017-10-12</th>
+      <td>-1.05</td>
+      <td>-0.06</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code class="python">def stock_change_cumsum(stock_time, ssi_change):
+    stocks_id = stock_time[&quot;ssindex&quot;].unique()    
+    index_stock = ssi_change[[u&quot;上证&quot;]]  
+    move_sum = pd.DataFrame()
+    for k in stocks_id:
+        one_stock = stock_time.loc[stock_time[&quot;ssindex&quot;] == k, [&quot;p_change&quot;]]    
+        result = pd.merge(one_stock, index_stock, left_index=True, right_index=True)
+        for i in np.unique(result.index.year):
+            for j in np.unique(result.index.month):
+                if j &lt; 10:
+                    strm = &quot;0&quot; + str(j)
+                else:
+                    strm = str(j)
+                temp = str(i) + &quot;-&quot; + strm
+                try:
+                    stock_sum = result[temp].sum()
+                except KeyError as e:
+                    print(e)
+                else:
+                    stock_sum = stock_sum.append(pd.Series(dict(sdate=temp)))
+                    stock_sum = stock_sum.append(pd.Series(dict(sindex=k)))
+                    stock_sum = stock_sum.append(pd.Series(dict(gap_sh=stock_sum[&quot;p_change&quot;] - stock_sum[u&quot;上证&quot;])))
+                    stock_sum.pop(u'上证')
+                    move_sum = move_sum.append(stock_sum, ignore_index=True)
+    return move_sum
+</code></pre>
+
+<pre><code class="python">tt = stock_change_cumsum(stocks, ssi_change)
+# tt.to_csv(&quot;./stocks_month_change.csv&quot;, index=False)
+</code></pre>
+
+<pre><code class="python">tt.head(3)
+</code></pre>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>gap_sh</th>
+      <th>p_change</th>
+      <th>sdate</th>
+      <th>sindex</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>-15.70</td>
+      <td>-13.92</td>
+      <td>2017-01</td>
+      <td>300425</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>3.05</td>
+      <td>5.66</td>
+      <td>2017-02</td>
+      <td>300425</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>-6.62</td>
+      <td>-7.20</td>
+      <td>2017-03</td>
+      <td>300425</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code class="python">stocks_month_sum = pd.pivot_table(tt, index=[&quot;sindex&quot;], columns=[&quot;sdate&quot;])
+stocks_month_sum.head(3)
+</code></pre>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr>
+      <th></th>
+      <th colspan="10" halign="left">gap_sh</th>
+      <th colspan="10" halign="left">p_change</th>
+    </tr>
+    <tr>
+      <th>sdate</th>
+      <th>2017-01</th>
+      <th>2017-02</th>
+      <th>2017-03</th>
+      <th>2017-04</th>
+      <th>2017-05</th>
+      <th>2017-06</th>
+      <th>2017-07</th>
+      <th>2017-08</th>
+      <th>2017-09</th>
+      <th>2017-10</th>
+      <th>2017-01</th>
+      <th>2017-02</th>
+      <th>2017-03</th>
+      <th>2017-04</th>
+      <th>2017-05</th>
+      <th>2017-06</th>
+      <th>2017-07</th>
+      <th>2017-08</th>
+      <th>2017-09</th>
+      <th>2017-10</th>
+    </tr>
+    <tr>
+      <th>sindex</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>000001</th>
+      <td>0.73</td>
+      <td>-0.99</td>
+      <td>-2.71</td>
+      <td>0.11</td>
+      <td>3.61</td>
+      <td>-0.32</td>
+      <td>12.20</td>
+      <td>3.36</td>
+      <td>-0.90</td>
+      <td>2.78</td>
+      <td>2.51</td>
+      <td>1.62</td>
+      <td>-3.29</td>
+      <td>-1.98</td>
+      <td>2.44</td>
+      <td>2.09</td>
+      <td>14.73</td>
+      <td>6.06</td>
+      <td>-1.26</td>
+      <td>3.9</td>
+    </tr>
+    <tr>
+      <th>000002</th>
+      <td>-1.37</td>
+      <td>-3.32</td>
+      <td>1.04</td>
+      <td>-3.21</td>
+      <td>10.22</td>
+      <td>16.76</td>
+      <td>-10.07</td>
+      <td>0.32</td>
+      <td>13.89</td>
+      <td>2.08</td>
+      <td>0.97</td>
+      <td>-0.71</td>
+      <td>0.46</td>
+      <td>-5.30</td>
+      <td>9.05</td>
+      <td>17.36</td>
+      <td>-6.11</td>
+      <td>3.02</td>
+      <td>13.53</td>
+      <td>3.2</td>
+    </tr>
+    <tr>
+      <th>000004</th>
+      <td>-17.16</td>
+      <td>-0.62</td>
+      <td>-7.19</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>-34.40</td>
+      <td>-15.69</td>
+      <td>1.25</td>
+      <td>4.56</td>
+      <td>4.08</td>
+      <td>-15.38</td>
+      <td>1.99</td>
+      <td>-7.77</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>-32.43</td>
+      <td>-13.16</td>
+      <td>3.95</td>
+      <td>4.20</td>
+      <td>5.2</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code class="python">sms = stocks_month_sum[&quot;gap_sh&quot;]
+sms[&quot;sum_all&quot;] = sms.sum(axis=1)
+sms[&quot;mean&quot;] = sms.mean(axis=1)
+sms[&quot;median&quot;] = sms.median(axis=1)
+sms.head(3)
+</code></pre>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>sdate</th>
+      <th>2017-01</th>
+      <th>2017-02</th>
+      <th>2017-03</th>
+      <th>2017-04</th>
+      <th>2017-05</th>
+      <th>2017-06</th>
+      <th>2017-07</th>
+      <th>2017-08</th>
+      <th>2017-09</th>
+      <th>2017-10</th>
+      <th>sum_all</th>
+      <th>mean</th>
+      <th>median</th>
+    </tr>
+    <tr>
+      <th>sindex</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>000001</th>
+      <td>0.73</td>
+      <td>-0.99</td>
+      <td>-2.71</td>
+      <td>0.11</td>
+      <td>3.61</td>
+      <td>-0.32</td>
+      <td>12.20</td>
+      <td>3.36</td>
+      <td>-0.90</td>
+      <td>2.78</td>
+      <td>17.87</td>
+      <td>3.249091</td>
+      <td>1.755000</td>
+    </tr>
+    <tr>
+      <th>000002</th>
+      <td>-1.37</td>
+      <td>-3.32</td>
+      <td>1.04</td>
+      <td>-3.21</td>
+      <td>10.22</td>
+      <td>16.76</td>
+      <td>-10.07</td>
+      <td>0.32</td>
+      <td>13.89</td>
+      <td>2.08</td>
+      <td>26.34</td>
+      <td>4.789091</td>
+      <td>1.560000</td>
+    </tr>
+    <tr>
+      <th>000004</th>
+      <td>-17.16</td>
+      <td>-0.62</td>
+      <td>-7.19</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>-34.40</td>
+      <td>-15.69</td>
+      <td>1.25</td>
+      <td>4.56</td>
+      <td>4.08</td>
+      <td>-65.17</td>
+      <td>-14.482222</td>
+      <td>-10.836111</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code class="python">stock_t = sms[sms[[&quot;median&quot;]] &gt; 1].dropna(how=&quot;all&quot;)
+stock_t.head(3)
+</code></pre>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>sdate</th>
+      <th>2017-01</th>
+      <th>2017-02</th>
+      <th>2017-03</th>
+      <th>2017-04</th>
+      <th>2017-05</th>
+      <th>2017-06</th>
+      <th>2017-07</th>
+      <th>2017-08</th>
+      <th>2017-09</th>
+      <th>2017-10</th>
+      <th>sum_all</th>
+      <th>mean</th>
+      <th>median</th>
+    </tr>
+    <tr>
+      <th>sindex</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>000001</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1.755000</td>
+    </tr>
+    <tr>
+      <th>000002</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1.560000</td>
+    </tr>
+    <tr>
+      <th>000016</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>2.442727</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code class="python"># 个股涨跌幅大于大盘涨跌幅记为1否则记为0
+month_stock_sh = stocks_month_sum[&quot;gap_sh&quot;]
+stock_p = pd.DataFrame()
+for i in  month_stock_sh.columns:
+    single_month = month_stock_sh[i].apply(lambda x: 1 if x &gt; 0 else 0)
+    stock_p[i] = single_month
+stock_p[&quot;positive_num&quot;] = stock_p.sum(axis=1)
+stock_p.sort_values(&quot;positive_num&quot;, ascending=False, inplace=True)
+stock_p.shape
+</code></pre>
+
+<pre><code>(3039, 11)
+</code></pre>
+<pre><code class="python"># 10个月3039多的股票，有82%的股票在共10个月份中不超过5个月的收益是大于大盘的，
+# 比如有4个月的收益大于同期的大盘的的股票数目为852
+stock_p[&quot;positive_num&quot;].value_counts()
+</code></pre>
+
+<pre><code>4     852
+5     689
+3     664
+6     341
+2     241
+7     119
+1      63
+8      56
+9       8
+0       4
+10      2
+Name: positive_num, dtype: int64
+</code></pre>
+<pre><code class="python"># 个股涨跌幅大于大盘超过6个月的为重点研究对象
+target_stock_index_ = stock_p[stock_p[&quot;positive_num&quot;] &gt; 6].index.values
+len(target_stock_index_)
+</code></pre>
+
+<pre><code>185
+</code></pre>
+<pre><code class="python">target_stocks = pd.DataFrame()
+for i in target_stock_index_:
+        if target_stocks.empty:
+            target_stocks = stocks[stocks[&quot;ssindex&quot;] == i]
+        else:
+            target_stocks = pd.concat([target_stocks, stocks[stocks[&quot;ssindex&quot;] == i]], ignore_index=False)
+target_stocks.shape  # (34276, 5)
+# target_stocks.to_csv(&quot;./target_stocks_201710.csv&quot;, index=False)
+</code></pre>
+
+<pre><code class="python">def target_stock_plot(stock_id, stocks, stock_index_change):
+    target_stocks = pd.DataFrame()
+    for i in stock_id:
+        if target_stocks.empty:
+            target_stocks = stocks[stocks[&quot;ssindex&quot;] == i]
+        else:
+            target_stocks = pd.concat([target_stocks, stocks[stocks[&quot;ssindex&quot;] == i]], ignore_index=False)
+    sigma_large = target_stocks[target_stocks[&quot;p_change&quot;] &gt; 11][&quot;ssindex&quot;].unique()
+    tst = target_stocks.reset_index()
+    tst.set_index(&quot;ssindex&quot;, inplace=True)
+    tst.drop(sigma_large, axis=0, inplace=True)
+    tst = tst.reset_index()
+    tst.set_index(&quot;ssdate&quot;, inplace=True)
+    ts_sh = tst[tst[&quot;ssindex&quot;].str.startswith(&quot;6&quot;)]
+    ts_sz = tst[tst[&quot;ssindex&quot;].str.startswith(&quot;0&quot;)]
+    ts_cy = tst[tst[&quot;ssindex&quot;].str.startswith(&quot;3&quot;)]
+    pivot_t = list()
+    for i in [ts_sh, ts_sz, ts_cy]:
+        pivot_t.append(pd.pivot_table(i, index=[i.index], columns=[i[&quot;ssindex&quot;]]))    
+    stock_tar_sh = pivot_t[0]
+    stock_tar_sz = pivot_t[1]
+    stock_tar_cy = pivot_t[2]
+    ssindex_tar = stock_index_change[[u&quot;上证&quot;, u&quot;深圳成指&quot;, u&quot;创业板&quot;]]
+    sh_pchange = pd.merge(stock_tar_sh[&quot;p_change&quot;], ssindex_tar, how=&quot;right&quot;, left_index=True, right_index=True)
+    sz_pchange = pd.merge(stock_tar_sz[&quot;p_change&quot;], ssindex_tar, how=&quot;right&quot;, left_index=True, right_index=True)
+    cy_pchange = pd.merge(stock_tar_cy[&quot;p_change&quot;], ssindex_tar, how=&quot;right&quot;, left_index=True, right_index=True)
+    return [sh_pchange, sz_pchange, cy_pchange]
+</code></pre>
+
+<pre><code class="python">data_list = target_stock_plot(target_stock_index_, stocks, ssi_change)
+</code></pre>
+
+<pre><code class="python">target_stocks.head(3)
+</code></pre>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>ssindex</th>
+      <th>open</th>
+      <th>close</th>
+      <th>volume</th>
+      <th>p_change</th>
+    </tr>
+    <tr>
+      <th>ssdate</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2017-01-03</th>
+      <td>600309</td>
+      <td>21.55</td>
+      <td>22.84</td>
+      <td>273738.59</td>
+      <td>6.08</td>
+    </tr>
+    <tr>
+      <th>2017-01-04</th>
+      <td>600309</td>
+      <td>22.84</td>
+      <td>23.71</td>
+      <td>273070.53</td>
+      <td>3.81</td>
+    </tr>
+    <tr>
+      <th>2017-01-05</th>
+      <td>600309</td>
+      <td>23.72</td>
+      <td>23.47</td>
+      <td>110848.12</td>
+      <td>-1.01</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code class="python">tspv_ = target_stocks[[&quot;ssindex&quot;, &quot;volume&quot;, &quot;p_change&quot;]]
+tspv = pd.pivot_table(tspv, index=[tspv.index], columns=[tspv.ssindex])
+tspv.head(3)
+</code></pre>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr>
+      <th></th>
+      <th colspan="10" halign="left">volume</th>
+      <th>...</th>
+      <th colspan="10" halign="left">p_change</th>
+    </tr>
+    <tr>
+      <th>ssindex</th>
+      <th>000039</th>
+      <th>000063</th>
+      <th>000090</th>
+      <th>000333</th>
+      <th>000338</th>
+      <th>000402</th>
+      <th>000418</th>
+      <th>000423</th>
+      <th>000426</th>
+      <th>000429</th>
+      <th>...</th>
+      <th>603577</th>
+      <th>603579</th>
+      <th>603589</th>
+      <th>603638</th>
+      <th>603689</th>
+      <th>603778</th>
+      <th>603859</th>
+      <th>603868</th>
+      <th>603939</th>
+      <th>603989</th>
+    </tr>
+    <tr>
+      <th>ssdate</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2017-01-03</th>
+      <td>54452.85</td>
+      <td>200629.84</td>
+      <td>62564.77</td>
+      <td>441082.41</td>
+      <td>129824.97</td>
+      <td>124258.15</td>
+      <td>20953.93</td>
+      <td>44567.78</td>
+      <td>68529.82</td>
+      <td>76185.64</td>
+      <td>...</td>
+      <td>10.00</td>
+      <td>NaN</td>
+      <td>0.34</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>-0.61</td>
+      <td>6.42</td>
+      <td>1.02</td>
+      <td>0.17</td>
+      <td>1.28</td>
+    </tr>
+    <tr>
+      <th>2017-01-04</th>
+      <td>71462.32</td>
+      <td>181859.92</td>
+      <td>79045.98</td>
+      <td>358068.31</td>
+      <td>278103.72</td>
+      <td>128683.01</td>
+      <td>19167.08</td>
+      <td>63958.45</td>
+      <td>84513.59</td>
+      <td>55327.64</td>
+      <td>...</td>
+      <td>9.99</td>
+      <td>NaN</td>
+      <td>3.57</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1.55</td>
+      <td>1.07</td>
+      <td>-0.04</td>
+      <td>0.10</td>
+      <td>0.32</td>
+    </tr>
+    <tr>
+      <th>2017-01-05</th>
+      <td>254709.69</td>
+      <td>302294.81</td>
+      <td>81780.03</td>
+      <td>191762.12</td>
+      <td>200137.56</td>
+      <td>67855.99</td>
+      <td>11631.32</td>
+      <td>45589.55</td>
+      <td>81008.58</td>
+      <td>66012.42</td>
+      <td>...</td>
+      <td>10.02</td>
+      <td>NaN</td>
+      <td>-1.59</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>-0.04</td>
+      <td>4.23</td>
+      <td>-0.82</td>
+      <td>0.20</td>
+      <td>-2.62</td>
+    </tr>
+  </tbody>
+</table>
+<p>3 rows × 370 columns</p>
+</div>
+
+<pre><code class="python"># 利用线性回归模型评估个股与大盘的关系，进一步确定强势个股
+def regression_stock(stock_data, stock_index_change, stocks_id):    
+    regress_weights = pd.DataFrame()
+    columns=[&quot;ssindex&quot;, &quot;sindex&quot;, &quot;beta&quot;, &quot;alpha&quot;, &quot;r_value&quot;, &quot;p_value&quot;, &quot;sigma&quot;, &quot;coeff&quot;]
+    for i in stocks_id:
+        one_stock = stock_data.loc[stock_data[&quot;ssindex&quot;] == i, [&quot;p_change&quot;]]    
+        index_stock = stock_index_change[[u&quot;上证&quot;]]
+        result = pd.merge(one_stock, index_stock, left_index=True, right_index=True)
+        corr_s = result.corr()
+        corrs = corr_s.loc[corr_s.index == &quot;p_change&quot;, corr_s.index != &quot;p_change&quot;]
+        for j in [u&quot;上证&quot;]:
+            cof = stats.linregress(result[j], result[&quot;p_change&quot;])
+            cof = list(cof)
+            cof.insert(0, j)
+            cof.insert(0, i)
+            cof.append(corrs[j].values[0])
+            regress_weights = regress_weights.append(pd.Series(cof), ignore_index=True)
+
+    regress_weights.columns = columns
+    return regress_weights
+</code></pre>
+
+<pre><code class="python">target_stock_w = regression_stock(target_stocks, ssi_change, target_stock_index_)
+</code></pre>
+
+<pre><code class="python">target_stock_w.set_index(&quot;ssindex&quot;, inplace=True)
+</code></pre>
+
+<pre><code class="python">target_stock_w.describe()
+</code></pre>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>beta</th>
+      <th>alpha</th>
+      <th>r_value</th>
+      <th>p_value</th>
+      <th>sigma</th>
+      <th>coeff</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>185.000000</td>
+      <td>185.000000</td>
+      <td>185.000000</td>
+      <td>1.850000e+02</td>
+      <td>185.000000</td>
+      <td>185.000000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>1.364059</td>
+      <td>0.208562</td>
+      <td>0.310617</td>
+      <td>1.952266e-02</td>
+      <td>0.315013</td>
+      <td>0.310617</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>0.589382</td>
+      <td>0.231631</td>
+      <td>0.109439</td>
+      <td>7.449688e-02</td>
+      <td>0.133513</td>
+      <td>0.109439</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>0.055238</td>
+      <td>-0.327113</td>
+      <td>0.037926</td>
+      <td>2.076057e-25</td>
+      <td>0.106718</td>
+      <td>0.037926</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>0.965545</td>
+      <td>0.091520</td>
+      <td>0.244631</td>
+      <td>5.001486e-08</td>
+      <td>0.230257</td>
+      <td>0.244631</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>1.324876</td>
+      <td>0.173365</td>
+      <td>0.315984</td>
+      <td>1.127948e-05</td>
+      <td>0.275821</td>
+      <td>0.315984</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>1.774391</td>
+      <td>0.262506</td>
+      <td>0.385492</td>
+      <td>1.014028e-03</td>
+      <td>0.366257</td>
+      <td>0.385492</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>2.917665</td>
+      <td>1.377041</td>
+      <td>0.665457</td>
+      <td>6.053448e-01</td>
+      <td>0.841204</td>
+      <td>0.665457</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>选择$\alpha$ &gt; 0.2的股票</p>
+<pre><code class="python">target_cof = target_stock_w[target_stock_w[&quot;alpha&quot;] &gt; 0.2]  
+target_stock_index_ = target_cof.index.unique()  
+tsw = target_stock_w.loc[target_stock_index_, :]
+tsw.shape
+</code></pre>
+
+<pre><code>(72, 7)
+</code></pre>
+<pre><code class="python">tsw.head(3)
+</code></pre>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>sindex</th>
+      <th>beta</th>
+      <th>alpha</th>
+      <th>r_value</th>
+      <th>p_value</th>
+      <th>sigma</th>
+      <th>coeff</th>
+    </tr>
+    <tr>
+      <th>ssindex</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>600309</th>
+      <td>上证</td>
+      <td>1.528217</td>
+      <td>0.427141</td>
+      <td>0.340176</td>
+      <td>0.000002</td>
+      <td>0.309757</td>
+      <td>0.340176</td>
+    </tr>
+    <tr>
+      <th>300323</th>
+      <td>上证</td>
+      <td>1.151786</td>
+      <td>0.427385</td>
+      <td>0.191409</td>
+      <td>0.009246</td>
+      <td>0.437794</td>
+      <td>0.191409</td>
+    </tr>
+    <tr>
+      <th>000568</th>
+      <td>上证</td>
+      <td>1.194345</td>
+      <td>0.285961</td>
+      <td>0.332146</td>
+      <td>0.000003</td>
+      <td>0.248692</td>
+      <td>0.332146</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code class="python">tsw.describe()
+</code></pre>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>beta</th>
+      <th>alpha</th>
+      <th>r_value</th>
+      <th>p_value</th>
+      <th>sigma</th>
+      <th>coeff</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>72.000000</td>
+      <td>72.000000</td>
+      <td>72.000000</td>
+      <td>7.200000e+01</td>
+      <td>72.000000</td>
+      <td>72.000000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>1.376637</td>
+      <td>0.395819</td>
+      <td>0.261814</td>
+      <td>3.424837e-02</td>
+      <td>0.382494</td>
+      <td>0.261814</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>0.661657</td>
+      <td>0.260708</td>
+      <td>0.097494</td>
+      <td>9.132718e-02</td>
+      <td>0.167683</td>
+      <td>0.097494</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>0.089285</td>
+      <td>0.201078</td>
+      <td>0.048533</td>
+      <td>2.479784e-12</td>
+      <td>0.134731</td>
+      <td>0.048533</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>0.890088</td>
+      <td>0.243439</td>
+      <td>0.196778</td>
+      <td>2.918321e-06</td>
+      <td>0.258856</td>
+      <td>0.196778</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>1.293436</td>
+      <td>0.278410</td>
+      <td>0.274410</td>
+      <td>1.628649e-04</td>
+      <td>0.333847</td>
+      <td>0.274410</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>1.871676</td>
+      <td>0.427202</td>
+      <td>0.337566</td>
+      <td>8.272103e-03</td>
+      <td>0.460708</td>
+      <td>0.337566</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>2.917665</td>
+      <td>1.377041</td>
+      <td>0.482065</td>
+      <td>5.083502e-01</td>
+      <td>0.841204</td>
+      <td>0.482065</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>选择$\beta$ &lt; 1的股票</p>
+<pre><code class="python">tsw_cof = tsw[tsw[&quot;beta&quot;] &lt; 1.1]  
+stock_index_final = tsw_cof.index.unique()  
+tsw_sec = tsw.loc[stock_index_final, :]
+tsw_sec.describe()
+</code></pre>
+
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>beta</th>
+      <th>alpha</th>
+      <th>r_value</th>
+      <th>p_value</th>
+      <th>sigma</th>
+      <th>coeff</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>25.000000</td>
+      <td>25.000000</td>
+      <td>25.000000</td>
+      <td>25.000000</td>
+      <td>25.000000</td>
+      <td>25.000000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>0.680083</td>
+      <td>0.314594</td>
+      <td>0.177388</td>
+      <td>0.092120</td>
+      <td>0.293871</td>
+      <td>0.177388</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>0.284923</td>
+      <td>0.118889</td>
+      <td>0.079043</td>
+      <td>0.138273</td>
+      <td>0.138153</td>
+      <td>0.079043</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>0.089285</td>
+      <td>0.203866</td>
+      <td>0.048533</td>
+      <td>0.000018</td>
+      <td>0.134731</td>
+      <td>0.048533</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>0.465821</td>
+      <td>0.237999</td>
+      <td>0.109585</td>
+      <td>0.001386</td>
+      <td>0.227418</td>
+      <td>0.109585</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>0.710655</td>
+      <td>0.264513</td>
+      <td>0.193048</td>
+      <td>0.007947</td>
+      <td>0.246998</td>
+      <td>0.193048</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>0.897701</td>
+      <td>0.343124</td>
+      <td>0.232177</td>
+      <td>0.134383</td>
+      <td>0.299470</td>
+      <td>0.232177</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>1.098548</td>
+      <td>0.609608</td>
+      <td>0.307354</td>
+      <td>0.508350</td>
+      <td>0.675432</td>
+      <td>0.307354</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code class="python">stock_index_final
+</code></pre>
+
+<pre><code>Index([u'002415', u'002008', u'600519', u'000333', u'601933', u'601888',
+       u'002508', u'600622', u'600690', u'603288', u'300136', u'000418',
+       u'600809', u'300176', u'601318', u'601398', u'600276', u'601155',
+       u'603689', u'603579', u'600887', u'002032', u'600196', u'603228',
+       u'000651'],
+      dtype='object', name=u'ssindex')
+</code></pre>
+<pre><code class="python">data_list = target_stock_plot(stock_index_final, stocks, ssi_change)
+</code></pre>
+
+<pre><code class="python">def target_stocks_final_plot(data, plot_title=&quot;&quot;):
+    fig1, (ax1,ax2,ax3) = plt.subplots(3,1, figsize=(8,18), sharex=True)
+    data[0].cumsum().plot(ax=ax1)
+    data[1].cumsum().plot(ax=ax2)
+    data[2].cumsum().plot(ax=ax3)    
+    ax1.legend(loc=2, prop=font, fontsize=17)
+    ax2.legend(loc='best', prop=font, fontsize=17)
+    ax3.legend(loc='best', prop=font, fontsize=17) 
+    ax1.set_title(u&quot;沪市&quot;, fontproperties=font, fontsize=19)
+    ax2.set_title(u&quot;深市&quot;, fontproperties=font, fontsize=19)
+    ax3.set_title(u&quot;创业板&quot;, fontproperties=font, fontsize=19)
+    ax1.set_xlabel(&quot;&quot;)
+    ax2.set_xlabel(&quot;&quot;)
+    ax3.set_xlabel(&quot;&quot;)    
+    plt.tight_layout() 
+</code></pre>
+
+<pre><code class="python">target_stocks_final_plot(data_list)
+</code></pre>
+
+<p><img alt="png" src="../output_74_0.png" /></p>
+<p>最终选择了22支股票，沪市、深市、创业板分别为13、7、2支，明显看出选择的22支股票涨幅明显高于大盘，此外表现出沪市强，创业板弱，这跟17年的整体市场环境有关。</p>
+<p>总之，通过滑动计算个股与大盘的涨幅强弱初步筛选强势的个股，即选择那些每月涨幅超过大盘且月数量超过6个的股票，然后通过线性回归模型建立个股与大盘的线性关系，利用线性回归系数进一步判断强势股票。这是因为建立的线性模型 $ R = \alpha + \beta R_M + \epsilon $ 的系数β的大小表示收益的波动性的大小，当β系数大于1时，该资产风险大于市场平均风险；反之，当β系数小于1时，该资产风险小于市场平均风险。而α可看成个股超出股票市场的参数，大于0表示优于市场，小于0表示劣于市场。</p>
+<p>本文只是利用线性回归模型对股票的简单分析，并未利用股票的成交量信息、板块信息等，也未实现股票价格预测或选股模型构建，待后续！</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../../../machine_learning/logistic_regression/logistic_regression_forshow/" class="btn btn-neutral float-right" title="Logistic_regression的Python代码实现">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../../p2p_runaway_analysis/p2p_runaway_classify_analysis_forshow/" class="btn btn-neutral" title="p2p网站跑路判别"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+    
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../../p2p_runaway_analysis/p2p_runaway_classify_analysis_forshow/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../../../machine_learning/logistic_regression/logistic_regression_forshow/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script src="../../../js/theme.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+</body>
+</html>

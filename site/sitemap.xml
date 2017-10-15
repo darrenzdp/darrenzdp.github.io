@@ -4,7 +4,7 @@
     
     <url>
      <loc>/</loc>
-     <lastmod>2017-09-18</lastmod>
+     <lastmod>2017-10-16</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
@@ -12,7 +12,7 @@
     
     <url>
      <loc>/data_analysis/lagou_job_analysis/lagou_job_analysis_forshow/</loc>
-     <lastmod>2017-09-18</lastmod>
+     <lastmod>2017-10-16</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
@@ -20,7 +20,15 @@
     
     <url>
      <loc>/data_analysis/p2p_runaway_analysis/p2p_runaway_classify_analysis_forshow/</loc>
-     <lastmod>2017-09-18</lastmod>
+     <lastmod>2017-10-16</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    
+
+    
+    <url>
+     <loc>/data_analysis/stocks_analysis/stock_index_tackle/</loc>
+     <lastmod>2017-10-16</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
@@ -28,7 +36,7 @@
     
     <url>
      <loc>/machine_learning/logistic_regression/logistic_regression_forshow/</loc>
-     <lastmod>2017-09-18</lastmod>
+     <lastmod>2017-10-16</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
@@ -36,7 +44,7 @@
     
     <url>
      <loc>/machine_learning/perceptron_classifier/perceptron_classifier_blog/</loc>
-     <lastmod>2017-09-18</lastmod>
+     <lastmod>2017-10-16</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
