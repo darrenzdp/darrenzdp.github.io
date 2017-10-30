@@ -1,11 +1,15 @@
 site_name: Darren_blog
 pages:
 - [index.md, Darren_blog]
-- [data_analysis/lagou_job_analysis_forshow.md, 拉勾招聘职位数据分析]
-- [machine_learning/logistic regression.md, Logistic_regression的Python代码实现]
+- [data_analysis/lagou_job_analysis/lagou_job_analysis_forshow.md, 拉勾招聘职位信息数据分析]
+- [data_analysis/p2p_runaway_analysis/p2p_runaway_classify_analysis_forshow.md, p2p网站跑路判别]
+- [data_analysis/stocks_analysis/stock_index_tackle.md, 股票线性回归分析]
+- [machine_learning/logistic_regression/logistic_regression_forshow.md, Logistic_regression的Python代码实现]
+- [machine_learning/perceptron_classifier/perceptron_classifier_blog.md, 感知器python代码实现]
+- [machine_learning/stock_index_classification/stock_index_classification.md, 沪深300股指涨跌预测]
+- [machine_learning/hs300_classification/hs300_classificatio.md, 机器学习预测沪深300股票涨跌]
 theme: readthedocs
 extra_javascript: 
     - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML
-
 markdown_extensions:
     - mdx_math
