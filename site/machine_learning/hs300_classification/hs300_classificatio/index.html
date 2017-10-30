@@ -1,0 +1,3881 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../../../img/favicon.ico">
+  <title>机器学习预测沪深300股票涨跌 - Darren_blog</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../../../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../../../css/highlight.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "\u673a\u5668\u5b66\u4e60\u9884\u6d4b\u6caa\u6df1300\u80a1\u7968\u6da8\u8dcc";
+    var mkdocs_page_input_path = "machine_learning/hs300_classification/hs300_classificatio.md";
+    var mkdocs_page_url = "/machine_learning/hs300_classification/hs300_classificatio/";
+  </script>
+  
+  <script src="../../../js/jquery-2.1.1.min.js"></script>
+  <script src="../../../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../../../js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href="../../.." class="icon icon-home"> Darren_blog</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../..">Darren_blog</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../../data_analysis/lagou_job_analysis/lagou_job_analysis_forshow/">拉勾招聘职位信息数据分析</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../../data_analysis/p2p_runaway_analysis/p2p_runaway_classify_analysis_forshow/">p2p网站跑路判别</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../../data_analysis/stocks_analysis/stock_index_tackle/">股票线性回归分析</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../logistic_regression/logistic_regression_forshow/">Logistic_regression的Python代码实现</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../perceptron_classifier/perceptron_classifier_blog/">感知器python代码实现</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../stock_index_classification/stock_index_classification/">沪深300股指涨跌预测</a>
+	    </li>
+          
+            <li class="toctree-l1 current">
+		
+    <a class="current" href="./">机器学习预测沪深300股票涨跌</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l2"><a href="#300">机器学习预测沪深300股票涨跌</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l3" href="#_1">数据采集</a></li>
+        
+            <li><a class="toctree-l3" href="#_2">数据分析</a></li>
+        
+            <li><a class="toctree-l3" href="#_10">总结</a></li>
+        
+        </ul>
+    
+
+    </ul>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../..">Darren_blog</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>机器学习预测沪深300股票涨跌</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="300">机器学习预测沪深300股票涨跌</h1>
+<p>近几年人工智能大热，其使用的算法包括机器学习尤其是深度学习，这俩者是目前最火热的职业之一。在人们生活中，机器学习和深度学习也在逐渐走如人们的生活，比如Alphago、人脸识别、无人驾驶都用到了机器学习或深度学习的一些算法，让人切实感受到科技的力量正显著地改变着人类世界。而运用机器学习进行量化交易，也是机器学习的一大应用领域。本文采用python第三方库sklearn提供的几种分类算法对沪深300的部分股票进行训练和学习，以期能够预测股票的涨跌情况。</p>
+<h2 id="_1">数据采集</h2>
+<p>使用tushare提供的API采集2012-2017年沪深300的股票交易数据，沪市、深市、创业板等股指数据，股票的基本面数据以及其他的经济指标数据，由于数据量不大，直接保存为CSV格式的文件。</p>
+<h2 id="_2">数据分析</h2>
+<h3 id="_3">数据处理及清洗</h3>
+<pre><code class="python">import pandas as pd 
+import numpy as np
+import matplotlib.pyplot as plt 
+import seaborn as sns
+sns.set(style=&quot;whitegrid&quot;, palette=&quot;muted&quot;, font_scale=1, color_codes=True, context=&quot;talk&quot;)
+%matplotlib inline
+from matplotlib.font_manager import FontProperties  
+font = FontProperties(fname=r&quot;/usr/share/fonts/truetype/arphic/ukai.ttc&quot;)
+# font = FontProperties(fname=r&quot;C:\Windows\Fonts\msyh.ttc&quot;)
+import datetime
+import re
+from techFeature import StockFeature
+import os
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
+from sklearn.preprocessing import StandardScaler 
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.model_selection import train_test_split
+from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import learning_curve
+from sklearn.model_selection import GridSearchCV
+from sklearn.feature_selection import RFE
+from sklearn.linear_model import RandomizedLasso
+from sklearn.linear_model import Ridge
+from sklearn.linear_model import Lasso
+from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import RandomizedLogisticRegression
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import ExtraTreesClassifier
+from sklearn.ensemble import AdaBoostClassifier
+from sklearn.ensemble import BaggingClassifier
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import f1_score
+from sklearn.metrics import recall_score
+from sklearn.metrics import precision_score
+from sklearn.metrics import classification_report
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import mean_squared_error
+from sklearn.metrics import r2_score
+from sklearn.pipeline import Pipeline
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import VotingClassifier
+from sklearn import svm
+</code></pre>
+
+<p>沪深300股票中有近50支股票缺失数据较多(超过20%），故使用处理后的251支股票进行初步统计分析</p>
+<pre><code class="python"># 读取已经删除过部分股票的数据
+st = pd.read_csv(&quot;./datas/hs300_dropleft_251.csv&quot;, encoding=&quot;utf-8&quot;, dtype={&quot;code&quot;: str})
+st[&quot;date&quot;] = pd.to_datetime(st[&quot;date&quot;])
+#由于600688和600871的pct_change有异常，故不使用该两支股票的信息
+st = st[st[&quot;code&quot;] != &quot;600688&quot;]
+st = st[st[&quot;code&quot;] != &quot;600871&quot;]
+st.head(2)
+</code></pre>
+
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>date</th>
+      <th>code</th>
+      <th>close</th>
+      <th>high</th>
+      <th>low</th>
+      <th>open</th>
+      <th>volume</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2012-01-04</td>
+      <td>000001</td>
+      <td>5.120</td>
+      <td>5.265</td>
+      <td>5.116</td>
+      <td>5.265</td>
+      <td>147910.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2012-01-04</td>
+      <td>000002</td>
+      <td>6.052</td>
+      <td>6.316</td>
+      <td>6.044</td>
+      <td>6.168</td>
+      <td>474329.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code class="python">st.shape
+</code></pre>
+
+<pre><code>(335285, 7)
+</code></pre>
+<pre><code class="python">st_pv = st.pivot_table(index=&quot;date&quot;, columns=&quot;code&quot;)
+st_pv.head(3)
+</code></pre>
+
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr>
+      <th></th>
+      <th colspan="10" halign="left">close</th>
+      <th>...</th>
+      <th colspan="10" halign="left">volume</th>
+    </tr>
+    <tr>
+      <th>code</th>
+      <th>000001</th>
+      <th>000002</th>
+      <th>000008</th>
+      <th>000009</th>
+      <th>000060</th>
+      <th>000063</th>
+      <th>000069</th>
+      <th>000100</th>
+      <th>000156</th>
+      <th>000157</th>
+      <th>...</th>
+      <th>601901</th>
+      <th>601919</th>
+      <th>601933</th>
+      <th>601939</th>
+      <th>601958</th>
+      <th>601988</th>
+      <th>601989</th>
+      <th>601992</th>
+      <th>601998</th>
+      <th>603993</th>
+    </tr>
+    <tr>
+      <th>date</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2012-01-04</th>
+      <td>5.120</td>
+      <td>6.052</td>
+      <td>0.760</td>
+      <td>5.344</td>
+      <td>7.802</td>
+      <td>13.371</td>
+      <td>5.013</td>
+      <td>1.607</td>
+      <td>NaN</td>
+      <td>6.362</td>
+      <td>...</td>
+      <td>606942.0</td>
+      <td>258238.0</td>
+      <td>11334.0</td>
+      <td>414369.0</td>
+      <td>52481.0</td>
+      <td>183288.0</td>
+      <td>222003.0</td>
+      <td>63765.0</td>
+      <td>160450.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2012-01-05</th>
+      <td>5.197</td>
+      <td>5.986</td>
+      <td>0.729</td>
+      <td>5.048</td>
+      <td>7.675</td>
+      <td>13.292</td>
+      <td>4.782</td>
+      <td>1.652</td>
+      <td>NaN</td>
+      <td>6.151</td>
+      <td>...</td>
+      <td>533317.0</td>
+      <td>320893.0</td>
+      <td>15274.0</td>
+      <td>804582.0</td>
+      <td>48201.0</td>
+      <td>389570.0</td>
+      <td>276832.0</td>
+      <td>58840.0</td>
+      <td>863501.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2012-01-06</th>
+      <td>5.184</td>
+      <td>5.912</td>
+      <td>0.734</td>
+      <td>5.350</td>
+      <td>7.763</td>
+      <td>12.950</td>
+      <td>4.790</td>
+      <td>1.661</td>
+      <td>NaN</td>
+      <td>6.143</td>
+      <td>...</td>
+      <td>867634.0</td>
+      <td>304644.0</td>
+      <td>14070.0</td>
+      <td>662240.0</td>
+      <td>43909.0</td>
+      <td>NaN</td>
+      <td>215748.0</td>
+      <td>62473.0</td>
+      <td>383847.0</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+<p>3 rows × 1245 columns</p>
+</div>
+
+<pre><code class="python">st_pv_ = st_pv.copy()
+st_pv_.columns = st_pv.columns.reorder_levels([1,0])
+st_pv_.head(3)
+</code></pre>
+
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr>
+      <th>code</th>
+      <th>000001</th>
+      <th>000002</th>
+      <th>000008</th>
+      <th>000009</th>
+      <th>000060</th>
+      <th>000063</th>
+      <th>000069</th>
+      <th>000100</th>
+      <th>000156</th>
+      <th>000157</th>
+      <th>...</th>
+      <th>601901</th>
+      <th>601919</th>
+      <th>601933</th>
+      <th>601939</th>
+      <th>601958</th>
+      <th>601988</th>
+      <th>601989</th>
+      <th>601992</th>
+      <th>601998</th>
+      <th>603993</th>
+    </tr>
+    <tr>
+      <th></th>
+      <th>close</th>
+      <th>close</th>
+      <th>close</th>
+      <th>close</th>
+      <th>close</th>
+      <th>close</th>
+      <th>close</th>
+      <th>close</th>
+      <th>close</th>
+      <th>close</th>
+      <th>...</th>
+      <th>volume</th>
+      <th>volume</th>
+      <th>volume</th>
+      <th>volume</th>
+      <th>volume</th>
+      <th>volume</th>
+      <th>volume</th>
+      <th>volume</th>
+      <th>volume</th>
+      <th>volume</th>
+    </tr>
+    <tr>
+      <th>date</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2012-01-04</th>
+      <td>5.120</td>
+      <td>6.052</td>
+      <td>0.760</td>
+      <td>5.344</td>
+      <td>7.802</td>
+      <td>13.371</td>
+      <td>5.013</td>
+      <td>1.607</td>
+      <td>NaN</td>
+      <td>6.362</td>
+      <td>...</td>
+      <td>606942.0</td>
+      <td>258238.0</td>
+      <td>11334.0</td>
+      <td>414369.0</td>
+      <td>52481.0</td>
+      <td>183288.0</td>
+      <td>222003.0</td>
+      <td>63765.0</td>
+      <td>160450.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2012-01-05</th>
+      <td>5.197</td>
+      <td>5.986</td>
+      <td>0.729</td>
+      <td>5.048</td>
+      <td>7.675</td>
+      <td>13.292</td>
+      <td>4.782</td>
+      <td>1.652</td>
+      <td>NaN</td>
+      <td>6.151</td>
+      <td>...</td>
+      <td>533317.0</td>
+      <td>320893.0</td>
+      <td>15274.0</td>
+      <td>804582.0</td>
+      <td>48201.0</td>
+      <td>389570.0</td>
+      <td>276832.0</td>
+      <td>58840.0</td>
+      <td>863501.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2012-01-06</th>
+      <td>5.184</td>
+      <td>5.912</td>
+      <td>0.734</td>
+      <td>5.350</td>
+      <td>7.763</td>
+      <td>12.950</td>
+      <td>4.790</td>
+      <td>1.661</td>
+      <td>NaN</td>
+      <td>6.143</td>
+      <td>...</td>
+      <td>867634.0</td>
+      <td>304644.0</td>
+      <td>14070.0</td>
+      <td>662240.0</td>
+      <td>43909.0</td>
+      <td>NaN</td>
+      <td>215748.0</td>
+      <td>62473.0</td>
+      <td>383847.0</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+<p>3 rows × 1245 columns</p>
+</div>
+
+<p>通过计算pct_change检查数据有无异常情况</p>
+<pre><code class="python">pctchanges = st_pv[&quot;close&quot;].pct_change() * 100.0
+pctchanges.dropna(how=&quot;all&quot;, inplace=True)
+pp = pctchanges.apply(lambda x: np.abs(x) &gt; 11.0)
+ppsum = pp.sum().sort_values(ascending=False)
+problem_stock_index = ppsum[ppsum &gt; 0].index.tolist()  # [u'600153', u'600871', u'600688']
+problem_stock = st_pv_[problem_stock_index]
+problem_stock.head(3)
+</code></pre>
+
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr>
+      <th>code</th>
+      <th colspan="5" halign="left">600153</th>
+    </tr>
+    <tr>
+      <th></th>
+      <th>close</th>
+      <th>high</th>
+      <th>low</th>
+      <th>open</th>
+      <th>volume</th>
+    </tr>
+    <tr>
+      <th>date</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2012-01-04</th>
+      <td>5.177</td>
+      <td>5.396</td>
+      <td>5.161</td>
+      <td>5.380</td>
+      <td>82566.0</td>
+    </tr>
+    <tr>
+      <th>2012-01-05</th>
+      <td>5.161</td>
+      <td>5.203</td>
+      <td>5.144</td>
+      <td>5.161</td>
+      <td>86409.0</td>
+    </tr>
+    <tr>
+      <th>2012-01-06</th>
+      <td>5.152</td>
+      <td>5.186</td>
+      <td>5.085</td>
+      <td>5.177</td>
+      <td>69581.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code class="python">problem_stock.tail(3)
+</code></pre>
+
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr>
+      <th>code</th>
+      <th colspan="5" halign="left">600153</th>
+    </tr>
+    <tr>
+      <th></th>
+      <th>close</th>
+      <th>high</th>
+      <th>low</th>
+      <th>open</th>
+      <th>volume</th>
+    </tr>
+    <tr>
+      <th>date</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2017-10-19</th>
+      <td>11.89</td>
+      <td>11.92</td>
+      <td>11.73</td>
+      <td>11.80</td>
+      <td>170555.0</td>
+    </tr>
+    <tr>
+      <th>2017-10-20</th>
+      <td>12.00</td>
+      <td>12.08</td>
+      <td>11.92</td>
+      <td>11.95</td>
+      <td>201325.0</td>
+    </tr>
+    <tr>
+      <th>2017-10-23</th>
+      <td>12.00</td>
+      <td>12.09</td>
+      <td>11.89</td>
+      <td>12.04</td>
+      <td>140262.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code class="python">pctchanges[problem_stock_index].plot(figsize=(8,6), legend=True)
+</code></pre>
+
+<pre><code>&lt;matplotlib.axes._subplots.AxesSubplot at 0x7ff7d4cf5750&gt;
+</code></pre>
+<p><img alt="png" src="../output_14_1.png" /></p>
+<pre><code class="python"># 各统计量的均值、中位数、百分位数、最大和最小值一览
+hs_all_info = st_pv.describe()
+hs_all_info
+</code></pre>
+
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr>
+      <th></th>
+      <th colspan="10" halign="left">close</th>
+      <th>...</th>
+      <th colspan="10" halign="left">volume</th>
+    </tr>
+    <tr>
+      <th>code</th>
+      <th>000001</th>
+      <th>000002</th>
+      <th>000008</th>
+      <th>000009</th>
+      <th>000060</th>
+      <th>000063</th>
+      <th>000069</th>
+      <th>000100</th>
+      <th>000156</th>
+      <th>000157</th>
+      <th>...</th>
+      <th>601901</th>
+      <th>601919</th>
+      <th>601933</th>
+      <th>601939</th>
+      <th>601958</th>
+      <th>601988</th>
+      <th>601989</th>
+      <th>601992</th>
+      <th>601998</th>
+      <th>603993</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>1397.000000</td>
+      <td>1258.000000</td>
+      <td>1195.000000</td>
+      <td>1311.000000</td>
+      <td>1396.000000</td>
+      <td>1367.000000</td>
+      <td>1364.000000</td>
+      <td>1214.000000</td>
+      <td>1173.000000</td>
+      <td>1401.000000</td>
+      <td>...</td>
+      <td>1.291000e+03</td>
+      <td>1.261000e+03</td>
+      <td>1.394000e+03</td>
+      <td>1.407000e+03</td>
+      <td>1.408000e+03</td>
+      <td>1.407000e+03</td>
+      <td>1.206000e+03</td>
+      <td>1.381000e+03</td>
+      <td>1.405000e+03</td>
+      <td>1.204000e+03</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>7.895441</td>
+      <td>12.305227</td>
+      <td>5.456906</td>
+      <td>8.294201</td>
+      <td>9.930986</td>
+      <td>14.259742</td>
+      <td>6.607823</td>
+      <td>3.015196</td>
+      <td>23.784151</td>
+      <td>5.537340</td>
+      <td>...</td>
+      <td>1.095797e+06</td>
+      <td>5.011430e+05</td>
+      <td>3.265446e+05</td>
+      <td>9.733053e+05</td>
+      <td>1.990064e+05</td>
+      <td>2.778726e+06</td>
+      <td>2.198017e+06</td>
+      <td>4.599039e+05</td>
+      <td>6.741906e+05</td>
+      <td>6.512692e+05</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>2.113651</td>
+      <td>6.182167</td>
+      <td>3.846793</td>
+      <td>2.731044</td>
+      <td>3.188618</td>
+      <td>4.655476</td>
+      <td>1.644207</td>
+      <td>1.156071</td>
+      <td>9.296279</td>
+      <td>1.504979</td>
+      <td>...</td>
+      <td>9.993168e+05</td>
+      <td>7.407939e+05</td>
+      <td>3.802748e+05</td>
+      <td>1.459887e+06</td>
+      <td>2.193792e+05</td>
+      <td>5.595141e+06</td>
+      <td>2.890371e+06</td>
+      <td>9.062799e+05</td>
+      <td>8.444628e+05</td>
+      <td>9.123304e+05</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>4.269000</td>
+      <td>5.592000</td>
+      <td>0.729000</td>
+      <td>3.958000</td>
+      <td>5.344000</td>
+      <td>6.190000</td>
+      <td>4.144000</td>
+      <td>1.607000</td>
+      <td>7.685000</td>
+      <td>3.751000</td>
+      <td>...</td>
+      <td>7.093400e+04</td>
+      <td>2.760100e+04</td>
+      <td>3.177000e+03</td>
+      <td>8.230200e+04</td>
+      <td>1.672500e+04</td>
+      <td>5.679500e+04</td>
+      <td>2.705100e+04</td>
+      <td>2.710800e+04</td>
+      <td>4.250900e+04</td>
+      <td>1.422600e+04</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>6.190000</td>
+      <td>7.439000</td>
+      <td>1.720500</td>
+      <td>6.004000</td>
+      <td>7.720000</td>
+      <td>10.852500</td>
+      <td>5.373000</td>
+      <td>2.112000</td>
+      <td>17.268000</td>
+      <td>4.397000</td>
+      <td>...</td>
+      <td>4.283485e+05</td>
+      <td>1.087420e+05</td>
+      <td>5.740900e+04</td>
+      <td>2.672415e+05</td>
+      <td>6.349275e+04</td>
+      <td>2.768075e+05</td>
+      <td>4.695140e+05</td>
+      <td>1.243880e+05</td>
+      <td>2.062040e+05</td>
+      <td>1.110132e+05</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>8.016000</td>
+      <td>9.398000</td>
+      <td>5.283000</td>
+      <td>8.351000</td>
+      <td>9.682500</td>
+      <td>13.660000</td>
+      <td>6.317000</td>
+      <td>2.589000</td>
+      <td>20.969000</td>
+      <td>4.780000</td>
+      <td>...</td>
+      <td>7.909860e+05</td>
+      <td>2.291660e+05</td>
+      <td>2.132770e+05</td>
+      <td>5.010900e+05</td>
+      <td>1.210935e+05</td>
+      <td>7.675750e+05</td>
+      <td>1.006596e+06</td>
+      <td>2.145180e+05</td>
+      <td>3.466360e+05</td>
+      <td>2.936680e+05</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>9.224000</td>
+      <td>16.605750</td>
+      <td>9.001000</td>
+      <td>10.037500</td>
+      <td>11.390250</td>
+      <td>16.361000</td>
+      <td>7.371000</td>
+      <td>3.624000</td>
+      <td>28.892000</td>
+      <td>6.896000</td>
+      <td>...</td>
+      <td>1.394280e+06</td>
+      <td>5.246280e+05</td>
+      <td>4.610060e+05</td>
+      <td>9.291410e+05</td>
+      <td>2.398298e+05</td>
+      <td>1.930524e+06</td>
+      <td>2.492684e+06</td>
+      <td>4.556470e+05</td>
+      <td>7.663030e+05</td>
+      <td>7.521080e+05</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>13.986000</td>
+      <td>29.300000</td>
+      <td>13.721000</td>
+      <td>17.548000</td>
+      <td>28.849000</td>
+      <td>30.630000</td>
+      <td>13.448000</td>
+      <td>7.147000</td>
+      <td>59.297000</td>
+      <td>9.635000</td>
+      <td>...</td>
+      <td>7.081835e+06</td>
+      <td>6.846566e+06</td>
+      <td>3.915401e+06</td>
+      <td>1.805440e+07</td>
+      <td>2.213357e+06</td>
+      <td>5.109897e+07</td>
+      <td>2.107839e+07</td>
+      <td>1.693063e+07</td>
+      <td>7.545412e+06</td>
+      <td>6.340851e+06</td>
+    </tr>
+  </tbody>
+</table>
+<p>8 rows × 1245 columns</p>
+</div>
+
+<pre><code class="python">stock_null = (hs_all_info.loc[&quot;count&quot;, &quot;close&quot;] / st_pv.shape[0]) * 100
+stock_null = stock_null.map(lambda x: np.int(x))
+stock_null = stock_null.value_counts().sort_index()
+plt.figure(figsize=(8,6))
+stock_null.plot(kind=&quot;bar&quot;, grid=False)
+plt.ylabel(u&quot;样本数量&quot;, fontsize=16, fontproperties=font)
+plt.xlabel(u&quot;非缺失数据百分比 %&quot;, fontsize=16, fontproperties=font)
+plt.title(u&quot;数据集数据非缺失情况&quot;, fontproperties=font, fontsize=20)
+plt.gca().yaxis.grid(True, linestyle = &quot;-.&quot;,)
+plt.gca().xaxis.grid(False)
+</code></pre>
+
+<p><img alt="png" src="../output_16_0.png" /></p>
+<p>由于采集数据是12-17年的，时间跨度有些大，故基本所有的股票都有缺失的数据，这是因为股市经常出现由于各种原因停止交易的股票，在此选择缺失数据在20%以内的股票为初步研究对象。</p>
+<h4 id="300_1">沪深300各股票的价格区间分布</h4>
+<pre><code class="python">group_name = [u'便宜', u'适中', u'稍贵', u'贵']
+bins = [2, 10, 30, 100, 300]
+stock_kind_tuple = pd.cut(hs_all_info[&quot;close&quot;].loc[&quot;mean&quot;, :], bins,
+                           labels=group_name, retbins=True)
+st_kind = pd.DataFrame(stock_kind_tuple[0].value_counts())
+st_kind[&quot;index_name&quot;] = [u&quot;便宜(2-10]&quot;, u&quot;适中(10-30]&quot;, u&quot;稍贵(30-100]&quot;, u&quot;贵(100-300]&quot;]
+plt.figure(figsize=(8,6))
+g = sns.barplot(x=&quot;index_name&quot;, y=&quot;mean&quot;, data=st_kind)
+plt.xticks(g.get_xticks(), fontproperties=font, fontsize=16)
+plt.ylabel(u&quot;数量&quot;, fontsize=16, fontproperties=font)
+plt.xlabel(u&quot;股票价格区间 ￥&quot;, fontsize=16, fontproperties=font)
+plt.title(u&quot;沪深300股票(251支)价格区间&quot;, fontproperties=font, fontsize=20)
+plt.gca().yaxis.grid(True, linestyle = &quot;-.&quot;,)
+plt.legend(loc=7,prop=font, fontsize=12)
+</code></pre>
+
+<p><img alt="png" src="../output_19_0.png" /></p>
+<p>从图中明显看出沪深300股票中绝大部分股票的价格(均价)在30元以内，后续研究选择价格在10-30元的股票为研究对象，共计114支。</p>
+<h4 id="3002012-2017">沪深300股票2012-2017收市价格的波动情况统计</h4>
+<pre><code class="python">stock_std = hs_all_info.loc[&quot;std&quot;, &quot;close&quot;].sort_values(ascending=False)
+stock_std = stock_std.map(lambda x: np.round(x, 2))
+plt.figure(figsize=(8,6))
+fig = sns.distplot(stock_std, bins=80, kde=True, vertical=False, color=&quot;green&quot;)
+sns.despine(top=True)
+plt.yticks(fig.get_yticks(), fig.get_yticks() * 100)
+plt.ylabel('Distribution [%]', fontsize=16)
+# plt.xticks(range(0, 100, 10))
+plt.gca().yaxis.grid(True, linestyle = &quot;-.&quot;)
+plt.gca().xaxis.grid(True, linestyle = &quot;-.&quot;)
+plt.xlabel(u&quot;沪深300各股票收市价格std&quot;, fontsize=16, fontproperties=font)
+plt.title(u&quot;沪深300各股票收市价格波动&quot;, fontsize=20, fontproperties=font)
+</code></pre>
+
+<pre><code>Text(0.5,1,'沪深300各股票收市价格波动')
+</code></pre>
+<p><img alt="png" src="../output_22_1.png" /></p>
+<p>将251支股票的收市价格的标注差进行汇总统计，结果如下，大部分股票的收市价格波动均较小，少数股票有较大的波动，如，贵州茅台的std达到106，从2012-01-04的134.60涨到了
+2017-10-23的573.41。可以拿股价std较大的股票做文章。</p>
+<pre><code class="python">bins = [0, 5, 10, 20, 100, 200]
+stock_std_cut = pd.cut(stock_std, bins, labels=False)
+stock_std_stat = stock_std.groupby(stock_std_cut).agg([np.min, np.max, np.mean, np.median, np.std, np.size])
+stock_std_stat[&quot;stock_std_cut_range&quot;] = [&quot;(0, 5]&quot;, &quot;(5, 10]&quot;, &quot;(10, 20]&quot;, &quot;(20, 100]&quot;, &quot;(100, 200]&quot;]
+stock_std_stat.set_index(&quot;stock_std_cut_range&quot;, inplace=True)
+stock_std_stat
+</code></pre>
+
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>amin</th>
+      <th>amax</th>
+      <th>mean</th>
+      <th>median</th>
+      <th>std</th>
+      <th>size</th>
+    </tr>
+    <tr>
+      <th>stock_std_cut_range</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>(0, 5]</th>
+      <td>0.58</td>
+      <td>5.00</td>
+      <td>2.756818</td>
+      <td>2.710</td>
+      <td>1.217010</td>
+      <td>154.0</td>
+    </tr>
+    <tr>
+      <th>(5, 10]</th>
+      <td>5.04</td>
+      <td>9.67</td>
+      <td>6.982667</td>
+      <td>6.865</td>
+      <td>1.377019</td>
+      <td>60.0</td>
+    </tr>
+    <tr>
+      <th>(10, 20]</th>
+      <td>10.29</td>
+      <td>19.54</td>
+      <td>12.872258</td>
+      <td>12.490</td>
+      <td>2.421688</td>
+      <td>31.0</td>
+    </tr>
+    <tr>
+      <th>(20, 100]</th>
+      <td>25.95</td>
+      <td>32.31</td>
+      <td>29.096667</td>
+      <td>29.030</td>
+      <td>3.180524</td>
+      <td>3.0</td>
+    </tr>
+    <tr>
+      <th>(100, 200]</th>
+      <td>106.09</td>
+      <td>106.09</td>
+      <td>106.090000</td>
+      <td>106.090</td>
+      <td>NaN</td>
+      <td>1.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code class="python">def stock_indicator_plot(stock_data, stock_index):
+    particular = stock_data[stock_index]
+    if &quot;600519&quot; in stock_index:
+        maotai = stock_data[&quot;600519&quot;]
+    if &quot;600519&quot; in particular.columns:
+        particular.drop(&quot;600519&quot;, axis=1, inplace=True)
+    particular.columns = particular.columns.reorder_levels([1,0])
+    fig, ax = plt.subplots(figsize=(16,12)) 
+    particular[&quot;close&quot;].plot(ax=ax, legend=False if len(stock_index)&gt;30 else True, alpha=0.7)
+    if &quot;600519&quot; in stock_index:    
+        maotai[&quot;close&quot;].plot(secondary_y=True, ax=ax, linewidth=4, legend=True, label=u&quot;maotai&quot;)
+    ax.set_ylabel(u&quot;close price ￥&quot;, fontsize=15, fontproperties=font)
+    ax.set_xlabel(&quot;&quot;)
+    plt.gca().yaxis.grid(True, linestyle = &quot;-.&quot;)    
+    plt.title(u&quot;沪深300的股票价格趋势&quot;, fontproperties=font, fontsize=20)
+</code></pre>
+
+<pre><code class="python">def stock_pctchange_plot(stock_data, stock_index):
+    if &quot;600688&quot; in stock_index:
+        stock_index.remove(&quot;600688&quot;)
+    if &quot;600871&quot; in stock_index:
+        stock_index.remove(&quot;600871&quot;)
+    particular = stock_data[stock_index]
+    particular.columns = particular.columns.reorder_levels([1,0])    
+    pctchange = particular[&quot;close&quot;].pct_change() * 100.0
+    fig, ax = plt.subplots(figsize=(16,12))
+    pctchange.plot(ax=ax, legend=False if len(stock_index)&gt;30 else True, alpha=0.7)
+    plt.ylabel('pct_change [%]', fontsize=16)
+    plt.xlabel('')
+    plt.title(u&quot;沪深300股票涨跌幅(%)&quot;, fontsize=20, fontproperties=font)
+</code></pre>
+
+<p>std &gt; 20的股票</p>
+<pre><code class="python">large_index = stock_std_cut[stock_std_cut &gt; 2].index.tolist()
+stock_indicator_plot(st_pv_, large_index)
+stock_pctchange_plot(st_pv_, large_index)
+</code></pre>
+
+<p><img alt="png" src="../output_28_0.png" /></p>
+<p><img alt="png" src="../output_28_1.png" /></p>
+<p>10 &lt; std &lt; 20 的股票</p>
+<pre><code class="python">middle_index = stock_std_cut[stock_std_cut == 2].index.tolist()
+stock_indicator_plot(st_pv_, middle_index)
+stock_pctchange_plot(st_pv_, middle_index)
+</code></pre>
+
+<p><img alt="png" src="../output_30_0.png" /></p>
+<p><img alt="png" src="../output_30_1.png" /></p>
+<p>5 &lt; std &lt; 10 的股票</p>
+<pre><code class="python">minor_index = stock_std_cut[stock_std_cut == 1].index.tolist()
+stock_indicator_plot(st_pv_, minor_index)
+stock_pctchange_plot(st_pv_, minor_index)
+</code></pre>
+
+<p><img alt="png" src="../output_32_0.png" /></p>
+<p><img alt="png" src="../output_32_1.png" /></p>
+<p>0 &lt; std &lt; 5 的股票</p>
+<pre><code class="python">poor_index = stock_std_cut[stock_std_cut == 0].index.tolist()
+stock_indicator_plot(st_pv_, poor_index)
+stock_pctchange_plot(st_pv_, poor_index)
+</code></pre>
+
+<p><img alt="png" src="../output_34_0.png" /></p>
+<p><img alt="png" src="../output_34_1.png" /></p>
+<h3 id="_4">分类模型建立</h3>
+<p>首先，选择股票价格(均价）在10-30元之间的股票为最终研究对象，共114支股票，以当日收市股票涨跌幅(pct_change)大于0的为涨，小于0的为跌为评判标准，根据前1日、5日、30日、90日的股票信息为依据预测今日股票的涨跌情况。</p>
+<p>其次，选择股票收市价格、成交量、日最高和最低价格和其他的tech_features如5日均值等其他根据股票价格成交量信息计算出的指标，并且添加了股票的基本面数据、中国股市的股指数据、一些经济数据等信息构成特征集合。然后使用递归特征消除法等特征选取方法进行特征抽取，选择出用于构建分类模型的特征集。</p>
+<p>随之是构建分类模型，采用sklearn提供的随机森林、LogisticRegression、决策树、Adaboost分类算法分别构建对应的分类器，然后采用softVoting进行模型融合得到最终的分类器。</p>
+<p>根据第一次构建的分类模型，对那些准确率不高于50%的股票用特定的特征重新建模进行评估。</p>
+<h4 id="_5">股票特征数据处理</h4>
+<pre><code class="python"># 选择股票价格(12-17年均值）在10-30元之间的股票
+stocks_ = st_pv.copy()
+stocks_.columns = st_pv.columns.reorder_levels([1,0])
+st_mean_price = st_pv[&quot;close&quot;].mean()
+stt = st_mean_price[st_mean_price &gt; 10.0]
+large = set(stt.index)
+small = set(stt[stt &lt; 30.0].index)
+stockid_list = list(large &amp; small)
+# len(stockid)  # 114
+stocks= stocks_[stockid_list]
+stocks.shape  # (1409, 570)
+stocks.head(2)
+</code></pre>
+
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr>
+      <th>code</th>
+      <th colspan="5" halign="left">000002</th>
+      <th colspan="5" halign="left">600066</th>
+      <th>...</th>
+      <th colspan="5" halign="left">000826</th>
+      <th colspan="5" halign="left">000728</th>
+    </tr>
+    <tr>
+      <th></th>
+      <th>close</th>
+      <th>high</th>
+      <th>low</th>
+      <th>open</th>
+      <th>volume</th>
+      <th>close</th>
+      <th>high</th>
+      <th>low</th>
+      <th>open</th>
+      <th>volume</th>
+      <th>...</th>
+      <th>close</th>
+      <th>high</th>
+      <th>low</th>
+      <th>open</th>
+      <th>volume</th>
+      <th>close</th>
+      <th>high</th>
+      <th>low</th>
+      <th>open</th>
+      <th>volume</th>
+    </tr>
+    <tr>
+      <th>date</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2012-01-04</th>
+      <td>6.052</td>
+      <td>6.316</td>
+      <td>6.044</td>
+      <td>6.168</td>
+      <td>474329.0</td>
+      <td>6.282</td>
+      <td>6.501</td>
+      <td>6.179</td>
+      <td>6.487</td>
+      <td>39311.0</td>
+      <td>...</td>
+      <td>13.505</td>
+      <td>14.387</td>
+      <td>13.505</td>
+      <td>14.269</td>
+      <td>27417.0</td>
+      <td>5.249</td>
+      <td>5.354</td>
+      <td>5.249</td>
+      <td>5.354</td>
+      <td>51205.0</td>
+    </tr>
+    <tr>
+      <th>2012-01-05</th>
+      <td>5.986</td>
+      <td>6.126</td>
+      <td>5.937</td>
+      <td>6.036</td>
+      <td>528117.0</td>
+      <td>6.228</td>
+      <td>6.406</td>
+      <td>6.193</td>
+      <td>6.217</td>
+      <td>54086.0</td>
+      <td>...</td>
+      <td>12.622</td>
+      <td>13.634</td>
+      <td>12.510</td>
+      <td>13.375</td>
+      <td>65717.0</td>
+      <td>5.174</td>
+      <td>5.305</td>
+      <td>5.155</td>
+      <td>5.230</td>
+      <td>61228.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>2 rows × 570 columns</p>
+</div>
+
+<p>处理宏观经济数据</p>
+<pre><code class="python">def stock_economy_tackle():
+    stock_en_list = []
+    # 通过pandas将csv文件内容append到列表里然后生成字典便于后续数据处理
+    for stcok_en in os.listdir(&quot;./datas/stock_economy/&quot;):
+        st_en_path = os.path.join(&quot;./datas/stock_economy&quot;, stcok_en) 
+        stock_en_list.append(pd.read_csv(st_en_path, encoding=&quot;utf-8&quot;)) 
+    stock_en_dict = dict(zip([i[:-9] for i in os.listdir(&quot;./datas/stock_economy/&quot;)], stock_en_list))
+    # 不同文件内容分别处理
+    for stock_en in [i[:-9] for i in os.listdir(&quot;./datas/stock_economy/&quot;)]:
+        if stock_en == &quot;shibor&quot;:
+            stock_en_dict[stock_en].set_index(pd.to_datetime(stock_en_dict[stock_en][&quot;date&quot;]), inplace=True)
+            shibor = stock_en_dict[stock_en].drop([&quot;6M&quot;, &quot;9M&quot;, &quot;1Y&quot;, &quot;date&quot;], axis=1)
+            shibor.columns = shibor.columns.map(lambda x: &quot;shibor_&quot; + x)
+        elif stock_en == &quot;money&quot;:
+            stock_en_dict[stock_en].sort_index(ascending=False, inplace=True)
+            num = len(stock_en_dict[stock_en].columns) - 1
+            stock_en_dict[stock_en] = stock_en_dict[stock_en].append(pd.Series([&quot;2017.11&quot;]+[np.nan]*num, index=stock_en_dict[stock_en].columns.values), ignore_index=True)
+            stock_en_dict[stock_en][&quot;month&quot;] = stock_en_dict[stock_en][&quot;month&quot;].astype(str)
+            stock_en_dict[stock_en][&quot;month&quot;] = stock_en_dict[stock_en][&quot;month&quot;].str.replace(r&quot;\.&quot;, &quot;-&quot;)
+            stock_en_dict[stock_en].set_index(pd.to_datetime(stock_en_dict[stock_en][&quot;month&quot;]), inplace=True)
+            stock_en_dict[stock_en].drop(&quot;month&quot;, axis=1, inplace=True)
+            cols = stock_en_dict[stock_en].columns.map(lambda x: x if len(x) &lt; 6 else &quot;&quot;).values
+            cols = [i for i in cols if len(i) &gt; 1]
+            money = stock_en_dict[stock_en][cols]
+            money = money[&quot;2013-01-01&quot;:]
+            money = money.astype(np.float)
+            # 从月份数据升采样到天
+            money = money .resample(&quot;1D&quot;).mean()
+            money.fillna(method=&quot;ffill&quot;, inplace=True)
+            money.columns = money.columns.map(lambda x: &quot;money_&quot; + x)
+        elif stock_en == &quot;lpr&quot;:
+            stock_en_dict[stock_en][&quot;date&quot;] = pd.to_datetime(stock_en_dict[stock_en][&quot;date&quot;])
+            stock_en_dict[stock_en].set_index(stock_en_dict[stock_en][&quot;date&quot;], inplace=True)
+            stock_en_dict[stock_en].drop(&quot;date&quot;, axis=1, inplace=True)
+            stock_en_dict[stock_en].sort_index(ascending=False, inplace=True)
+            stock_en_dict[stock_en].columns = stock_en_dict[stock_en].columns.map(lambda x: &quot;lpr_&quot; + x)
+            ts_a = pd.Series([None]*297, index=pd.date_range(start=&quot;2013-01-01&quot;, end=&quot;2013-10-24&quot;, freq=&quot;D&quot;))
+            ts_a.sort_index(ascending=False, inplace=True)
+            lpr = pd.concat([stock_en_dict[stock_en], ts_a], axis=0)
+            lpr.drop(0, axis=1, inplace=True)
+            lpr.fillna(method=&quot;ffill&quot;, inplace=True)
+        elif stock_en == &quot;cpi&quot;:
+            stock_en_dict[stock_en].sort_index(ascending=False, inplace=True)
+            cpi = stock_en_dict[stock_en].append(pd.Series([2017.11, None], index=stock_en_dict[stock_en].columns), ignore_index=True)
+            cpi[&quot;month&quot;] = cpi[&quot;month&quot;].astype(str)
+            cpi[&quot;month&quot;] = cpi[&quot;month&quot;].str.replace(r&quot;\.&quot;, &quot;-&quot;)
+            cpi[&quot;date&quot;] = pd.to_datetime(cpi[&quot;month&quot;])
+            cpi.set_index(cpi[&quot;date&quot;], inplace=True)
+            cpi.drop([&quot;month&quot;, &quot;date&quot;], inplace=True, axis=1)
+            # 从月份数据升采样到天
+            cpi = cpi.resample(&quot;1D&quot;).mean()
+            cpi.fillna(method=&quot;ffill&quot;, inplace=True)
+            cpi = cpi[&quot;2013-01-01&quot;:]
+    return pd.concat([shibor, money, lpr, cpi], axis=1, join=&quot;inner&quot;)
+</code></pre>
+
+<p>处理股票的基本面数据</p>
+<pre><code class="python">def stock_basics_tackle(stockid, stock_basicd, stock_basic_file_name):
+    stock_basics_df = pd.DataFrame()
+    for skind in stock_basic_file_name:
+        df = stock_basicd[skind]
+        onestock = df[df[u&quot;code&quot;] == stockid]        
+        # 这几个文件中只有debt文件有特殊的缺失值“--”故要特殊处理
+        if skind == u&quot;debt&quot;:
+            debt_col = onestock.columns.tolist()        
+            for col in debt_col:
+                onestock[col] = onestock[col].replace(&quot;--&quot;, np.nan)
+            debt_col.remove(u&quot;code&quot;)
+            debt_col.remove(u&quot;name&quot;)
+            debt_col.remove(u&quot;time_q&quot;)
+            # 更改DataFrame的列类型
+            debt = onestock[debt_col].astype(np.float)
+            debt[u&quot;time_q&quot;] = onestock[u&quot;time_q&quot;]
+            onestock = debt
+        if skind == u'report':
+            report_col = onestock.columns.tolist() 
+            report_col.remove(u&quot;code&quot;)
+            report_col.remove(u&quot;name&quot;)
+            report_col.remove(u&quot;time_q&quot;)
+            report_col.remove(u&quot;distrib&quot;)
+            report_col.remove(u&quot;report_date&quot;)            
+            # 更改DataFrame的列类型
+            report = onestock[report_col].astype(np.float)
+            report[&quot;time_q&quot;] = onestock[&quot;time_q&quot;]
+            onestock = report           
+        temp = onestock[&quot;time_q&quot;]
+        col_type = onestock.dtypes
+        onestock.drop(col_type[col_type == object].index.values, axis=1, inplace=True)
+        onestock = onestock.astype(np.float)        
+        onestock[&quot;time_q&quot;] = temp
+        num = len(onestock.columns)
+        onestock[&quot;date&quot;] = pd.to_datetime(onestock[&quot;time_q&quot;])
+        onestock = onestock.append(pd.Series([None]*num+[&quot;2017-11-01&quot;], index=onestock.columns), ignore_index=True)
+        onestock[&quot;date&quot;] = pd.to_datetime(onestock[&quot;date&quot;])
+        onestock.set_index(onestock[&quot;date&quot;], inplace=True, drop=True)
+        onestock.drop([&quot;date&quot;, &quot;time_q&quot;], axis=1, inplace=True)        
+        # 从月份数据升采样到天
+        onestock_dropna = onestock.dropna()
+        if len(onestock_dropna) &lt; 1:  # 去除一些全为空的特征，这样会导致不同的股票的特征数量不一样
+            continue
+        onestock.columns = onestock.columns.map(lambda x: skind + &quot;_&quot; + x)
+        onestock = onestock.resample(&quot;1D&quot;).mean()
+        onestock.fillna(method=&quot;ffill&quot;, inplace=True)
+        temp_df = onestock[&quot;2013-01-01&quot;:]
+        onestock_ = temp_df.dropna()
+        if onestock_.shape[0] &gt;= 1:
+            if onestock_.iloc[0, :].name &gt; pd.Timestamp(&quot;2013-01-01&quot;):
+                temp_df.fillna(method=&quot;bfill&quot;, inplace=True)
+        if stock_basics_df.empty:
+            stock_basics_df = temp_df
+        else:
+            stock_basics_df = stock_basics_df.join(temp_df)            
+    return stock_basics_df
+</code></pre>
+
+<p>处理股指数据</p>
+<pre><code class="python">def stock_index_tackle():
+    si = pd.read_csv(&quot;./datas/stockindex_2012_2017.csv&quot;, parse_dates=True, index_col=&quot;date&quot;, encoding=&quot;utf-8&quot;)    
+    stock_indexes = pd.DataFrame()    
+    for i in si[&quot;code&quot;].unique()[:3]:
+        index_single = si[si[&quot;code&quot;] == i]
+        index_single.drop([&quot;open&quot;, &quot;code&quot;], axis=1, inplace=True)
+        index_single.columns = index_single.columns.map(lambda x: str(i) + &quot;_&quot; + x)
+        if stock_indexes.empty:        
+            stock_indexes = index_single
+        else:
+            stock_indexes = stock_indexes.join(index_single)
+    return stock_indexes
+</code></pre>
+
+<p>读取股票基本面数据</p>
+<pre><code class="python">def read_stock_basics():
+    file_cont = []
+    for j in os.listdir(&quot;./datas/stock_basic/&quot;):
+        file_path = os.path.join(&quot;./datas/stock_basic/&quot;, j)
+        file_cont.append(pd.read_csv(file_path, encoding=&quot;utf-8&quot;, dtype={&quot;code&quot;: str}))
+    stock_basics = dict(zip([j[:-9] for j in os.listdir(&quot;./datas/stock_basic/&quot;)], file_cont))
+    return stock_basics
+</code></pre>
+
+<p>股票涨跌幅划分区间</p>
+<pre><code class="python">def num_cut(x):
+    if x &gt;0:
+        x = 1
+    elif x &lt;= 0:
+        x = 0
+    return x
+</code></pre>
+
+<p>计算移动平均</p>
+<pre><code class="python">def stock_roll_mean(df):
+    df_temp = pd.DataFrame()
+    for k in [1,5,30,90]:
+        rolling_window = k
+        if &quot;pct_change&quot; in df.columns:
+            df.drop([&quot;pct_change&quot;], axis=1, inplace=True)
+        min_per = int(np.ceil(rolling_window-rolling_window*0.6)) if rolling_window &gt; 1 else rolling_window
+        stock_roll = df.rolling(rolling_window, min_periods=min_per).mean()
+        stock_roll.columns = stock_roll.columns.map(lambda x: x + &quot;mean{}&quot;.format(rolling_window))
+        if df_temp.empty:
+            df_temp = stock_roll
+        else:
+            df_temp = df_temp.join(stock_roll)            
+    return df_temp
+</code></pre>
+
+<h4 id="_6">分类模型特征选择</h4>
+<pre><code class="python"># 股票特征选择
+def feature_select(stock_):
+    if &quot;pct_change&quot; in stock_.columns:
+        stock_.drop(&quot;pct_change&quot;, inplace=True, axis=1)
+    if &quot;close&quot; in stock_.columns:
+        stock_.drop(&quot;close&quot;, inplace=True, axis=1)
+    y = stock_[&quot;direction&quot;]
+    stock_.drop(&quot;direction&quot;, axis=1, inplace=True)
+    X = stock_
+    sc = StandardScaler()
+    X_std = sc.fit_transform(X)  
+    feature_name = X.columns.values 
+    # 使用递归特征消除(RFE)进行特征选择
+    estimator = LogisticRegression()
+    selector = RFE(estimator, n_features_to_select=1, step=1)  
+    selector = selector.fit(X_std, y) 
+    bag = sorted(zip(feature_name, selector.ranking_, selector.support_),
+                 key=lambda x: x[1])
+    fea_importance = pd.DataFrame(bag)
+    fea_importance.set_index(0,inplace=True)
+    fea_importance.drop(2, axis=1, inplace=True)
+    fea_importance.rename(index=str, columns={1: &quot;RFE_Logistic&quot;}, inplace=True)
+    # 使用组合决策树(ExtraTrees)和稳定性选择(RandomizedLogisticRegression )进行特征选择    
+    model_dict = dict(zip([&quot;RandomLR&quot;, &quot;ExtraTree&quot;], [RandomizedLogisticRegression(),
+                                                      ExtraTreesClassifier(n_estimators=1000, random_state=1)]))
+    for i in [&quot;RandomLR&quot;, &quot;ExtraTree&quot;]:
+        model = model_dict[i]
+        model.fit(X if i == &quot;ExtraTree&quot; else X_std, y)
+        df_fea = pd.DataFrame(sorted(zip(feature_name, 
+                model.feature_importances_ if i == &quot;ExtraTree&quot; else model.scores_),
+                 key=lambda x: x[1], reverse=True))
+        df_fea.set_index(0, inplace=True)
+        df_fea.rename(index=str, columns={1: i}, inplace=True)
+        fea_importance = fea_importance.join(df_fea)
+    RandomLR_list = fea_importance[fea_importance[&quot;RandomLR&quot;] &gt; 0].index.tolist()
+    RFELR_list = fea_importance[fea_importance[&quot;RFE_Logistic&quot;] &lt; 150].index.tolist()
+    ExtraTree_list = fea_importance[fea_importance[&quot;ExtraTree&quot;] &gt; 0.003].index.tolist()
+    # 三种feature选择的交集
+    fea_two = set(RandomLR_list) &amp; set(RFELR_list)
+    fea_thr = fea_two &amp; set(ExtraTree_list)
+    feature_selected = list(fea_thr)
+    return feature_selected
+</code></pre>
+
+<h4 id="_7">模型训练</h4>
+<p>分类模型的分类效果的混淆矩阵可视化</p>
+<pre><code class="python"># 混淆矩阵图
+def confusion_group_plot(randomforest_result, logisticR_result, 
+                         merge_result,tree_result,ada_result,close_price,pct_change,stockid):
+    # 计算各个分类算法所得结果的混淆矩阵
+    con_rf = confusion_matrix(randomforest_result[0], randomforest_result[1], labels=[1, 0])    
+    con_lr = confusion_matrix(logisticR_result[0], logisticR_result[1], labels=[1, 0])    
+    con_merge = confusion_matrix(merge_result[0], merge_result[1], labels=[1, 0])    
+    con_tree = confusion_matrix(tree_result[0], tree_result[1], labels=[1, 0])    
+    con_ada = confusion_matrix(ada_result[0], ada_result[1], labels=[1, 0])    
+    # 混淆矩阵可视化
+    tick_labels = [u&quot;涨&quot;, u&quot;跌&quot;]    
+    fig, axes = plt.subplots(3,2, figsize=(8,12))        
+    ax1 = axes[0][0]
+    ax2 = axes[0][1]
+    ax3 = axes[1][0]        
+    ax4 = axes[1][1]
+    ax5 = axes[2][0]
+    ax6 = axes[2][1]
+    # g1-g5是用seaborn绘制各分类算法的混淆矩阵
+    g1 = sns.heatmap(con_rf, ax=ax1, cbar=True, annot=True, square=True, fmt=&quot;.2f&quot;, 
+                annot_kws={'size': 12}, yticklabels=tick_labels,xticklabels=tick_labels)
+    g2 = sns.heatmap(con_lr, ax=ax2, cbar=True, annot=True, square=True, fmt=&quot;.2f&quot;, 
+                annot_kws={'size': 12}, yticklabels=tick_labels,xticklabels=tick_labels)
+    g4 = sns.heatmap(con_ada, ax=ax4, cbar=True, annot=True, square=True, fmt=&quot;.2f&quot;, 
+                annot_kws={'size': 12}, yticklabels=tick_labels,xticklabels=tick_labels)
+    g3 = sns.heatmap(con_tree, ax=ax3, cbar=True, annot=True, square=True, 
+                     fmt=&quot;.2f&quot;, annot_kws={'size': 12}, yticklabels=tick_labels,xticklabels=tick_labels)
+    g5 = sns.heatmap(con_merge, ax=ax5, cbar=True, annot=True, square=True, 
+                     fmt=&quot;.2f&quot;, annot_kws={'size': 12}, yticklabels=tick_labels,xticklabels=tick_labels)
+    # ax6和ax7是双y轴图，用于股票的涨跌幅和价格的可视化输出
+    pct_change.plot(ax=ax6, legend=False, alpha=0.8)
+    ax7 = ax6.twinx()
+    close_price.plot(ax=ax7, legend=True, color=&quot;r&quot;,alpha=0.6)
+    # 以下为title、x_axis、x_label、y_axis、y_label的设置
+    ax7.set_ylabel(u&quot;股票价格 ￥&quot;, fontsize=14, fontproperties=font)
+    ax6.set_ylabel(&quot;pct_change&quot;, fontsize=17, fontproperties=font)
+    ax6.set_xlabel(&quot;&quot;)    
+    ax6.set_title(&quot;{} pct_chage &amp; close_price&quot;.format(stockid),fontsize=14)
+    ax5.set_title(u&quot;Merge-Softvote&quot;, fontsize=15, fontproperties=font)    
+    ax1.set_title(u&quot;RandomForest&quot;, fontsize=15, fontproperties=font)
+    ax2.set_title(u&quot;LogisticRegression&quot;, fontsize=15, fontproperties=font)    
+    ax3.set_title(u&quot;Tree&quot;, fontsize=15, fontproperties=font)    
+    ax4.set_title(u&quot;Adaboosgt&quot;, fontsize=15, fontproperties=font) 
+    ax5.set_title(u&quot;Merge-Softvote&quot;, fontsize=15, fontproperties=font)    
+    # 文本标注
+    ax1.text(0.3,-0.23,s=randomforest_result[2],fontsize=12,va=&quot;bottom&quot;,ha=&quot;left&quot;,fontproperties=font,color='green')
+    ax2.text(0.3,-0.23,s=logisticR_result[2],fontsize=12,va=&quot;bottom&quot;,ha=&quot;left&quot;,fontproperties=font,color='red')
+    ax4.text(0.3,-0.23,s=ada_result[2],fontsize=12,va=&quot;bottom&quot;,ha=&quot;left&quot;,fontproperties=font,color='blue')
+    ax3.text(0.3,-0.23,s=tree_result[2],fontsize=12,va=&quot;bottom&quot;,ha=&quot;left&quot;,fontproperties=font,color='purple')
+    ax5.text(0.3,-0.23,s=merge_result[2],fontsize=12,va=&quot;bottom&quot;,ha=&quot;left&quot;,fontproperties=font,color='k')
+    # x、y轴设置
+    ax1.set_yticklabels(g1.get_yticklabels(), fontproperties=font, fontsize=12)
+    ax1.set_xticklabels(g1.get_xticklabels(), fontproperties=font, fontsize=12)
+    ax2.set_yticklabels(g2.get_yticklabels(), fontproperties=font, fontsize=12)
+    ax2.set_xticklabels(g2.get_xticklabels(), fontproperties=font, fontsize=12)
+    ax3.set_yticklabels(g3.get_yticklabels(), fontproperties=font, fontsize=12)
+    ax3.set_xticklabels(g3.get_xticklabels(), fontproperties=font, fontsize=12)
+    ax4.set_yticklabels(g4.get_yticklabels(), fontproperties=font, fontsize=12)
+    ax4.set_xticklabels(g4.get_xticklabels(), fontproperties=font, fontsize=12)        
+    ax5.set_yticklabels(g5.get_yticklabels(), fontproperties=font, fontsize=12)
+    ax5.set_xticklabels(g5.get_xticklabels(), fontproperties=font, fontsize=12)        
+    #轴标签设置
+    ax1.set_ylabel(u&quot;实际&quot;, fontsize=15, fontproperties=font)
+    ax1.set_xlabel(u&quot;预测&quot;, fontsize=15, fontproperties=font)
+    ax2.set_ylabel(u&quot;实际&quot;, fontsize=15, fontproperties=font)
+    ax2.set_xlabel(u&quot;预测&quot;, fontsize=15, fontproperties=font)
+    ax3.set_ylabel(u&quot;实际&quot;, fontsize=15, fontproperties=font)
+    ax3.set_xlabel(u&quot;预测&quot;, fontsize=15, fontproperties=font)
+    ax4.set_ylabel(u&quot;实际&quot;, fontsize=15, fontproperties=font)
+    ax4.set_xlabel(u&quot;预测&quot;, fontsize=15, fontproperties=font)
+    ax5.set_ylabel(u&quot;实际&quot;, fontsize=15, fontproperties=font)
+    ax5.set_xlabel(u&quot;预测&quot;, fontsize=15, fontproperties=font)
+    plt.tight_layout() 
+    plt.show()  
+    # 保存图片
+    fig.savefig(&quot;./classificationResult/reasses/{}_classification_result.png&quot;.format(stockid))
+</code></pre>
+
+<p>分类器训练</p>
+<pre><code class="python"># 随机森林分类器
+def random_forest(stock_, stock_y, feature_selected):
+    train_num = int(stock_.shape[0] * 0.85)
+    if &quot;pct_change&quot; in stock_.columns:
+        stock_.drop(&quot;pct_change&quot;, inplace=True, axis=1)
+    if &quot;close&quot; in stock_.columns:
+        stock_.drop(&quot;close&quot;, inplace=True, axis=1)
+    X = stock_[feature_selected]
+    X_train = X[:train_num]
+    X_test = X[train_num:]
+    y_train = stock_y[:train_num]
+    y_test = stock_y[train_num:]
+    random_forest = RandomForestClassifier(max_features=&quot;auto&quot;,n_estimators=3000, class_weight=&quot;balanced&quot;,random_state=24)
+    parameters = {'max_depth':[6,7,8]}
+    gs = GridSearchCV(estimator=random_forest, param_grid=parameters, 
+                        scoring=&quot;accuracy&quot;, cv=3, n_jobs=3)
+    gs.fit(X_train, y_train)
+    rf = gs.best_estimator_
+    rf.fit(X_train, y_train)
+    rf_prediction_train = rf.predict(X_train)
+    rf_prediction_test = rf.predict(X_test)
+    rf_evaluate_result = classification_report(y_test, rf_prediction_test)
+    train_accuracy = np.round(accuracy_score(y_train, rf_prediction_train),4)
+    test_accuracy = np.round(accuracy_score(y_test, rf_prediction_test),4) 
+    train_f = np.round(f1_score(y_train, rf_prediction_train),4)
+    test_f = np.round(f1_score(y_test, rf_prediction_test),4)
+    cls_accuracy = &quot;train:{0},test:{1}&quot;.format(train_accuracy, test_accuracy)
+    cls_f = &quot;train:{0},test:{1}&quot;.format(train_f, test_f)  
+    cls_report = &quot;classifationReport:{}&quot;.format(rf_evaluate_result)    
+    print(&quot;rf,{}&quot;.format(cls_report))
+    return [y_test, rf_prediction_test,cls_accuracy,cls_f,rf]    
+</code></pre>
+
+<pre><code class="python"># Logistic 分类器
+def logistic(stock_, stock_y, feature_selected):
+    # 使用选择的特征训练LogisticRegression分类器
+    train_num = int(stock_.shape[0] * 0.85)
+    if &quot;pct_change&quot; in stock_.columns:
+        stock_.drop(&quot;pct_change&quot;, inplace=True, axis=1)
+    if &quot;close&quot; in stock_.columns:
+        stock_.drop(&quot;close&quot;, inplace=True, axis=1)
+    X = stock_[feature_selected]
+    X_train = X[:train_num]
+    X_test = X[train_num:]
+    y_train = stock_y[:train_num]
+    y_test = stock_y[train_num:]
+    sc = StandardScaler()
+    sc.fit(X_train)  # 计算均值和方差
+    X_train_std = sc.transform(X_train)  # 进行标准变换，变成标准正态分布
+    X_test_std = sc.transform(X_test)
+    parameters = {'C':[0.04, 0.05, 0.06]}
+    logistic = LogisticRegression(penalty=&quot;l2&quot;, random_state=24, tol=1e-6)
+    gs = GridSearchCV(estimator=logistic, param_grid=parameters, 
+                        scoring=&quot;accuracy&quot;, cv=3, n_jobs=3)
+    gs.fit(X_train_std, y_train)
+    lr = gs.best_estimator_
+    lr.fit(X_train_std, y_train)
+    y_pred_test = lr.predict(X_test_std)
+    y_pred_train = lr.predict(X_train_std)    
+    lr_evaluate_result = classification_report(y_test, y_pred_test)
+    train_accuracy = np.round(accuracy_score(y_train, y_pred_train),4)
+    test_accuracy = np.round(accuracy_score(y_test, y_pred_test),4) 
+    train_f = np.round(f1_score(y_train, y_pred_train),4)
+    test_f = np.round(f1_score(y_test, y_pred_test),4)
+    lr_accuracy = &quot;train:{0},test:{1}&quot;.format(train_accuracy, test_accuracy) 
+    lr_f = &quot;train:{0},test:{1}&quot;.format(train_f, test_f) 
+    lr_report = &quot;classifationReport:{}&quot;.format(lr_evaluate_result)    
+    print(&quot;lr,{}&quot;.format(lr_report))
+    return [y_test, y_pred_test, lr_accuracy, lr_f, lr]
+</code></pre>
+
+<pre><code class="python"># 模型融合——softVoting
+def merge(stock_, stock_y, feature_selected, models):
+    train_num = int(stock_.shape[0] * 0.85)
+    if &quot;pct_change&quot; in stock_.columns:
+        stock_.drop(&quot;pct_change&quot;, inplace=True, axis=1)
+    if &quot;close&quot; in stock_.columns:
+        stock_.drop(&quot;close&quot;, inplace=True, axis=1)
+    X = stock_[feature_selected]
+    X_train = X[:train_num]
+    X_test = X[train_num:]
+    y_train = stock_y[:train_num]
+    y_test = stock_y[train_num:]
+    sc = StandardScaler()
+    sc.fit(X_train)  
+    X_train_std = sc.transform(X_train)  
+    X_test_std = sc.transform(X_test)
+    lr = models.get(&quot;lr&quot;)
+    rf = models.get(&quot;rf&quot;)
+    tree = models.get(&quot;tree&quot;)
+    ada = models.get(&quot;ada&quot;)    
+    eclf = VotingClassifier(estimators=[(&quot;lr&quot;, lr),('rf', rf),('ada', ada),('tree', tree),], voting='soft',weights=[1.2,1.2,1.1,0.8]) 
+    eclf.fit(X_train_std, y_train)
+    eclf_pred_test = eclf.predict(X_test_std)
+    eclf_pred_train = eclf.predict(X_train_std)
+    eclf_train_accu = np.round(accuracy_score(y_train, eclf_pred_train),4)
+    eclf_test_accu = np.round(accuracy_score(y_test, eclf_pred_test),4)
+    eclf_train_f = np.round(f1_score(y_train, eclf_pred_train),4)
+    eclf_test_f = np.round(f1_score(y_test, eclf_pred_test),4)
+    eclf_evaluate_result = classification_report(y_test, eclf_pred_test)
+    merge_result = &quot;train:{0}, test:{1}&quot;.format(eclf_train_accu, eclf_test_accu)
+    merge_result_f = &quot;train:{0}, test:{1}&quot;.format(eclf_train_f, eclf_test_f)
+    print(&quot;merge,{}&quot;.format(eclf_evaluate_result))
+    return [y_test, eclf_pred_test, merge_result, merge_result_f]
+</code></pre>
+
+<pre><code class="python"># 决策树分类器
+def tree(stock_, stock_y, feature_selected):
+    train_num = int(stock_.shape[0] * 0.85)
+    if &quot;pct_change&quot; in stock_.columns:
+        stock_.drop(&quot;pct_change&quot;, inplace=True, axis=1)
+    if &quot;close&quot; in stock_.columns:
+        stock_.drop(&quot;close&quot;, inplace=True, axis=1)
+    X = stock_[feature_selected]
+    X_train = X[:train_num]
+    X_test = X[train_num:]
+    y_train = stock_y[:train_num]
+    y_test = stock_y[train_num:]
+    decision_tree = DecisionTreeClassifier(random_state=24)
+    parameters = {'max_depth':[9,10,11]}
+    gs = GridSearchCV(estimator=decision_tree, param_grid=parameters, 
+                        scoring=&quot;accuracy&quot;, cv=3, n_jobs=3)
+    gs.fit(X_train, y_train)
+    tree = gs.best_estimator_
+    tree.fit(X_train, y_train)
+    tree_pred_test = tree.predict(X_test)
+    tree_evaluate_result = classification_report(y_test, tree_pred_test)
+    tree_pred_train = tree.predict(X_train)    
+    train_accuracy = np.round(accuracy_score(y_train, tree_pred_train),4)
+    test_accuracy = np.round(accuracy_score(y_test, tree_pred_test),4) 
+    train_f = np.round(f1_score(y_train, tree_pred_train),4)
+    test_f = np.round(f1_score(y_test, tree_pred_test),4)
+    tree_accuracy = &quot;train:{0},test:{1}&quot;.format(train_accuracy, test_accuracy) 
+    tree_f = &quot;train:{0},test:{1}&quot;.format(train_f, test_f)  
+    tree_report = &quot;classifationReport:{}&quot;.format(tree_evaluate_result)    
+    print(&quot;tree,{}&quot;.format(tree_report))
+    return [y_test, tree_pred_test, tree_accuracy,tree_f,tree]
+</code></pre>
+
+<pre><code class="python"># Boosting分类器
+def adaboost(stock_, stock_y, feature_selected):
+    train_num = int(stock_.shape[0] * 0.85)
+    if &quot;pct_change&quot; in stock_.columns:
+        stock_.drop(&quot;pct_change&quot;, inplace=True, axis=1)
+    if &quot;close&quot; in stock_.columns:
+        stock_.drop(&quot;close&quot;, inplace=True, axis=1)
+    X = stock_[feature_selected]
+    X_train = X[:train_num]
+    X_test = X[train_num:]
+    y_train = stock_y[:train_num]
+    y_test = stock_y[train_num:]
+    sc = StandardScaler()
+    sc.fit(X_train)  
+    X_train_std = sc.transform(X_train)  
+    X_test_std = sc.transform(X_test)
+    tree = DecisionTreeClassifier(max_depth=5, random_state=24)    
+    adaboost = AdaBoostClassifier(base_estimator=tree, random_state=24)
+    parameters = [{'n_estimators':[1000,2000]}, {&quot;learning_rate&quot;:[0.05,0.08,0.11]}]
+    gs = GridSearchCV(estimator=adaboost, param_grid=parameters, 
+                        scoring=&quot;accuracy&quot;, cv=3, n_jobs=3)
+    gs.fit(X_train_std, y_train)
+    ada = gs.best_estimator_
+    ada = ada.fit(X_train_std, y_train)
+    ada_test_pred = ada.predict(X_test_std)
+    ada_train_pred = ada.predict(X_train_std)    
+    ada_evaluate_result = classification_report(y_test, ada_test_pred)
+    test_f = np.round(f1_score(y_test, ada_test_pred),4)    
+    train_f = np.round(f1_score(y_train, ada_train_pred),4)
+    train_accuracy = np.round(accuracy_score(y_train, ada_train_pred),4)
+    test_accuracy = np.round(accuracy_score(y_test, ada_test_pred),4)    
+    ada_accuracy = &quot;train:{0},test:{1}&quot;.format(train_accuracy, test_accuracy)
+    ada_f = &quot;train:{0},test:{1}&quot;.format(train_f, test_f)  
+    ada_report = &quot;classifationReport:{}&quot;.format(ada_evaluate_result) 
+    print(&quot;ada,{}&quot;.format(ada_report))
+    return [y_test, ada_test_pred, ada_accuracy, ada_f, ada]
+</code></pre>
+
+<pre><code class="python">def stock_tackle(stockid_list, stocks, features=None, feature_select=1):
+    sf = StockFeature()  
+    clf_result = &quot;./classificationResult/reasses/ClassificationResultAccuracy.csv&quot;
+    clf_result_ = &quot;./classificationResult/reasses/ClassificationResultReport.csv&quot;
+    feature_result = &quot;./classificationResult/reasses/FeatureResult.csv&quot;    
+    stock_basic_file_name = [i[:-9] for i in os.listdir(&quot;./datas/stock_basic/&quot;)]    
+    stock_basics = read_stock_basics()
+    stock_index = stock_index_tackle()
+    stock_eco = stock_economy_tackle()    
+    # 取出每一支股票进行特征抽取和模型训练的处理
+    for i, stid in enumerate(stockid_list):        
+        models = {}  # 保存模型参数用于最后的模型融合        
+        tar_st = stocks[stid]
+        tar_st[&quot;pct_change&quot;] = tar_st[&quot;close&quot;].pct_change() * 100
+        tar_st.drop(tar_st[tar_st[&quot;pct_change&quot;] &gt; 11.0].index, inplace=True)
+        tar_st.drop(tar_st[tar_st[&quot;pct_change&quot;] &lt; -11.0].index, inplace=True)
+        tar_st.drop([&quot;pct_change&quot;, &quot;open&quot;], inplace=True, axis=1)
+        # 提取股票的tech_features
+        stock_tech_fea = sf.extract_stock_fea(tar_st)
+        stock_roll = stock_roll_mean(stock_tech_fea)       
+        # 增加股指数据
+        stock_roll = stock_roll.join(stock_index)
+        # 增加宏观经济数据
+        stock_roll = stock_roll.join(stock_eco)
+        # 增加股票基本面数据
+        stock_basic_one = stock_basics_tackle(stid, stock_basics, stock_basic_file_name)
+        stock_roll = stock_roll.join(stock_basic_one)
+        stock_roll = stock_roll.shift(1)
+        # 增加分类标签
+        tar_close = pd.DataFrame(index=tar_st.index)
+        tar_close[&quot;close&quot;] = tar_st[&quot;close&quot;]         
+        tar_close[&quot;pct_change&quot;] = tar_st[&quot;close&quot;].pct_change() * 100 
+        tar_close[&quot;direction&quot;] = tar_close[&quot;pct_change&quot;].apply(num_cut)
+        close_price = tar_close[&quot;close&quot;]
+        pct_change = tar_close[&quot;pct_change&quot;]        
+        tar_close.drop([&quot;pct_change&quot;], axis=1, inplace=True)
+        tar_close.drop([&quot;close&quot;], axis=1, inplace=True)
+        stock_roll = stock_roll.join(tar_close)
+        stock_roll.dropna(inplace=True)
+        Y = stock_roll[&quot;direction&quot;]
+        # 模型特征选择
+        if feature_select == 1:
+            feature_selected = feature_select(stock_roll)
+        else:
+            feature_selected = features
+        # 模型训练
+        if &quot;direction&quot; in stock_roll.columns:
+            stock_roll.drop(&quot;direction&quot;, axis=1, inplace=True)
+        randomforest_result = random_forest(stock_roll, Y, feature_selected)
+        logisticR_result = logistic(stock_roll, Y, feature_selected)
+        tree_result = tree(stock_roll, Y, feature_selected)
+        ada_result = adaboost(stock_roll, Y, feature_selected)
+        models[&quot;rf&quot;] = randomforest_result[4]
+        models[&quot;lr&quot;] = logisticR_result[4]
+        models[&quot;tree&quot;] = tree_result[4]
+        models[&quot;ada&quot;] = ada_result[4]
+        merge_result = merge(stock_roll, Y, feature_selected, models)        
+        # 混淆矩阵可视化
+        confusion_group_plot(randomforest_result, logisticR_result,
+                             merge_result,tree_result,ada_result,
+                             close_price, pct_change,stid)
+        # 分类特征保存
+        if feature_select == 1:
+            feature_selected.insert(0, stid)
+            feature_str = &quot;,&quot;.join(feature_selected)
+            with open(feature_result, &quot;a&quot;) as f:
+                f.write( feature_str + &quot;\n&quot;)
+        # 分类结果保存
+        classification_accuracy = &quot;,&quot;.join([stid,randomforest_result[2],logisticR_result[2],tree_result[2],ada_result[2],merge_result[2]]) + &quot;\n&quot; 
+        classification_reportf1 = &quot;,&quot;.join([stid,randomforest_result[3],logisticR_result[3],tree_result[3],ada_result[3],merge_result[3]]) + str(stock_roll.shape) + &quot;\n&quot; 
+        with open(clf_result, &quot;a&quot;) as f:
+            f.write(classification_accuracy)
+        with open(clf_result_, &quot;a&quot;) as f:
+            f.write(classification_reportf1)
+</code></pre>
+
+<p>分类模型结果输出</p>
+<pre><code class="python"># 分类结果输出，结果太长,略...
+stock_tackle(stockid_list, stocks)
+</code></pre>
+
+<h3 id="_8">分类结果分析</h3>
+<pre><code class="python"># 分类准确率
+accuracy = pd.read_csv(&quot;./classification_result_accuracy.csv&quot;,encoding=&quot;utf-8&quot;, dtype=str)
+accuracy.set_index(&quot;stockid&quot;, inplace=True)
+accuracy.head(2)
+</code></pre>
+
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>rf_train_accuracy</th>
+      <th>rf_test_accuracy</th>
+      <th>lr_train_accuracy</th>
+      <th>lr_test_accuracy</th>
+      <th>tree_train_accuracy</th>
+      <th>tree_test_accuracy</th>
+      <th>ada_train_accuracy</th>
+      <th>ada_test_accuracy</th>
+      <th>merge_train_accuracy</th>
+      <th>merge_test_accuracy</th>
+    </tr>
+    <tr>
+      <th>stockid</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>002450</th>
+      <td>0.9032</td>
+      <td>0.5833</td>
+      <td>0.5874</td>
+      <td>0.5476</td>
+      <td>0.9179</td>
+      <td>0.5595</td>
+      <td>0.9979</td>
+      <td>0.5952</td>
+      <td>0.9874</td>
+      <td>0.5357</td>
+    </tr>
+    <tr>
+      <th>600999</th>
+      <td>0.8713</td>
+      <td>0.5038</td>
+      <td>0.5528</td>
+      <td>0.458</td>
+      <td>0.8496</td>
+      <td>0.4733</td>
+      <td>1.0</td>
+      <td>0.5191</td>
+      <td>1.0</td>
+      <td>0.4733</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code class="python"># 分类f1scrore
+fscore = pd.read_csv(&quot;./classification_result_fscore.csv&quot;,encoding=&quot;utf-8&quot;, dtype=str)
+fscore.set_index(&quot;stockid&quot;, inplace=True)
+fscore.head(2)
+</code></pre>
+
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>rf_train_fscore</th>
+      <th>rf_test_fscore</th>
+      <th>lr_train_fscore</th>
+      <th>lr_test_fscore</th>
+      <th>tree_train_fscore</th>
+      <th>tree_test_fscore</th>
+      <th>ada_train_fscore</th>
+      <th>ada_test_fscore</th>
+      <th>merge_train_fscore</th>
+      <th>merge_test_fscore</th>
+    </tr>
+    <tr>
+      <th>stockid</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>002450</th>
+      <td>0.9112</td>
+      <td>0.6535</td>
+      <td>0.6423</td>
+      <td>0.4242</td>
+      <td>0.9234</td>
+      <td>0.5934</td>
+      <td>0.998</td>
+      <td>0.66</td>
+      <td>0.9882</td>
+      <td>0.5979</td>
+    </tr>
+    <tr>
+      <th>600999</th>
+      <td>0.8633</td>
+      <td>0.4037</td>
+      <td>0.5352</td>
+      <td>0.4409</td>
+      <td>0.8326</td>
+      <td>0.3429</td>
+      <td>1.0</td>
+      <td>0.496</td>
+      <td>1.0</td>
+      <td>0.3784</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code class="python"># 各股票分类模型构建使用的特征
+stock_feature_selected_file = &quot;./feature_selected.csv&quot;
+feature_selected = pd.read_csv(stock_feature_selected_file,header=None,encoding=&quot;utf-8&quot;, dtype=str)
+feature_selected.set_index(0, inplace=True)
+feature_selected.index.rename(&quot;stockid&quot;, inplace=True)
+feature_selected.columns = [&quot;fea_num&quot;, &quot;fea_name&quot;]
+feature_selected.head(2)
+</code></pre>
+
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>fea_num</th>
+      <th>fea_name</th>
+    </tr>
+    <tr>
+      <th>stockid</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>002450</th>
+      <td>14</td>
+      <td>volume_roll_20_maxmean90::volume_roll_5_ppmean...</td>
+    </tr>
+    <tr>
+      <th>600999</th>
+      <td>9</td>
+      <td>Lag60mean30::macd_deamean30::volume_roll_20_pp...</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code class="python"># 合并文件
+result = pd.concat([feature_selected, accuracy, fscore], axis=1)
+result.head(2)
+</code></pre>
+
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>fea_num</th>
+      <th>fea_name</th>
+      <th>rf_train_accuracy</th>
+      <th>rf_test_accuracy</th>
+      <th>lr_train_accuracy</th>
+      <th>lr_test_accuracy</th>
+      <th>tree_train_accuracy</th>
+      <th>tree_test_accuracy</th>
+      <th>ada_train_accuracy</th>
+      <th>ada_test_accuracy</th>
+      <th>...</th>
+      <th>rf_train_fscore</th>
+      <th>rf_test_fscore</th>
+      <th>lr_train_fscore</th>
+      <th>lr_test_fscore</th>
+      <th>tree_train_fscore</th>
+      <th>tree_test_fscore</th>
+      <th>ada_train_fscore</th>
+      <th>ada_test_fscore</th>
+      <th>merge_train_fscore</th>
+      <th>merge_test_fscore</th>
+    </tr>
+    <tr>
+      <th>stockid</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>002450</th>
+      <td>14</td>
+      <td>volume_roll_20_maxmean90::volume_roll_5_ppmean...</td>
+      <td>0.9032</td>
+      <td>0.5833</td>
+      <td>0.5874</td>
+      <td>0.5476</td>
+      <td>0.9179</td>
+      <td>0.5595</td>
+      <td>0.9979</td>
+      <td>0.5952</td>
+      <td>...</td>
+      <td>0.9112</td>
+      <td>0.6535</td>
+      <td>0.6423</td>
+      <td>0.4242</td>
+      <td>0.9234</td>
+      <td>0.5934</td>
+      <td>0.998</td>
+      <td>0.66</td>
+      <td>0.9882</td>
+      <td>0.5979</td>
+    </tr>
+    <tr>
+      <th>600999</th>
+      <td>9</td>
+      <td>Lag60mean30::macd_deamean30::volume_roll_20_pp...</td>
+      <td>0.8713</td>
+      <td>0.5038</td>
+      <td>0.5528</td>
+      <td>0.458</td>
+      <td>0.8496</td>
+      <td>0.4733</td>
+      <td>1.0</td>
+      <td>0.5191</td>
+      <td>...</td>
+      <td>0.8633</td>
+      <td>0.4037</td>
+      <td>0.5352</td>
+      <td>0.4409</td>
+      <td>0.8326</td>
+      <td>0.3429</td>
+      <td>1.0</td>
+      <td>0.496</td>
+      <td>1.0</td>
+      <td>0.3784</td>
+    </tr>
+  </tbody>
+</table>
+<p>2 rows × 22 columns</p>
+</div>
+
+<pre><code class="python">fea_name = result[&quot;fea_name&quot;]
+result.drop(&quot;fea_name&quot;, axis=1, inplace=True)
+result = result.astype(np.float)
+result[&quot;fea_name&quot;] = fea_name
+result.describe()
+</code></pre>
+
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>fea_num</th>
+      <th>rf_train_accuracy</th>
+      <th>rf_test_accuracy</th>
+      <th>lr_train_accuracy</th>
+      <th>lr_test_accuracy</th>
+      <th>tree_train_accuracy</th>
+      <th>tree_test_accuracy</th>
+      <th>ada_train_accuracy</th>
+      <th>ada_test_accuracy</th>
+      <th>merge_train_accuracy</th>
+      <th>...</th>
+      <th>rf_train_fscore</th>
+      <th>rf_test_fscore</th>
+      <th>lr_train_fscore</th>
+      <th>lr_test_fscore</th>
+      <th>tree_train_fscore</th>
+      <th>tree_test_fscore</th>
+      <th>ada_train_fscore</th>
+      <th>ada_test_fscore</th>
+      <th>merge_train_fscore</th>
+      <th>merge_test_fscore</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>114.000000</td>
+      <td>114.000000</td>
+      <td>114.000000</td>
+      <td>114.000000</td>
+      <td>114.000000</td>
+      <td>114.000000</td>
+      <td>114.000000</td>
+      <td>114.000000</td>
+      <td>114.000000</td>
+      <td>114.000000</td>
+      <td>...</td>
+      <td>114.000000</td>
+      <td>114.000000</td>
+      <td>114.000000</td>
+      <td>114.000000</td>
+      <td>114.000000</td>
+      <td>114.000000</td>
+      <td>114.000000</td>
+      <td>114.000000</td>
+      <td>114.000000</td>
+      <td>114.000000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>14.736842</td>
+      <td>0.931375</td>
+      <td>0.535332</td>
+      <td>0.576775</td>
+      <td>0.539644</td>
+      <td>0.848904</td>
+      <td>0.518705</td>
+      <td>0.997176</td>
+      <td>0.513425</td>
+      <td>0.987729</td>
+      <td>...</td>
+      <td>0.931418</td>
+      <td>0.505799</td>
+      <td>0.591576</td>
+      <td>0.516610</td>
+      <td>0.848570</td>
+      <td>0.504644</td>
+      <td>0.997196</td>
+      <td>0.508587</td>
+      <td>0.987868</td>
+      <td>0.509133</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>5.507923</td>
+      <td>0.047039</td>
+      <td>0.044155</td>
+      <td>0.020905</td>
+      <td>0.044296</td>
+      <td>0.076324</td>
+      <td>0.046297</td>
+      <td>0.008231</td>
+      <td>0.044125</td>
+      <td>0.016967</td>
+      <td>...</td>
+      <td>0.048054</td>
+      <td>0.117307</td>
+      <td>0.062980</td>
+      <td>0.144329</td>
+      <td>0.085231</td>
+      <td>0.102104</td>
+      <td>0.008179</td>
+      <td>0.085687</td>
+      <td>0.016824</td>
+      <td>0.098467</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>2.000000</td>
+      <td>0.780500</td>
+      <td>0.429600</td>
+      <td>0.521500</td>
+      <td>0.451100</td>
+      <td>0.644100</td>
+      <td>0.373200</td>
+      <td>0.952500</td>
+      <td>0.392400</td>
+      <td>0.923600</td>
+      <td>...</td>
+      <td>0.779500</td>
+      <td>0.038500</td>
+      <td>0.165300</td>
+      <td>0.000000</td>
+      <td>0.400000</td>
+      <td>0.140400</td>
+      <td>0.952200</td>
+      <td>0.228600</td>
+      <td>0.918200</td>
+      <td>0.140400</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>11.250000</td>
+      <td>0.897700</td>
+      <td>0.508825</td>
+      <td>0.563525</td>
+      <td>0.508925</td>
+      <td>0.797925</td>
+      <td>0.493250</td>
+      <td>0.999250</td>
+      <td>0.486125</td>
+      <td>0.982825</td>
+      <td>...</td>
+      <td>0.896425</td>
+      <td>0.447150</td>
+      <td>0.564025</td>
+      <td>0.473550</td>
+      <td>0.799850</td>
+      <td>0.449125</td>
+      <td>0.999250</td>
+      <td>0.474700</td>
+      <td>0.983400</td>
+      <td>0.471225</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>14.000000</td>
+      <td>0.937250</td>
+      <td>0.536100</td>
+      <td>0.575250</td>
+      <td>0.537850</td>
+      <td>0.851200</td>
+      <td>0.520500</td>
+      <td>1.000000</td>
+      <td>0.517500</td>
+      <td>0.995250</td>
+      <td>...</td>
+      <td>0.938100</td>
+      <td>0.518300</td>
+      <td>0.600450</td>
+      <td>0.541600</td>
+      <td>0.855050</td>
+      <td>0.522850</td>
+      <td>1.000000</td>
+      <td>0.515050</td>
+      <td>0.995550</td>
+      <td>0.525050</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>18.750000</td>
+      <td>0.971250</td>
+      <td>0.564900</td>
+      <td>0.590150</td>
+      <td>0.569000</td>
+      <td>0.913475</td>
+      <td>0.543225</td>
+      <td>1.000000</td>
+      <td>0.534675</td>
+      <td>1.000000</td>
+      <td>...</td>
+      <td>0.971650</td>
+      <td>0.591875</td>
+      <td>0.625400</td>
+      <td>0.616650</td>
+      <td>0.914700</td>
+      <td>0.571400</td>
+      <td>1.000000</td>
+      <td>0.571025</td>
+      <td>1.000000</td>
+      <td>0.577725</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>30.000000</td>
+      <td>1.000000</td>
+      <td>0.695700</td>
+      <td>0.640100</td>
+      <td>0.658500</td>
+      <td>0.992800</td>
+      <td>0.634900</td>
+      <td>1.000000</td>
+      <td>0.615400</td>
+      <td>1.000000</td>
+      <td>...</td>
+      <td>1.000000</td>
+      <td>0.704200</td>
+      <td>0.704700</td>
+      <td>0.708700</td>
+      <td>0.992900</td>
+      <td>0.691900</td>
+      <td>1.000000</td>
+      <td>0.700600</td>
+      <td>1.000000</td>
+      <td>0.695700</td>
+    </tr>
+  </tbody>
+</table>
+<p>8 rows × 21 columns</p>
+</div>
+
+<pre><code class="python">result.head(3)
+</code></pre>
+
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>fea_num</th>
+      <th>rf_train_accuracy</th>
+      <th>rf_test_accuracy</th>
+      <th>lr_train_accuracy</th>
+      <th>lr_test_accuracy</th>
+      <th>tree_train_accuracy</th>
+      <th>tree_test_accuracy</th>
+      <th>ada_train_accuracy</th>
+      <th>ada_test_accuracy</th>
+      <th>merge_train_accuracy</th>
+      <th>...</th>
+      <th>rf_test_fscore</th>
+      <th>lr_train_fscore</th>
+      <th>lr_test_fscore</th>
+      <th>tree_train_fscore</th>
+      <th>tree_test_fscore</th>
+      <th>ada_train_fscore</th>
+      <th>ada_test_fscore</th>
+      <th>merge_train_fscore</th>
+      <th>merge_test_fscore</th>
+      <th>fea_name</th>
+    </tr>
+    <tr>
+      <th>stockid</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>002450</th>
+      <td>14.0</td>
+      <td>0.9032</td>
+      <td>0.5833</td>
+      <td>0.5874</td>
+      <td>0.5476</td>
+      <td>0.9179</td>
+      <td>0.5595</td>
+      <td>0.9979</td>
+      <td>0.5952</td>
+      <td>0.9874</td>
+      <td>...</td>
+      <td>0.6535</td>
+      <td>0.6423</td>
+      <td>0.4242</td>
+      <td>0.9234</td>
+      <td>0.5934</td>
+      <td>0.998</td>
+      <td>0.6600</td>
+      <td>0.9882</td>
+      <td>0.5979</td>
+      <td>volume_roll_20_maxmean90::volume_roll_5_ppmean...</td>
+    </tr>
+    <tr>
+      <th>600999</th>
+      <td>9.0</td>
+      <td>0.8713</td>
+      <td>0.5038</td>
+      <td>0.5528</td>
+      <td>0.4580</td>
+      <td>0.8496</td>
+      <td>0.4733</td>
+      <td>1.0000</td>
+      <td>0.5191</td>
+      <td>1.0000</td>
+      <td>...</td>
+      <td>0.4037</td>
+      <td>0.5352</td>
+      <td>0.4409</td>
+      <td>0.8326</td>
+      <td>0.3429</td>
+      <td>1.000</td>
+      <td>0.4960</td>
+      <td>1.0000</td>
+      <td>0.3784</td>
+      <td>Lag60mean30::macd_deamean30::volume_roll_20_pp...</td>
+    </tr>
+    <tr>
+      <th>601633</th>
+      <td>28.0</td>
+      <td>0.9153</td>
+      <td>0.5435</td>
+      <td>0.6072</td>
+      <td>0.5145</td>
+      <td>0.9037</td>
+      <td>0.5435</td>
+      <td>1.0000</td>
+      <td>0.5507</td>
+      <td>0.9884</td>
+      <td>...</td>
+      <td>0.2588</td>
+      <td>0.5854</td>
+      <td>0.1299</td>
+      <td>0.9007</td>
+      <td>0.5828</td>
+      <td>1.000</td>
+      <td>0.3111</td>
+      <td>0.9880</td>
+      <td>0.2444</td>
+      <td>Lag60mean30::sz_low::volume_roll_10_minmean5::...</td>
+    </tr>
+  </tbody>
+</table>
+<p>3 rows × 22 columns</p>
+</div>
+
+<p>5种不同分类模型在测试集的表现</p>
+<pre><code class="python">def test_score_plot(df, regex, score_type):
+    score = result.filter(regex=regex)
+    score.columns = score.columns.map(lambda x: re.match(r&quot;(.*?)_.*&quot;, x).group(1))
+    score.sort_values(&quot;merge&quot;, ascending=False, inplace=True)
+    score.columns = [&quot;randomForest&quot;, &quot;LogisiticRegression&quot;, &quot;decisionTree&quot;, &quot;Adaboost&quot;, &quot;merge-softvoting&quot;]
+    merge_ = score[&quot;merge-softvoting&quot;]
+    score.drop(&quot;merge-softvoting&quot;, axis=1, inplace=True)
+    fig, ax = plt.subplots(figsize=(12,9))
+    score.plot(legend=True, ax=ax, grid=False, alpha=0.9)
+    merge_.plot(ax=ax, lw=4, legend=True, grid=False)
+    plt.gca().yaxis.grid(True, linestyle = &quot;-.&quot;)
+    plt.xlabel(&quot;&quot;)
+    plt.ylabel(u&quot;{}&quot;.format(score_type), fontsize=16, fontproperties=font)
+    plt.title(u&quot;五种分类模型测试集{}&quot;.format(score_type), fontsize=20, fontproperties=font)
+</code></pre>
+
+<pre><code class="python">accuracy_regex=&quot;.*?_test_accuracy&quot;
+test_score_plot(result, accuracy_regex, u&quot;准确率&quot;)
+</code></pre>
+
+<p><img alt="png" src="../output_74_0.png" /></p>
+<pre><code class="python">fscore_regex=&quot;.*?_test_fscore&quot;
+test_score_plot(result, fscore_regex, &quot;f1_score&quot;)
+</code></pre>
+
+<p><img alt="png" src="../output_75_0.png" /></p>
+<pre><code class="python"># 分类f1 score不高于50%的比例
+merge_test = result[[&quot;merge_test_accuracy&quot;, &quot;merge_test_fscore&quot;]]
+fscore_low_num = merge_test.loc[merge_test[&quot;merge_test_fscore&quot;] &lt;= 0.501, :].shape[0]  # (46,2)
+np.float(fscore_low_num) / merge_test.shape[0] * 100
+</code></pre>
+
+<pre><code>37.719298245614034
+</code></pre>
+<pre><code class="python"># 分类准确率不高于50%的比例
+accuracy_low_num = merge_test.loc[merge_test[&quot;merge_test_accuracy&quot;] &lt;= 0.501, :].shape[0]  # (46,2)
+np.float(accuracy_low_num) / merge_test.shape[0] * 100
+</code></pre>
+
+<pre><code>30.701754385964914
+</code></pre>
+<pre><code class="python"># 找出分类准确率不高于50%的股票
+accuracy_low_index = merge_test.loc[merge_test[&quot;merge_test_accuracy&quot;] &lt;= 0.501, :].index.tolist()
+len(result.loc[accuracy_low_index, &quot;merge_test_accuracy&quot;])  # 35
+accuracy_low_index[:2]
+</code></pre>
+
+<pre><code>[u'600999', u'002352']
+</code></pre>
+<p>所有股票分类准确率高于50%和不高于50%的数量</p>
+<pre><code class="python">def test_score_count(df, index_name, score_name):
+    group_name = [u&quot;准确率&gt;0.50&quot;, u&quot;准确率&lt;=0.50&quot;]
+    bins = [0.1, 0.5, 0.7]
+    score_bins = pd.cut(df, bins,labels=index_name, retbins=True)
+    score_bin_kind = pd.DataFrame(score_bins[0].value_counts())
+    score_bin_kind[&quot;index_name&quot;] = index_name
+    score_bin_kind.columns = [&quot;score&quot;, &quot;index_name&quot;]
+    plt.figure(figsize=(4,3)) 
+    g = sns.barplot(x=&quot;index_name&quot;, y=&quot;score&quot;, data=score_bin_kind)
+    plt.xticks(g.get_xticks(), fontproperties=font, fontsize=16)
+    plt.ylabel(u&quot;数量&quot;, fontsize=16, fontproperties=font)
+    plt.xlabel(&quot;&quot;)
+    plt.title(u&quot;股票数量对比—{}&quot;.format(score_name), fontproperties=font, fontsize=18)
+    plt.gca().yaxis.grid(True, linestyle = &quot;-.&quot;,)
+    text_loc = zip(g.get_xticks(), score_bin_kind[&quot;score&quot;].values)    
+    plt.text(text_loc[0][0],text_loc[0][1],s=str(score_bin_kind[&quot;score&quot;].values[0]), fontsize=16,va=&quot;bottom&quot;,ha=&quot;center&quot;,fontproperties=font)
+    plt.text(text_loc[1][0],text_loc[1][1],s=str(score_bin_kind[&quot;score&quot;].values[1]), fontsize=16,va=&quot;bottom&quot;,ha=&quot;center&quot;,fontproperties=font)    
+    if &quot;ress&quot; not in score_name:
+        plt.ylim(0,90)
+    else:
+        plt.ylim(0,25)
+</code></pre>
+
+<pre><code class="python">test_score_count(merge_test[&quot;merge_test_accuracy&quot;], [u&quot;准确率&gt;0.50&quot;,u&quot;准确率&lt;=0.50&quot;],u&quot;准确率&quot;)
+</code></pre>
+
+<p><img alt="png" src="../output_81_0.png" /></p>
+<pre><code class="python">test_score_count(merge_test[&quot;merge_test_fscore&quot;], [u&quot;f1_score&gt;0.50&quot;,u&quot;f1_score&lt;=0.50&quot;],u&quot;f1_score&quot;)
+</code></pre>
+
+<p><img alt="png" src="../output_82_0.png" /></p>
+<p>无论是准确率还是f1，大于50%的股票数量超过60%</p>
+<pre><code class="python"># accuracy与f1_score对比
+merge_test_sorted = merge_test.sort_index()
+merge_test_sorted.columns = [&quot;accuracy&quot;, &quot;f1_score&quot;]
+merge_test_sorted.plot(figsize=(8,6), grid=False)
+plt.gca().yaxis.grid(True, linestyle = &quot;-.&quot;)
+plt.xlabel(&quot;&quot;)
+plt.ylabel(u&quot;accuracy &amp; f1_score&quot;, fontsize=16)
+plt.title(u&quot;各股票在测试集的accuracy与f1_score对比&quot;, fontsize=20, fontproperties=font)
+</code></pre>
+
+<pre><code>&lt;matplotlib.text.Text at 0x7f8509327990&gt;
+</code></pre>
+<p><img alt="png" src="../output_84_1.png" /></p>
+<pre><code class="python">fscore_low_index = merge_test.loc[merge_test[&quot;merge_test_fscore&quot;] &lt;= 0.501, :].index.tolist()
+fscore_low_index
+</code></pre>
+
+<pre><code class="python">fscore_low = result.loc[merge_test[&quot;merge_test_fscore&quot;] &lt;= 0.501, :]
+fscore_low[&quot;fea_num&quot;].describe()
+</code></pre>
+
+<pre><code>count    43.000000
+mean     14.558140
+std       5.607403
+min       2.000000
+25%      11.500000
+50%      14.000000
+75%      19.000000
+max      28.000000
+Name: fea_num, dtype: float64
+</code></pre>
+<pre><code class="python">fscore_large = result.loc[merge_test[&quot;merge_test_fscore&quot;] &gt; 0.501, :]
+fscore_large[&quot;fea_num&quot;].describe()
+</code></pre>
+
+<pre><code>count    71.000000
+mean     14.845070
+std       5.484127
+min       2.000000
+25%      11.500000
+50%      14.000000
+75%      18.000000
+max      30.000000
+Name: fea_num, dtype: float64
+</code></pre>
+<pre><code class="python">accuracy_large = result.loc[merge_test[&quot;merge_test_accuracy&quot;] &gt; 0.501, :]
+accuracy_large[&quot;fea_num&quot;].describe()
+</code></pre>
+
+<pre><code>count    79.000000
+mean     15.518987
+std       5.322571
+min       2.000000
+25%      12.000000
+50%      15.000000
+75%      19.500000
+max      28.000000
+Name: fea_num, dtype: float64
+</code></pre>
+<pre><code class="python">accuracy_low = result.loc[merge_test[&quot;merge_test_accuracy&quot;] &lt;= 0.501, :]
+accuracy_low[&quot;fea_num&quot;].describe()
+</code></pre>
+
+<pre><code>count    35.000000
+mean     12.971429
+std       5.586147
+min       2.000000
+25%       9.500000
+50%      13.000000
+75%      15.000000
+max      30.000000
+Name: fea_num, dtype: float64
+</code></pre>
+<p>分别对比准确率和f1 score的统计结果，即高于50%和低于50%的两类对比结果，感脚准确率高的特征数也多！</p>
+<pre><code class="python">def score_lowandhigh(df, accu_kind):
+    first_test = df.filter(regex=&quot;fea_num|merge_test.*&quot;)
+    first_test.sort_values(&quot;fea_num&quot;, inplace=True)
+    first_test.columns = [&quot;fea_num&quot;, &quot;accuracy&quot;, &quot;f1_score&quot;]
+    feature_num = first_test[&quot;fea_num&quot;]
+    first_test.drop(&quot;fea_num&quot;, axis=1, inplace=True)
+    fig, ax1 = plt.subplots(figsize=(8,6))
+    first_test.plot(ax=ax1, grid=False)
+    ax2 = ax1.twinx()
+    feature_num.plot(ax=ax2, grid=False, label=&quot;feature_number(right_axis)&quot;, legend=True, color=&quot;purple&quot;, alpha=0.7)
+    ax1.set_ylabel(&quot;accuracy &amp; f1_score&quot;, fontsize=16, fontproperties=font)
+    ax2.set_ylabel(&quot;feature_number&quot;, fontsize=16, fontproperties=font)
+    ax2.legend(loc=1, fontsize=12)
+    ax1.legend(loc=2, fontsize=12)
+    # merge_test_sorted.plot(figsize=(8,6), grid=False)
+    ax1.yaxis.grid(True, linestyle = &quot;-.&quot;)
+    ax1.set_xlabel(&quot;&quot;)
+    plt.title(u&quot;准确率{}的股票的accuracy、f1_score与feature_num&quot;.format(accu_kind), fontsize=17, fontproperties=font)
+</code></pre>
+
+<pre><code class="python"># 看看分类准确率高于0.50的那些stocks的准确率和f1 score
+score_lowandhigh(accuracy_large, u&quot;高于0.50&quot;)
+</code></pre>
+
+<p><img alt="png" src="../output_92_0.png" /></p>
+<pre><code class="python"># 看看分类准确率低于0.50的那些stocks的准确率和f1 score
+score_lowandhigh(accuracy_low, u&quot;低于0.50&quot;)
+</code></pre>
+
+<p><img alt="png" src="../output_93_0.png" /></p>
+<pre><code class="python">accuracy_top = result.loc[merge_test[&quot;merge_test_accuracy&quot;] &gt; 0.55, :]
+# 看看分类准确率高于0.55的那些stocks的准确率和f1 score
+score_lowandhigh(accuracy_top, u&quot;高于0.55&quot;)
+</code></pre>
+
+<p><img alt="png" src="../output_94_0.png" /></p>
+<p>不同的准确率下股票特征与accuracy和f1_score的关系可看出，较高的准确率对应着较高的f1_score，同时，特征也较多。</p>
+<p>看看分类准确率高于55%的那些stocks的特征都是啥</p>
+<pre><code class="python">accuracy_top_list = result.loc[merge_test[&quot;merge_test_accuracy&quot;] &gt; 0.55, :].index.tolist()
+fscore_top_list = result.loc[result[&quot;merge_test_fscore&quot;] &gt; 0.55, :].index.tolist()
+target_index = list(set(accuracy_top_list) &amp; set(fscore_top_list))
+# len(target_index)  # 20
+target_stock = result.loc[target_index, :]
+target_stock.head(2)
+</code></pre>
+
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>fea_num</th>
+      <th>rf_train_accuracy</th>
+      <th>rf_test_accuracy</th>
+      <th>lr_train_accuracy</th>
+      <th>lr_test_accuracy</th>
+      <th>tree_train_accuracy</th>
+      <th>tree_test_accuracy</th>
+      <th>ada_train_accuracy</th>
+      <th>ada_test_accuracy</th>
+      <th>merge_train_accuracy</th>
+      <th>...</th>
+      <th>rf_test_fscore</th>
+      <th>lr_train_fscore</th>
+      <th>lr_test_fscore</th>
+      <th>tree_train_fscore</th>
+      <th>tree_test_fscore</th>
+      <th>ada_train_fscore</th>
+      <th>ada_test_fscore</th>
+      <th>merge_train_fscore</th>
+      <th>merge_test_fscore</th>
+      <th>fea_name</th>
+    </tr>
+    <tr>
+      <th>stockid</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>601877</th>
+      <td>14.0</td>
+      <td>0.8831</td>
+      <td>0.5556</td>
+      <td>0.5831</td>
+      <td>0.5556</td>
+      <td>0.8085</td>
+      <td>0.6349</td>
+      <td>1.0</td>
+      <td>0.5476</td>
+      <td>1.0000</td>
+      <td>...</td>
+      <td>0.6585</td>
+      <td>0.5647</td>
+      <td>0.6818</td>
+      <td>0.7994</td>
+      <td>0.6714</td>
+      <td>1.0</td>
+      <td>0.6275</td>
+      <td>1.000</td>
+      <td>0.6667</td>
+      <td>sz_volume::rocmean1::fimean5::Lag5mean5::hs300...</td>
+    </tr>
+    <tr>
+      <th>600332</th>
+      <td>19.0</td>
+      <td>0.9942</td>
+      <td>0.5435</td>
+      <td>0.5792</td>
+      <td>0.5870</td>
+      <td>0.8533</td>
+      <td>0.5652</td>
+      <td>1.0</td>
+      <td>0.4783</td>
+      <td>0.9981</td>
+      <td>...</td>
+      <td>0.5962</td>
+      <td>0.5381</td>
+      <td>0.5000</td>
+      <td>0.8538</td>
+      <td>0.6078</td>
+      <td>1.0</td>
+      <td>0.5000</td>
+      <td>0.998</td>
+      <td>0.5859</td>
+      <td>close_roll_20_ppmean90::fimean5::high_pctchang...</td>
+    </tr>
+  </tbody>
+</table>
+<p>2 rows × 22 columns</p>
+</div>
+
+<pre><code class="python">target_stock.describe()
+</code></pre>
+
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>fea_num</th>
+      <th>rf_train_accuracy</th>
+      <th>rf_test_accuracy</th>
+      <th>lr_train_accuracy</th>
+      <th>lr_test_accuracy</th>
+      <th>tree_train_accuracy</th>
+      <th>tree_test_accuracy</th>
+      <th>ada_train_accuracy</th>
+      <th>ada_test_accuracy</th>
+      <th>merge_train_accuracy</th>
+      <th>...</th>
+      <th>rf_train_fscore</th>
+      <th>rf_test_fscore</th>
+      <th>lr_train_fscore</th>
+      <th>lr_test_fscore</th>
+      <th>tree_train_fscore</th>
+      <th>tree_test_fscore</th>
+      <th>ada_train_fscore</th>
+      <th>ada_test_fscore</th>
+      <th>merge_train_fscore</th>
+      <th>merge_test_fscore</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>20.000000</td>
+      <td>20.000000</td>
+      <td>20.000000</td>
+      <td>20.000000</td>
+      <td>20.000000</td>
+      <td>20.000000</td>
+      <td>20.000000</td>
+      <td>20.000000</td>
+      <td>20.000000</td>
+      <td>20.000000</td>
+      <td>...</td>
+      <td>20.000000</td>
+      <td>20.000000</td>
+      <td>20.000000</td>
+      <td>20.000000</td>
+      <td>20.000000</td>
+      <td>20.000000</td>
+      <td>20.000000</td>
+      <td>20.000000</td>
+      <td>20.000000</td>
+      <td>20.000000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>15.950000</td>
+      <td>0.940980</td>
+      <td>0.559530</td>
+      <td>0.583380</td>
+      <td>0.553630</td>
+      <td>0.856590</td>
+      <td>0.565900</td>
+      <td>0.999245</td>
+      <td>0.527110</td>
+      <td>0.989585</td>
+      <td>...</td>
+      <td>0.941895</td>
+      <td>0.584980</td>
+      <td>0.599625</td>
+      <td>0.573735</td>
+      <td>0.868400</td>
+      <td>0.614970</td>
+      <td>0.999255</td>
+      <td>0.553925</td>
+      <td>0.989940</td>
+      <td>0.615905</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>3.872644</td>
+      <td>0.045878</td>
+      <td>0.038063</td>
+      <td>0.016712</td>
+      <td>0.049804</td>
+      <td>0.080882</td>
+      <td>0.038997</td>
+      <td>0.001889</td>
+      <td>0.045610</td>
+      <td>0.017169</td>
+      <td>...</td>
+      <td>0.045279</td>
+      <td>0.085217</td>
+      <td>0.044295</td>
+      <td>0.093469</td>
+      <td>0.067407</td>
+      <td>0.051002</td>
+      <td>0.001867</td>
+      <td>0.077192</td>
+      <td>0.016303</td>
+      <td>0.036228</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>10.000000</td>
+      <td>0.838000</td>
+      <td>0.493400</td>
+      <td>0.555800</td>
+      <td>0.457400</td>
+      <td>0.709500</td>
+      <td>0.503600</td>
+      <td>0.992200</td>
+      <td>0.428600</td>
+      <td>0.933300</td>
+      <td>...</td>
+      <td>0.842600</td>
+      <td>0.384000</td>
+      <td>0.510100</td>
+      <td>0.333300</td>
+      <td>0.768900</td>
+      <td>0.527500</td>
+      <td>0.992300</td>
+      <td>0.371400</td>
+      <td>0.938100</td>
+      <td>0.552200</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>13.000000</td>
+      <td>0.924775</td>
+      <td>0.537600</td>
+      <td>0.567525</td>
+      <td>0.511600</td>
+      <td>0.795325</td>
+      <td>0.527800</td>
+      <td>1.000000</td>
+      <td>0.481425</td>
+      <td>0.987825</td>
+      <td>...</td>
+      <td>0.923500</td>
+      <td>0.557475</td>
+      <td>0.579100</td>
+      <td>0.510925</td>
+      <td>0.810450</td>
+      <td>0.571400</td>
+      <td>1.000000</td>
+      <td>0.497575</td>
+      <td>0.988250</td>
+      <td>0.589375</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>14.500000</td>
+      <td>0.948400</td>
+      <td>0.562050</td>
+      <td>0.584250</td>
+      <td>0.555600</td>
+      <td>0.859800</td>
+      <td>0.565450</td>
+      <td>1.000000</td>
+      <td>0.528300</td>
+      <td>0.997700</td>
+      <td>...</td>
+      <td>0.948750</td>
+      <td>0.601850</td>
+      <td>0.601500</td>
+      <td>0.570900</td>
+      <td>0.861700</td>
+      <td>0.610650</td>
+      <td>1.000000</td>
+      <td>0.566200</td>
+      <td>0.997700</td>
+      <td>0.610000</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>19.000000</td>
+      <td>0.983525</td>
+      <td>0.578025</td>
+      <td>0.593950</td>
+      <td>0.586400</td>
+      <td>0.933800</td>
+      <td>0.596350</td>
+      <td>1.000000</td>
+      <td>0.563975</td>
+      <td>1.000000</td>
+      <td>...</td>
+      <td>0.983925</td>
+      <td>0.654000</td>
+      <td>0.621475</td>
+      <td>0.666700</td>
+      <td>0.933250</td>
+      <td>0.664450</td>
+      <td>1.000000</td>
+      <td>0.604250</td>
+      <td>1.000000</td>
+      <td>0.639975</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>23.000000</td>
+      <td>0.995500</td>
+      <td>0.641000</td>
+      <td>0.627600</td>
+      <td>0.642900</td>
+      <td>0.992800</td>
+      <td>0.634900</td>
+      <td>1.000000</td>
+      <td>0.594800</td>
+      <td>1.000000</td>
+      <td>...</td>
+      <td>0.995500</td>
+      <td>0.681800</td>
+      <td>0.677200</td>
+      <td>0.681800</td>
+      <td>0.992900</td>
+      <td>0.691900</td>
+      <td>1.000000</td>
+      <td>0.700600</td>
+      <td>1.000000</td>
+      <td>0.695700</td>
+    </tr>
+  </tbody>
+</table>
+<p>8 rows × 21 columns</p>
+</div>
+
+<p>target_stock的特征数目最少的10个，最多的23个，平均15个左右，即分类效果较好的stocks的特征数目既不太少也不太多，那这些股票都使用了哪些特征呢，可否用这些特征作为所有股票的最终的分类特征呢？</p>
+<pre><code class="python">target_stock[&quot;fea_name&quot;].head(2)
+</code></pre>
+
+<pre><code>stockid
+002241    volume_roll_5_ppmean90::rocmean1::close_roll_3...
+600703    Lag20mean90::rocmean1::ccimean1::rsv9mean1::vo...
+Name: fea_name, dtype: object
+</code></pre>
+<pre><code class="python">top_fea_name = target_stock[&quot;fea_name&quot;].str.split(&quot;::&quot;)
+top_fea_name.head(2)
+</code></pre>
+
+<pre><code>stockid
+601877    [sz_volume, rocmean1, fimean5, Lag5mean5, hs30...
+600332    [close_roll_20_ppmean90, fimean5, high_pctchan...
+Name: fea_name, dtype: object
+</code></pre>
+<p>取在20支股票中公共特征次数超过3次的那些特征</p>
+<pre><code class="python">tip_fea_list = []
+for i in range(len(top_fea_name)):
+    tip_fea_list.extend(top_fea_name[i])
+fname, fcount = np.unique(tip_fea_list, return_counts=True)
+fea_sorted = sorted(zip(fname, fcount), key=lambda x: x[1], reverse=True)
+fea_sorted = filter(lambda x: x[1]&gt;3, fea_sorted)
+# len(fea_sorted)  # 25
+feature_final = [i[0] for i in fea_sorted]
+feature_final[:3]
+</code></pre>
+
+<pre><code>[u'rsimean1', u'rocmean1', u'obvmean5']
+</code></pre>
+<h3 id="_9">使用选定特征重新建模</h3>
+<p>使用选择的25个特征对分类准确率不高于50%的stocks重新进行分类训练</p>
+<pre><code class="python">stock_tackle(accuracy_low_index, stocks, feature_final, 0)
+# 分类结果在此略过...
+</code></pre>
+
+<p>使用选定的25个特征对第一次分类准确率不高于50%的股票重新进行分类评估，结果如下：</p>
+<pre><code class="python"># 读入文件
+accuracy_ress = pd.read_csv(&quot;./classification_result_ress_accuracy.csv&quot;,encoding=&quot;utf-8&quot;, dtype=str)
+accuracy_ress.set_index(&quot;stockid&quot;, inplace=True)
+fscore_ress = pd.read_csv(&quot;./classification_result_ress_fscore.csv&quot;,encoding=&quot;utf-8&quot;, dtype=str)
+fscore_ress.set_index(&quot;stockid&quot;, inplace=True)
+result_ress = pd.concat([accuracy_ress, fscore_ress], axis=1)
+result_ress.drop(&quot;data_shape&quot;, axis=1, inplace=True)
+result_ress = result_ress.astype(np.float)
+result_ress.head(2)
+</code></pre>
+
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>rf_train_accuracy</th>
+      <th>rf_test_accuracy</th>
+      <th>lr_train_accuracy</th>
+      <th>lr_test_accuracy</th>
+      <th>tree_train_accuracy</th>
+      <th>tree_test_accuracy</th>
+      <th>ada_train_accuracy</th>
+      <th>ada_test_accuracy</th>
+      <th>merge_train_accuracy</th>
+      <th>merge_test_accuracy</th>
+      <th>rf_train_fscore</th>
+      <th>rf_test_fscore</th>
+      <th>lr_train_fscore</th>
+      <th>lr_test_fscore</th>
+      <th>tree_train_fscore</th>
+      <th>tree_test_fscore</th>
+      <th>ada_train_fscore</th>
+      <th>ada_test_fscore</th>
+      <th>merge_train_fscore</th>
+      <th>merge_test_fscore</th>
+    </tr>
+    <tr>
+      <th>stockid</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>600999</th>
+      <td>0.9892</td>
+      <td>0.5573</td>
+      <td>0.5732</td>
+      <td>0.4351</td>
+      <td>0.8889</td>
+      <td>0.5496</td>
+      <td>1.0</td>
+      <td>0.5038</td>
+      <td>1.0000</td>
+      <td>0.5191</td>
+      <td>0.9888</td>
+      <td>0.4314</td>
+      <td>0.5428</td>
+      <td>0.1778</td>
+      <td>0.8898</td>
+      <td>0.5124</td>
+      <td>1.0</td>
+      <td>0.3299</td>
+      <td>1.0000</td>
+      <td>0.3762</td>
+    </tr>
+    <tr>
+      <th>002352</th>
+      <td>0.9925</td>
+      <td>0.5141</td>
+      <td>0.5593</td>
+      <td>0.5634</td>
+      <td>0.7878</td>
+      <td>0.4366</td>
+      <td>1.0</td>
+      <td>0.4789</td>
+      <td>0.9925</td>
+      <td>0.4859</td>
+      <td>0.9931</td>
+      <td>0.6057</td>
+      <td>0.6728</td>
+      <td>0.6265</td>
+      <td>0.8265</td>
+      <td>0.4872</td>
+      <td>1.0</td>
+      <td>0.5432</td>
+      <td>0.9932</td>
+      <td>0.5576</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code class="python">result_ress.describe()
+</code></pre>
+
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>rf_train_accuracy</th>
+      <th>rf_test_accuracy</th>
+      <th>lr_train_accuracy</th>
+      <th>lr_test_accuracy</th>
+      <th>tree_train_accuracy</th>
+      <th>tree_test_accuracy</th>
+      <th>ada_train_accuracy</th>
+      <th>ada_test_accuracy</th>
+      <th>merge_train_accuracy</th>
+      <th>merge_test_accuracy</th>
+      <th>rf_train_fscore</th>
+      <th>rf_test_fscore</th>
+      <th>lr_train_fscore</th>
+      <th>lr_test_fscore</th>
+      <th>tree_train_fscore</th>
+      <th>tree_test_fscore</th>
+      <th>ada_train_fscore</th>
+      <th>ada_test_fscore</th>
+      <th>merge_train_fscore</th>
+      <th>merge_test_fscore</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>35.000000</td>
+      <td>35.000000</td>
+      <td>35.000000</td>
+      <td>35.000000</td>
+      <td>35.000000</td>
+      <td>35.000000</td>
+      <td>35.000000</td>
+      <td>35.000000</td>
+      <td>35.000000</td>
+      <td>35.000000</td>
+      <td>35.000000</td>
+      <td>35.000000</td>
+      <td>35.000000</td>
+      <td>35.000000</td>
+      <td>35.000000</td>
+      <td>35.000000</td>
+      <td>35.000000</td>
+      <td>35.000000</td>
+      <td>35.000000</td>
+      <td>35.000000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>0.966860</td>
+      <td>0.505991</td>
+      <td>0.574640</td>
+      <td>0.502557</td>
+      <td>0.845254</td>
+      <td>0.507454</td>
+      <td>0.997851</td>
+      <td>0.498680</td>
+      <td>0.991723</td>
+      <td>0.506531</td>
+      <td>0.967537</td>
+      <td>0.484546</td>
+      <td>0.588957</td>
+      <td>0.504066</td>
+      <td>0.841951</td>
+      <td>0.490154</td>
+      <td>0.997880</td>
+      <td>0.495414</td>
+      <td>0.991934</td>
+      <td>0.502054</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>0.030945</td>
+      <td>0.049303</td>
+      <td>0.024525</td>
+      <td>0.039650</td>
+      <td>0.081260</td>
+      <td>0.054788</td>
+      <td>0.006110</td>
+      <td>0.043482</td>
+      <td>0.013401</td>
+      <td>0.038681</td>
+      <td>0.029980</td>
+      <td>0.107487</td>
+      <td>0.061700</td>
+      <td>0.125887</td>
+      <td>0.087532</td>
+      <td>0.092912</td>
+      <td>0.006022</td>
+      <td>0.078563</td>
+      <td>0.012882</td>
+      <td>0.084782</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>0.890700</td>
+      <td>0.417500</td>
+      <td>0.541000</td>
+      <td>0.435100</td>
+      <td>0.661800</td>
+      <td>0.418900</td>
+      <td>0.967500</td>
+      <td>0.421100</td>
+      <td>0.939400</td>
+      <td>0.426400</td>
+      <td>0.896300</td>
+      <td>0.256400</td>
+      <td>0.349100</td>
+      <td>0.177800</td>
+      <td>0.586700</td>
+      <td>0.335900</td>
+      <td>0.968000</td>
+      <td>0.329900</td>
+      <td>0.942100</td>
+      <td>0.273500</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>0.948100</td>
+      <td>0.467400</td>
+      <td>0.558850</td>
+      <td>0.472950</td>
+      <td>0.793450</td>
+      <td>0.459600</td>
+      <td>1.000000</td>
+      <td>0.466000</td>
+      <td>0.991750</td>
+      <td>0.474700</td>
+      <td>0.950150</td>
+      <td>0.406200</td>
+      <td>0.553900</td>
+      <td>0.425550</td>
+      <td>0.795500</td>
+      <td>0.408250</td>
+      <td>1.000000</td>
+      <td>0.451400</td>
+      <td>0.992150</td>
+      <td>0.449500</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>0.976000</td>
+      <td>0.506200</td>
+      <td>0.572800</td>
+      <td>0.503100</td>
+      <td>0.860200</td>
+      <td>0.500000</td>
+      <td>1.000000</td>
+      <td>0.500000</td>
+      <td>0.997000</td>
+      <td>0.506300</td>
+      <td>0.976100</td>
+      <td>0.493500</td>
+      <td>0.602300</td>
+      <td>0.528700</td>
+      <td>0.858100</td>
+      <td>0.493000</td>
+      <td>1.000000</td>
+      <td>0.500000</td>
+      <td>0.997100</td>
+      <td>0.490300</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>0.991400</td>
+      <td>0.548750</td>
+      <td>0.583850</td>
+      <td>0.531150</td>
+      <td>0.892400</td>
+      <td>0.538950</td>
+      <td>1.000000</td>
+      <td>0.524000</td>
+      <td>1.000000</td>
+      <td>0.523550</td>
+      <td>0.991400</td>
+      <td>0.565150</td>
+      <td>0.633400</td>
+      <td>0.604150</td>
+      <td>0.891800</td>
+      <td>0.565350</td>
+      <td>1.000000</td>
+      <td>0.551500</td>
+      <td>1.000000</td>
+      <td>0.578650</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>1.000000</td>
+      <td>0.611100</td>
+      <td>0.665100</td>
+      <td>0.610000</td>
+      <td>0.954200</td>
+      <td>0.638900</td>
+      <td>1.000000</td>
+      <td>0.638900</td>
+      <td>1.000000</td>
+      <td>0.629600</td>
+      <td>1.000000</td>
+      <td>0.679200</td>
+      <td>0.684800</td>
+      <td>0.678000</td>
+      <td>0.955100</td>
+      <td>0.681600</td>
+      <td>1.000000</td>
+      <td>0.682900</td>
+      <td>1.000000</td>
+      <td>0.661000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code class="python"># 分类准确率低于50%的比例
+accuracy_low_num_ress = merge_test_ress.loc[merge_test_ress[&quot;merge_test_accuracy&quot;] &lt;= 0.501, :].shape[0]
+np.float(accuracy_low_num_ress) / merge_test_ress.shape[0] * 100
+</code></pre>
+
+<pre><code>40.0
+</code></pre>
+<pre><code class="python"># 分类f1_score低于50%的比例
+merge_test_ress = result_ress[[&quot;merge_test_accuracy&quot;, &quot;merge_test_fscore&quot;]]
+fscore_low_num_ress = merge_test_ress.loc[merge_test_ress[&quot;merge_test_fscore&quot;] &lt;= 0.501, :].shape[0]
+np.float(fscore_low_num_ress) / merge_test_ress.shape[0] * 100
+</code></pre>
+
+<pre><code>57.14285714285714
+</code></pre>
+<pre><code class="python">test_score_count(merge_test_ress[&quot;merge_test_accuracy&quot;], [u&quot;准确率&gt;0.50&quot;,u&quot;准确率&lt;=0.50&quot;],u&quot;准确率_ress&quot;)
+</code></pre>
+
+<p><img alt="png" src="../output_112_0.png" /></p>
+<pre><code class="python">test_score_count(merge_test_ress[&quot;merge_test_fscore&quot;], [u&quot;f1_score&lt;=0.50&quot;,u&quot;f1_score&gt;0.50&quot;],u&quot;f1_score_ress&quot;)
+</code></pre>
+
+<p><img alt="png" src="../output_113_0.png" /></p>
+<pre><code class="python"># 使用特定特征进行分类评估与之前的分类准确率对比
+fig, ax = plt.subplots(figsize=(8,6))
+merge_test_ress_sorted = merge_test_ress.sort_index()
+merge_test_ress_sorted.columns = [&quot;accuracy&quot;, &quot;f1_score&quot;]
+merge_test_ress_sorted[&quot;accuracy&quot;].plot(ax=ax, grid=False, linewidth=2, label=&quot;accuracy_ress&quot;, legend=True, color=&quot;red&quot;, style=&quot;-.&quot;,alpha=0.7)
+# merge_test_ress_sorted[&quot;f1_score&quot;].plot(ax=ax, grid=False, label=&quot;f1_score_ress&quot;, legend=True,linewidth=4, color=&quot;purple&quot;,style=&quot;-.&quot;,alpha=0.8)
+merge_low_sorted = merge_test_sorted.loc[merge_test_sorted[&quot;accuracy&quot;] &lt; 0.501, :]
+merge_low_sorted  = merge_low_sorted .sort_index()
+merge_low_sorted[&quot;accuracy&quot;].plot(ax=ax,grid=False,linewidth=2,alpha=0.9,legend=True, label=&quot;accuracy&quot;)
+# merge_low_sorted[&quot;f1_score&quot;].plot(ax=ax,grid=False,linewidth=2,alpha=0.9,legend=True, label=&quot;fscore&quot;)
+plt.gca().yaxis.grid(True, linestyle = &quot;-.&quot;)
+plt.xlabel(&quot;&quot;)
+plt.ylabel(u&quot;accuracy&quot;, fontsize=16)
+plt.title(u&quot;使用特定特征进行分类评估与之前的分类对比&quot;, fontsize=20, fontproperties=font)
+</code></pre>
+
+<pre><code>&lt;matplotlib.text.Text at 0x7f8502d89ed0&gt;
+</code></pre>
+<p><img alt="png" src="../output_114_1.png" /></p>
+<p>各种分类器在使用特定特征重新分类的的表现</p>
+<pre><code class="python">test_score_plot(result_ress, accuracy_regex, u&quot;准确率_ress&quot;)
+</code></pre>
+
+<p><img alt="png" src="../output_116_0.png" /></p>
+<pre><code class="python">test_score_plot(result_ress, fscore_regex, u&quot;f1_score_ress&quot;)
+</code></pre>
+
+<p><img alt="png" src="../output_117_0.png" /></p>
+<p>在使用选定的25个特征对第一次分类准确率不高于50%的那些股票进行重分类模型构建，整体准确率有提高，说明特征选择很重要！！！</p>
+<p>对114支股票分别建立分类模型预测股价涨跌，分类结果详情就不列出了，在这举一个实例，就拿在第二次重新分类准确率最高的000063这支股票为例：</p>
+<pre><code class="python">result_ress_sorted_ = result_ress.sort_values(&quot;merge_test_accuracy&quot;, ascending=False)
+result_ress_sorted_.head()
+</code></pre>
+
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>rf_train_accuracy</th>
+      <th>rf_test_accuracy</th>
+      <th>lr_train_accuracy</th>
+      <th>lr_test_accuracy</th>
+      <th>tree_train_accuracy</th>
+      <th>tree_test_accuracy</th>
+      <th>ada_train_accuracy</th>
+      <th>ada_test_accuracy</th>
+      <th>merge_train_accuracy</th>
+      <th>merge_test_accuracy</th>
+      <th>rf_train_fscore</th>
+      <th>rf_test_fscore</th>
+      <th>lr_train_fscore</th>
+      <th>lr_test_fscore</th>
+      <th>tree_train_fscore</th>
+      <th>tree_test_fscore</th>
+      <th>ada_train_fscore</th>
+      <th>ada_test_fscore</th>
+      <th>merge_train_fscore</th>
+      <th>merge_test_fscore</th>
+    </tr>
+    <tr>
+      <th>stockid</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>000063</th>
+      <td>0.9984</td>
+      <td>0.6111</td>
+      <td>0.5698</td>
+      <td>0.5370</td>
+      <td>0.9524</td>
+      <td>0.6389</td>
+      <td>1.0000</td>
+      <td>0.6389</td>
+      <td>1.0000</td>
+      <td>0.6296</td>
+      <td>0.9984</td>
+      <td>0.6719</td>
+      <td>0.6147</td>
+      <td>0.6377</td>
+      <td>0.9532</td>
+      <td>0.6422</td>
+      <td>1.0000</td>
+      <td>0.6829</td>
+      <td>1.0000</td>
+      <td>0.6610</td>
+    </tr>
+    <tr>
+      <th>300070</th>
+      <td>0.9728</td>
+      <td>0.4898</td>
+      <td>0.5725</td>
+      <td>0.5204</td>
+      <td>0.8297</td>
+      <td>0.5000</td>
+      <td>0.9982</td>
+      <td>0.5714</td>
+      <td>0.9783</td>
+      <td>0.5816</td>
+      <td>0.9731</td>
+      <td>0.3902</td>
+      <td>0.5986</td>
+      <td>0.3896</td>
+      <td>0.8058</td>
+      <td>0.3951</td>
+      <td>0.9982</td>
+      <td>0.6182</td>
+      <td>0.9783</td>
+      <td>0.6019</td>
+    </tr>
+    <tr>
+      <th>600741</th>
+      <td>0.8914</td>
+      <td>0.5414</td>
+      <td>0.5837</td>
+      <td>0.5541</td>
+      <td>0.7862</td>
+      <td>0.4904</td>
+      <td>0.9966</td>
+      <td>0.5350</td>
+      <td>0.9593</td>
+      <td>0.5478</td>
+      <td>0.8963</td>
+      <td>0.5862</td>
+      <td>0.6175</td>
+      <td>0.6196</td>
+      <td>0.8000</td>
+      <td>0.5699</td>
+      <td>0.9967</td>
+      <td>0.5922</td>
+      <td>0.9605</td>
+      <td>0.6162</td>
+    </tr>
+    <tr>
+      <th>601601</th>
+      <td>0.9414</td>
+      <td>0.4914</td>
+      <td>0.5566</td>
+      <td>0.5143</td>
+      <td>0.8879</td>
+      <td>0.5257</td>
+      <td>1.0000</td>
+      <td>0.5429</td>
+      <td>0.9970</td>
+      <td>0.5429</td>
+      <td>0.9428</td>
+      <td>0.5389</td>
+      <td>0.6049</td>
+      <td>0.6222</td>
+      <td>0.8917</td>
+      <td>0.5608</td>
+      <td>1.0000</td>
+      <td>0.5876</td>
+      <td>0.9971</td>
+      <td>0.5876</td>
+    </tr>
+    <tr>
+      <th>300133</th>
+      <td>0.9936</td>
+      <td>0.5904</td>
+      <td>0.5906</td>
+      <td>0.5422</td>
+      <td>0.9424</td>
+      <td>0.6024</td>
+      <td>1.0000</td>
+      <td>0.4578</td>
+      <td>1.0000</td>
+      <td>0.5422</td>
+      <td>0.9937</td>
+      <td>0.6792</td>
+      <td>0.6082</td>
+      <td>0.6780</td>
+      <td>0.9434</td>
+      <td>0.6118</td>
+      <td>1.0000</td>
+      <td>0.5455</td>
+      <td>1.0000</td>
+      <td>0.6275</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code class="python">result_ress_sorted_.loc[&quot;000063&quot;, &quot;merge_test_accuracy&quot;]
+</code></pre>
+
+<pre><code>0.62960000000000005
+</code></pre>
+<pre><code class="python">result.loc[&quot;000063&quot;, &quot;merge_test_accuracy&quot;]
+</code></pre>
+
+<pre><code>0.46300000000000002
+</code></pre>
+<p>000063股票在第一次构建分类模型的测试集的准确率为0.463，而在第二次使用选定的特征进行的分类模型构建的准确率为0.629，精确率，召回率及f1_score就不一一列出来了，不同分类器的分类效果可参考见下面的混淆矩阵图，其中，前5副图为混淆矩阵，后一张为该股票的close_price和pct_change。</p>
+<p>000063混淆矩阵图
+<img src='./000069_classification_confusion_matrix.png'> </p>
+<h2 id="_10">总结</h2>
+<p>本项目使用机器学习中的分类算法预测部分沪深300股票的涨跌情况。数据是使用tushare提供的API采集2012-2017年沪深300股票的信息，同时，也收集了同时期的各股指、股票基本面、经济数据等相关信息，采用sklearn的分类模型，如随机森林、LogisticRegression等分类器对部分沪深300股票的涨跌情况进行预测。</p>
+<p>分类建模使用的股票数据是源自是沪深300中均价在10-30元之间并且缺失数据少于20%的114支股票信息，特征工程选择的特征包括了股票价格、成交量信息，基于股票价格和成交量计算的其他股票指标，国内同时期股指、经济以及股票的基本面信息等。使用递归特征消除(RFE)等三种特征选择方法选出重要的特征，然后简单粗暴地用三种特征选择方法选择的特征的交集为分类模型的训练特征。使用sklearn进行分类模型的构建，具体而言是采用了随机森林、LogisticRegression、决策树、Adaboost四种分类器分别构建相应的分类模型，最后使用softVoting对上述四类分类器进行模型融合，从而完成分类模型的构建。</p>
+<p>分类模型在测试集的表现为，有40%左右的股票的分类预测准确率不高于50%，分析分类结果能发现，分类准确率较高的stocks的特征数量较多，为此，使用分类结果中准确率高于55%的股票的特征为特定的特征对那40%的分类准确率低的股票重新进行分类训练，结果为有40%的股票的分类准确率仍旧不高于50%，有60%的在第一次分类中的准确率不高于50%，在第二次使用选定的特征训练后其准确率超过50%，说明选定的特征对分类模型构建是有效的。</p>
+<p>目前，在量化投资领域有很多人在用一些机器学习的算法进行research，如用自然语言处理来选股，线性回归的β系数、分类预测等等，本项目就是利用sklearn封装的分类算法对股票涨跌进行预测，本质是机器学习中的分类问题。为了简化流程，在构建的分类模型的时候采用的是二分类，同时由于最终分类效果较差，因此不具备实际意义。后续，可进行多分类模型构建，同时应采用更多有效的特征，结合其他方法比如加入自然语言处理的手段对股票的新闻类信息进行采集和分析并加入到模型中，以提高模型的预测精准性。</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="../../stock_index_classification/stock_index_classification/" class="btn btn-neutral" title="沪深300股指涨跌预测"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+    
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../../stock_index_classification/stock_index_classification/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+    </span>
+</div>
+    <script src="../../../js/theme.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+</body>
+</html>

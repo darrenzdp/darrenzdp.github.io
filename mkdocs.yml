@@ -1,7 +1,6 @@
 site_name: Darren_blog
 pages:
 - [index.md, Darren_blog]
-
 - [data_analysis/lagou_job_analysis_forshow.md, 拉勾招聘职位数据分析]
 - [machine_learning/logistic regression.md, Logistic_regression的Python代码实现]
 theme: readthedocs
